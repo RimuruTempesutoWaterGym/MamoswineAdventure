@@ -1,5 +1,7 @@
 
 #include "map.h"
+sfRectangleShape* selectTileSetSquare;
+sfVector2i mousepos;
 
 sfSprite* mapSprite;
 sfTexture* peacefulTexture;
@@ -15,21 +17,12 @@ sfVector2f tilepos = { 0.0f,0.0f };
 int selectedTiles = 0;
 
 float keyMapTimer = 0.0f;
-typedef enum {
-	peaceful = 1,
-	natural,
-	swamp,
-	water,
-	deepWater,
-	thundered,
-	fire,
 
-}tilesetType;
-//typedef struct {
-//	tilesetType tileset;
-//	int isWall[30];
-//	char tilesetName[30];
-//} tileset;
+typedef struct {
+	tilesetType tileset;
+	int isWall[30];
+	char tilesetName[30];
+} tileSet;
 typedef struct {
 	int texture;
 	int tileNumber;
@@ -42,7 +35,7 @@ tileOf tileMap[MAP_HEIGHT][MAP_WIDTH] =
 {
  { {1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
 {{2,2}, {3,2}, {4,2}, {5,2},{6,3},{7,3},{2,3},{2,3},{2,3},{2,4},{2,4},{2,4},{2,4},{2,4},{2,4},{1,2}, },
-{{ 1,2 },{1,2},{1,2},{1,2}, {1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},},
+{{ 1,2 },{1,2},{1,2},{1,2}, {5,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},},
 {{2,2}, {2,2}, {2,2}, {2,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
 { { 1,2 },{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
 {{2,2}, {2,2}, {2,2}, {2,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
@@ -67,7 +60,7 @@ void initmap()
 	waterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-water.png", NULL);
 	deepWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-deep-water.png", NULL);
 	fireTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-fire.png", NULL);
-	thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL);
+	thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL); 
 	mapSprite = sfSprite_create();
 
 
@@ -75,11 +68,16 @@ void initmap()
 
 void updateMap(sfRenderWindow* _window)
 {
+	if (state == EDITOR)
+	{
+
+
 	tilepos.y +=10;
 	sfVector2i posNewTile = { 0,0 };
 	for (int i = 0; i < 8; i++)
 	{
-		sfSprite_setTexture(mapSprite, thunderedTexture, sfTrue);
+		changeTileset(i);
+	//	sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
 		sfSprite_setTextureRect(mapSprite, tile);
 		sfSprite_setPosition(mapSprite, tilepos);
 		sfRenderWindow_drawSprite(_window, mapSprite, NULL);
@@ -124,55 +122,63 @@ void updateMap(sfRenderWindow* _window)
 			}
 		}
 	}
+}
 void displayMap(sfRenderWindow* _window)
 {
-	for (int x = 0; x < MAP_HEIGHT; x++)
+	if (state != MENU)
 	{
-		for (int y = 0; y < MAP_WIDTH; y++)
+		for (int x = 0; x < MAP_HEIGHT; x++)
 		{
-
-			tile.left = tileMap[x][y].tileNumber * tile.width;
-			tileType = tileMap[x][y].texture;
-			switch (tileType)
+			for (int y = 0; y < MAP_WIDTH; y++)
 			{
 
-			case peaceful:
-				sfSprite_setTexture(mapSprite, peacefulTexture, sfTrue);
-				break;
-			case natural:
-				sfSprite_setTexture(mapSprite, naturalTexture, sfTrue);
-				break;
-			case swamp:
-				sfSprite_setTexture(mapSprite, swampTexture, sfTrue);
-				break;
-			case water:
-				sfSprite_setTexture(mapSprite, waterTexture, sfTrue);
-				break;
-			case deepWater:
-				sfSprite_setTexture(mapSprite, deepWaterTexture, sfTrue);
-				break;
-			case thundered:
-				sfSprite_setTexture(mapSprite, thunderedTexture, sfTrue);
-				break;
-			case fire:
-				sfSprite_setTexture(mapSprite, fireTexture, sfTrue);
-				break;
+				tile.left = tileMap[x][y].tileNumber * tile.width;
+				tileType = tileMap[x][y].texture;
+				changeTileset(tileType);
+
+
+
+				sfSprite_setTextureRect(mapSprite, tile);
+
+
+				sfSprite_setPosition(mapSprite, tilepos);
+
+				sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+				tilepos.x += tile.width;
+
+
 			}
-
-
-			sfSprite_setTextureRect(mapSprite, tile);
-
-
-			sfSprite_setPosition(mapSprite, tilepos);
-
-			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
-			tilepos.x += tile.width;
-
-
+			tilepos.y += tile.height;
+			tilepos.x = 0;
 		}
-		tilepos.y += tile.height;
-		tilepos.x = 0;
+		tilepos.y = 0;
 	}
-	tilepos.y = 0;
 }
+void changeTileset(tilesetType tileType)
+{
+	switch (tileType)
+	{
 
+	case peaceful:
+		sfSprite_setTexture(mapSprite, peacefulTexture, sfTrue);
+		break;
+	case natural:
+		sfSprite_setTexture(mapSprite, naturalTexture, sfTrue);
+		break;
+	case swamp:
+		sfSprite_setTexture(mapSprite, swampTexture, sfTrue);
+		break;
+	case water:
+		sfSprite_setTexture(mapSprite, waterTexture, sfTrue);
+		break;
+	case deepWater:
+		sfSprite_setTexture(mapSprite, deepWaterTexture, sfTrue);
+		break;
+	case thundered:
+		sfSprite_setTexture(mapSprite, thunderedTexture, sfTrue);
+		break;
+	case fire:
+		sfSprite_setTexture(mapSprite, fireTexture, sfTrue);
+		break;
+	}
+}
