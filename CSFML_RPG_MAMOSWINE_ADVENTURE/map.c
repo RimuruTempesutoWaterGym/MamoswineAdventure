@@ -77,7 +77,11 @@ void updateMap(sfRenderWindow* _window)
 	for (int i = 0; i < 8; i++)
 	{
 		changeTileset(i);
-	//	sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
+		sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && mousepos.x > mapfrect.left && mousepos.x < (mapfrect.width + mapfrect.left) && mousepos.y > mapfrect.top && mousepos.y < (mapfrect.top + mapfrect.height))
+		{
+			tile.top = i * tile.height;
+		}
 		sfSprite_setTextureRect(mapSprite, tile);
 		sfSprite_setPosition(mapSprite, tilepos);
 		sfRenderWindow_drawSprite(_window, mapSprite, NULL);
@@ -98,6 +102,7 @@ void updateMap(sfRenderWindow* _window)
 
 
 		tile.left = selectedTiles * tile.width;
+	
 
 
 		sfSprite_setTextureRect(mapSprite, tile);
@@ -108,7 +113,8 @@ void updateMap(sfRenderWindow* _window)
 		else
 		{
 			sfRenderWindow_setMouseCursorVisible(_window, sfFalse);
-			if (pressed == 1)
+
+			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
 			{
 				if (keyMapTimer > 0.02f) {
 					posNewTile.x = (int)(sfMouse_getPositionRenderWindow(_window).x / TILE_WIDTH);
