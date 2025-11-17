@@ -38,7 +38,7 @@ void initmenu()
 	sfText_setPosition(Game, PosText1);
 	sfText_setColor(Game, sfWhite);
 	sfText_setCharacterSize(Game, 50);
-	MC = sfFont_createFromFile("..\\Ressource\\Font\\Minecraft.ttf");
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Game, MC);
 
 
