@@ -1,40 +1,38 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "SFML/Graphics.h"
-
-
+#include "tools.h"
+#include "map.h"
 int main()
 {
-    sfVideoMode mode = { 800,600,32 };
-    sfRenderWindow* window = sfRenderWindow_create(mode, "Titre", sfResize | sfClose, NULL);
-    sfEvent events;
 
+	initTools();
+	initmap();
+	sfVideoMode mode = { MAP_WIDTH * TILE_WIDTH ,MAP_HEIGHT * TILE_HEIGHT,32 };
+	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfResize | sfClose, NULL);
+	sfEvent event;
+	state = EDITOR;
+	while (sfRenderWindow_isOpen(window))
+	{
+		restartClock();
+		while (sfRenderWindow_pollEvent(window, &event))
+		{
+			if (event.type == sfEvtClosed)
+			{
+				sfRenderWindow_close(window);
+			}
+			if (event.type == sfEvtMouseButtonPressed)
+			{
+				pressed = 1;
+			}
+			else if (event.type == sfEvtMouseButtonReleased)
+			{
+				pressed = 0;
+			}
+		}
+		
+		sfRenderWindow_clear(window, sfBlack);
+		displayMap(window);
+		updateMap(window);
+		sfRenderWindow_display(window);
+	}
 
-    //initTools();
-
-
-
-
-    while (sfRenderWindow_isOpen(window))
-    {
-      //  restartClock();
-        while (sfRenderWindow_pollEvent(window, &events))
-        {
-            if (events.type == sfEvtClosed)
-            {
-                sfRenderWindow_close(window);
-            }
-
-        }
-
-
-
-
-
-        sfRenderWindow_clear(window, sfBlack);
-
-
-
-        sfRenderWindow_display(window);
-    }
 }
