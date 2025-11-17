@@ -18,3 +18,5 @@ void updateMap(sfRenderWindow* _window);
 void displayMap(sfRenderWindow* _window);
 sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f* _vitesse);
 void changeTileset(tilesetType tileType);
+void saveMap(const char* filename);
+void loadMap(const char* filename);

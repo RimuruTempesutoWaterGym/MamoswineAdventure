@@ -2,7 +2,9 @@
 #include "map.h"
 sfRectangleShape* selectTileSetSquare;
 sfVector2i mousepos;
-
+sfRectangleShape* RectangleTilesetPanel;
+sfVector2f tailleTilesetPanel = { TILE_WIDTH + 10.f, TILE_HEIGHT*MAP_HEIGHT };
+sfVector2f PositionTilesetPanel = { 0.f,0.f };
 sfSprite* mapSprite;
 sfTexture* peacefulTexture;
 sfTexture* naturalTexture;
@@ -14,10 +16,11 @@ sfTexture* thunderedTexture;
 
 sfIntRect tile = { 0, 0, TILE_WIDTH, TILE_HEIGHT };
 sfVector2f tilepos = { 0.0f,0.0f };
-int selectedTiles = 0;
+int selectedTiles = 1;
+int selectedTexture = 1;
 
 float keyMapTimer = 0.0f;
-
+int tileSelection;
 typedef struct {
 	tilesetType tileset;
 	int isWall[30];
@@ -53,7 +56,11 @@ tileOf tileMap[MAP_HEIGHT][MAP_WIDTH] =
 
 void initmap()
 {
-
+	loadMap("maps/mymap.dat");
+	RectangleTilesetPanel = sfRectangleShape_create();
+	sfRectangleShape_setSize(RectangleTilesetPanel, tailleTilesetPanel);
+	sfRectangleShape_setFillColor(RectangleTilesetPanel, sfWhite);
+	sfRectangleShape_setPosition(RectangleTilesetPanel, PositionTilesetPanel);
 	peacefulTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-grassy-peaceful.png", NULL);
 	naturalTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-natural.png", NULL);
 	swampTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-swamp.png", NULL);
@@ -70,51 +77,83 @@ void updateMap(sfRenderWindow* _window)
 {
 	if (state == EDITOR)
 	{
-
+		mousepos = sfMouse_getPositionRenderWindow(_window);
 
 	tilepos.y +=10;
 	sfVector2i posNewTile = { 0,0 };
-	for (int i = 0; i < 8; i++)
+	sfRenderWindow_drawRectangleShape(_window, RectangleTilesetPanel, NULL);
+	//if(tileSection  == 1)
+
+	for (int i = 1; i < 8; i++)
 	{
+	
 		changeTileset(i);
-	//	sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
 		sfSprite_setTextureRect(mapSprite, tile);
 		sfSprite_setPosition(mapSprite, tilepos);
+		
+		 
+	
+		sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
+		if (sfMouse_isButtonPressed(sfMouseLeft) &&
+			mousepos.x > mapfrect.left &&
+			mousepos.x < (mapfrect.width + mapfrect.left) &&
+			mousepos.y > mapfrect.top &&
+			mousepos.y < (mapfrect.top + mapfrect.height))
+		{
+			selectedTexture = i;
+				selectedTiles = 1;
+		}
+	
 		sfRenderWindow_drawSprite(_window, mapSprite, NULL);
-		tilepos.y += tile.width+10;
-	};
+		
+		tilepos.y += tile.height + 10; 
+	}
 	tilepos.y = 0;
 		keyMapTimer += GetDeltaTime();
-		if (sfKeyboard_isKeyPressed(sfKeyAdd) && selectedTiles < 6 && keyMapTimer > 0.5f)
+		if (sfKeyboard_isKeyPressed(sfKeyN) && selectedTiles < 24 && keyMapTimer > 0.5f)
 		{
 			selectedTiles++;
 			keyMapTimer = 0.0f;
 		}
-		if (sfKeyboard_isKeyPressed(sfKeySubtract) && selectedTiles > 0 && keyMapTimer > 0.5f)
+		if (sfKeyboard_isKeyPressed(sfKeyS) && keyMapTimer > 1.f)
+		{
+			saveMap("maps/mymap.dat");
+			keyMapTimer = 0.0f;
+		}
+
+		if (sfKeyboard_isKeyPressed(sfKeyB) && selectedTiles > 1 && keyMapTimer > 0.5f)
 		{
 			selectedTiles--;
 			keyMapTimer = 0.0f;
 		}
-
-
 		tile.left = selectedTiles * tile.width;
+		tile.top = 0; 
 
+	
 
+		changeTileset(selectedTexture);
 		sfSprite_setTextureRect(mapSprite, tile);
-		sfSprite_setPosition(mapSprite, (sfVector2f) { (float)sfMouse_getPositionRenderWindow(_window).x, (float)sfMouse_getPositionRenderWindow(_window).y });
+		sfSprite_setPosition(mapSprite, (sfVector2f) { (float)mousepos.x, (float)mousepos.y });
 		sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 		if (selectedTiles == 0)
+		{
+			
 			sfRenderWindow_setMouseCursorVisible(_window, sfTrue);
+		}
 		else
 		{
+			changeTileset(selectedTexture);
 			sfRenderWindow_setMouseCursorVisible(_window, sfFalse);
-			if (pressed == 1)
+
+			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
 			{
 				if (keyMapTimer > 0.02f) {
-					posNewTile.x = (int)(sfMouse_getPositionRenderWindow(_window).x / TILE_WIDTH);
-					posNewTile.y = (int)(sfMouse_getPositionRenderWindow(_window).y / TILE_WIDTH);
+					posNewTile.x = (int)(mousepos.x / TILE_WIDTH);
+					posNewTile.y = (int)(mousepos.y / TILE_WIDTH);
 					if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT)
 					{
+						
+						tileMap[posNewTile.y][posNewTile.x].texture = selectedTexture;  
 						tileMap[posNewTile.y][posNewTile.x].tileNumber = selectedTiles;
 					}
 					keyMapTimer = 0.0f;
@@ -181,4 +220,49 @@ void changeTileset(tilesetType tileType)
 		sfSprite_setTexture(mapSprite, fireTexture, sfTrue);
 		break;
 	}
+}
+void saveMap(const char* filename)
+{
+	FILE* file = fopen(filename, "wb");
+	if (file == NULL)
+	{
+		printf("Erreur: Impossible de créer le fichier %s\n", filename);
+		return;
+	}
+
+	int width = MAP_WIDTH;
+	int height = MAP_HEIGHT;
+	fwrite(&width, sizeof(int), 1, file);
+	fwrite(&height, sizeof(int), 1, file);
+
+	fwrite(tileMap, sizeof(tileOf), MAP_HEIGHT * MAP_WIDTH, file);
+	fclose(file);
+	printf("Map sauvegardée dans %s\n", filename);
+}
+
+void loadMap(const char* filename)
+{
+	FILE* file = fopen(filename, "rb");
+
+	if (file == NULL)
+	{
+		printf("Aucune sauvegarde trouvée. Création de %s...\n", filename);
+		saveMap(filename);
+		return;
+	}
+
+	int width, height;
+	fread(&width, sizeof(int), 1, file);
+	fread(&height, sizeof(int), 1, file);
+
+	if (width != MAP_WIDTH || height != MAP_HEIGHT)
+	{
+
+		fclose(file);
+		return;
+	}
+
+	fread(tileMap, sizeof(tileOf), MAP_HEIGHT * MAP_WIDTH, file);
+	fclose(file);
+	printf("Map chargée depuis %s\n", filename);
 }
