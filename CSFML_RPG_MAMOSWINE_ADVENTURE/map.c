@@ -84,7 +84,7 @@ void updateMap(sfRenderWindow* _window)
 	sfRenderWindow_drawRectangleShape(_window, RectangleTilesetPanel, NULL);
 	//if(tileSection  == 1)
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 1; i < 8; i++)
 	{
 	
 		changeTileset(i);
@@ -120,6 +120,7 @@ void updateMap(sfRenderWindow* _window)
 			saveMap("maps/mymap.dat");
 			keyMapTimer = 0.0f;
 		}
+
 		if (sfKeyboard_isKeyPressed(sfKeyB) && selectedTiles > 1 && keyMapTimer > 0.5f)
 		{
 			selectedTiles--;
@@ -229,27 +230,39 @@ void saveMap(const char* filename)
 		return;
 	}
 
-
 	int width = MAP_WIDTH;
 	int height = MAP_HEIGHT;
 	fwrite(&width, sizeof(int), 1, file);
 	fwrite(&height, sizeof(int), 1, file);
 
 	fwrite(tileMap, sizeof(tileOf), MAP_HEIGHT * MAP_WIDTH, file);
-
 	fclose(file);
 	printf("Map sauvegardée dans %s\n", filename);
 }
+
 void loadMap(const char* filename)
 {
 	FILE* file = fopen(filename, "rb");
 
-		if (file == NULL)
-		{
-			saveMap(filename);
-				return;
-		}
-		fread(tileMap, sizeof(tileOf), MAP_HEIGHT * MAP_WIDTH, file);
+	if (file == NULL)
+	{
+		printf("Aucune sauvegarde trouvée. Création de %s...\n", filename);
+		saveMap(filename);
+		return;
+	}
+
+	int width, height;
+	fread(&width, sizeof(int), 1, file);
+	fread(&height, sizeof(int), 1, file);
+
+	if (width != MAP_WIDTH || height != MAP_HEIGHT)
+	{
+
 		fclose(file);
-		printf("Map chargée depuis %s\n", filename);
+		return;
+	}
+
+	fread(tileMap, sizeof(tileOf), MAP_HEIGHT * MAP_WIDTH, file);
+	fclose(file);
+	printf("Map chargée depuis %s\n", filename);
 }
