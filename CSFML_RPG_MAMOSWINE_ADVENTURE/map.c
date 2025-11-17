@@ -70,43 +70,51 @@ void updateMap(sfRenderWindow* _window)
 {
 	if (state == EDITOR)
 	{
-
+		mousepos = sfMouse_getPositionRenderWindow(_window);
 
 	tilepos.y +=10;
 	sfVector2i posNewTile = { 0,0 };
 	for (int i = 0; i < 8; i++)
 	{
 		changeTileset(i);
-		sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && mousepos.x > mapfrect.left && mousepos.x < (mapfrect.width + mapfrect.left) && mousepos.y > mapfrect.top && mousepos.y < (mapfrect.top + mapfrect.height))
-		{
-			tile.top = i * tile.height;
-		}
+		tile.top = i * tile.height; 
 		sfSprite_setTextureRect(mapSprite, tile);
 		sfSprite_setPosition(mapSprite, tilepos);
+		 
+	
+		sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
+		if (sfMouse_isButtonPressed(sfMouseLeft) &&
+			mousepos.x > mapfrect.left &&
+			mousepos.x < (mapfrect.width + mapfrect.left) &&
+			mousepos.y > mapfrect.top &&
+			mousepos.y < (mapfrect.top + mapfrect.height))
+		{
+			selectedTiles = i; 
+		}
+
 		sfRenderWindow_drawSprite(_window, mapSprite, NULL);
-		tilepos.y += tile.width+10;
-	};
+		tilepos.y += tile.height + 10; 
+	}
 	tilepos.y = 0;
 		keyMapTimer += GetDeltaTime();
-		if (sfKeyboard_isKeyPressed(sfKeyAdd) && selectedTiles < 6 && keyMapTimer > 0.5f)
+		if (sfKeyboard_isKeyPressed(sfKeyN) && selectedTiles < 6 && keyMapTimer > 0.5f)
 		{
 			selectedTiles++;
 			keyMapTimer = 0.0f;
 		}
-		if (sfKeyboard_isKeyPressed(sfKeySubtract) && selectedTiles > 0 && keyMapTimer > 0.5f)
+		if (sfKeyboard_isKeyPressed(sfKeyB) && selectedTiles > 0 && keyMapTimer > 0.5f)
 		{
 			selectedTiles--;
 			keyMapTimer = 0.0f;
 		}
-
-
 		tile.left = selectedTiles * tile.width;
+		tile.top = 0; 
+
 	
 
 
 		sfSprite_setTextureRect(mapSprite, tile);
-		sfSprite_setPosition(mapSprite, (sfVector2f) { (float)sfMouse_getPositionRenderWindow(_window).x, (float)sfMouse_getPositionRenderWindow(_window).y });
+		sfSprite_setPosition(mapSprite, (sfVector2f) { (float)mousepos.x, (float)mousepos.y });
 		sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 		if (selectedTiles == 0)
 			sfRenderWindow_setMouseCursorVisible(_window, sfTrue);
@@ -117,8 +125,8 @@ void updateMap(sfRenderWindow* _window)
 			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
 			{
 				if (keyMapTimer > 0.02f) {
-					posNewTile.x = (int)(sfMouse_getPositionRenderWindow(_window).x / TILE_WIDTH);
-					posNewTile.y = (int)(sfMouse_getPositionRenderWindow(_window).y / TILE_WIDTH);
+					posNewTile.x = (int)(mousepos.x / TILE_WIDTH);
+					posNewTile.y = (int)(mousepos.y / TILE_WIDTH);
 					if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT)
 					{
 						tileMap[posNewTile.y][posNewTile.x].tileNumber = selectedTiles;
