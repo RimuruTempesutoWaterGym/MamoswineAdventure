@@ -1,5 +1,7 @@
 
 #include "map.h"
+sfRectangleShape* selectTileSetSquare;
+sfVector2i mousepos;
 
 sfSprite* mapSprite;
 sfTexture* peacefulTexture;
@@ -58,7 +60,7 @@ void initmap()
 	waterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-water.png", NULL);
 	deepWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-deep-water.png", NULL);
 	fireTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-fire.png", NULL);
-	thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL);
+	thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL); 
 	mapSprite = sfSprite_create();
 
 
