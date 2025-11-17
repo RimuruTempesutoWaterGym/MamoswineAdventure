@@ -6,10 +6,10 @@ int main()
 
 	initTools();
 	initmap();
-	sfVideoMode mode = { MAP_WIDTH * TILE_WIDTH ,MAP_HEIGHT * TILE_HEIGHT,32 };
+	sfVideoMode mode = { 800,600,32 };
 	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfResize | sfClose, NULL);
 	sfEvent event;
-	state = EDITOR;
+	initmenu();
 	while (sfRenderWindow_isOpen(window))
 	{
 		restartClock();
@@ -28,10 +28,12 @@ int main()
 				pressed = 0;
 			}
 		}
-		
+		updatemenu(window);
 		sfRenderWindow_clear(window, sfBlack);
 		displayMap(window);
+	
 		updateMap(window);
+		displaymenu(window);
 		sfRenderWindow_display(window);
 	}
 
