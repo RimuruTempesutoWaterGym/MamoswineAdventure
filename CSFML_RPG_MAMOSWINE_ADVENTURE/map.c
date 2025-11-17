@@ -35,7 +35,7 @@ tileOf tileMap[MAP_HEIGHT][MAP_WIDTH] =
 {
  { {1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
 {{2,2}, {3,2}, {4,2}, {5,2},{6,3},{7,3},{2,3},{2,3},{2,3},{2,4},{2,4},{2,4},{2,4},{2,4},{2,4},{1,2}, },
-{{ 1,2 },{1,2},{1,2},{1,2}, {1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},},
+{{ 1,2 },{1,2},{1,2},{1,2}, {5,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},},
 {{2,2}, {2,2}, {2,2}, {2,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
 { { 1,2 },{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
 {{2,2}, {2,2}, {2,2}, {2,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
@@ -68,12 +68,16 @@ void initmap()
 
 void updateMap(sfRenderWindow* _window)
 {
+	if (state == EDITOR)
+	{
+
+
 	tilepos.y +=10;
 	sfVector2i posNewTile = { 0,0 };
 	for (int i = 0; i < 8; i++)
 	{
 		changeTileset(i);
-
+	//	sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
 		sfSprite_setTextureRect(mapSprite, tile);
 		sfSprite_setPosition(mapSprite, tilepos);
 		sfRenderWindow_drawSprite(_window, mapSprite, NULL);
@@ -118,33 +122,37 @@ void updateMap(sfRenderWindow* _window)
 			}
 		}
 	}
+}
 void displayMap(sfRenderWindow* _window)
 {
-	for (int x = 0; x < MAP_HEIGHT; x++)
+	if (state != MENU)
 	{
-		for (int y = 0; y < MAP_WIDTH; y++)
+		for (int x = 0; x < MAP_HEIGHT; x++)
 		{
+			for (int y = 0; y < MAP_WIDTH; y++)
+			{
 
-			tile.left = tileMap[x][y].tileNumber * tile.width;
-			tileType = tileMap[x][y].texture;
-			changeTileset(tileType);
-			
-
-
-			sfSprite_setTextureRect(mapSprite, tile);
+				tile.left = tileMap[x][y].tileNumber * tile.width;
+				tileType = tileMap[x][y].texture;
+				changeTileset(tileType);
 
 
-			sfSprite_setPosition(mapSprite, tilepos);
 
-			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
-			tilepos.x += tile.width;
+				sfSprite_setTextureRect(mapSprite, tile);
 
 
+				sfSprite_setPosition(mapSprite, tilepos);
+
+				sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+				tilepos.x += tile.width;
+
+
+			}
+			tilepos.y += tile.height;
+			tilepos.x = 0;
 		}
-		tilepos.y += tile.height;
-		tilepos.x = 0;
+		tilepos.y = 0;
 	}
-	tilepos.y = 0;
 }
 void changeTileset(tilesetType tileType)
 {
