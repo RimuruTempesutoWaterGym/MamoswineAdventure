@@ -15,21 +15,12 @@ sfVector2f tilepos = { 0.0f,0.0f };
 int selectedTiles = 0;
 
 float keyMapTimer = 0.0f;
-typedef enum {
-	peaceful = 1,
-	natural,
-	swamp,
-	water,
-	deepWater,
-	thundered,
-	fire,
 
-}tilesetType;
-//typedef struct {
-//	tilesetType tileset;
-//	int isWall[30];
-//	char tilesetName[30];
-//} tileset;
+typedef struct {
+	tilesetType tileset;
+	int isWall[30];
+	char tilesetName[30];
+} tileSet;
 typedef struct {
 	int texture;
 	int tileNumber;
@@ -79,7 +70,8 @@ void updateMap(sfRenderWindow* _window)
 	sfVector2i posNewTile = { 0,0 };
 	for (int i = 0; i < 8; i++)
 	{
-		sfSprite_setTexture(mapSprite, thunderedTexture, sfTrue);
+		changeTileset(i);
+
 		sfSprite_setTextureRect(mapSprite, tile);
 		sfSprite_setPosition(mapSprite, tilepos);
 		sfRenderWindow_drawSprite(_window, mapSprite, NULL);
@@ -133,31 +125,8 @@ void displayMap(sfRenderWindow* _window)
 
 			tile.left = tileMap[x][y].tileNumber * tile.width;
 			tileType = tileMap[x][y].texture;
-			switch (tileType)
-			{
-
-			case peaceful:
-				sfSprite_setTexture(mapSprite, peacefulTexture, sfTrue);
-				break;
-			case natural:
-				sfSprite_setTexture(mapSprite, naturalTexture, sfTrue);
-				break;
-			case swamp:
-				sfSprite_setTexture(mapSprite, swampTexture, sfTrue);
-				break;
-			case water:
-				sfSprite_setTexture(mapSprite, waterTexture, sfTrue);
-				break;
-			case deepWater:
-				sfSprite_setTexture(mapSprite, deepWaterTexture, sfTrue);
-				break;
-			case thundered:
-				sfSprite_setTexture(mapSprite, thunderedTexture, sfTrue);
-				break;
-			case fire:
-				sfSprite_setTexture(mapSprite, fireTexture, sfTrue);
-				break;
-			}
+			changeTileset(tileType);
+			
 
 
 			sfSprite_setTextureRect(mapSprite, tile);
@@ -175,4 +144,31 @@ void displayMap(sfRenderWindow* _window)
 	}
 	tilepos.y = 0;
 }
+void changeTileset(tilesetType tileType)
+{
+	switch (tileType)
+	{
 
+	case peaceful:
+		sfSprite_setTexture(mapSprite, peacefulTexture, sfTrue);
+		break;
+	case natural:
+		sfSprite_setTexture(mapSprite, naturalTexture, sfTrue);
+		break;
+	case swamp:
+		sfSprite_setTexture(mapSprite, swampTexture, sfTrue);
+		break;
+	case water:
+		sfSprite_setTexture(mapSprite, waterTexture, sfTrue);
+		break;
+	case deepWater:
+		sfSprite_setTexture(mapSprite, deepWaterTexture, sfTrue);
+		break;
+	case thundered:
+		sfSprite_setTexture(mapSprite, thunderedTexture, sfTrue);
+		break;
+	case fire:
+		sfSprite_setTexture(mapSprite, fireTexture, sfTrue);
+		break;
+	}
+}
