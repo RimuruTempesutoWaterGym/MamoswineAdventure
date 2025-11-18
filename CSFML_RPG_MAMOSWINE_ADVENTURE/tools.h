@@ -4,7 +4,7 @@
 #include <math.h>
 #include "SFML/Graphics.h"
 #include "SFML/audio.h"
-
+#include "view.h"
 #define MAP_HEIGHT 100
 #define MAP_WIDTH 100
 #define TILE_WIDTH 24
@@ -21,5 +21,5 @@ int pressed;
 void initTools();
 void restartClock();
 float GetDeltaTime();
-int isInside(sfVector2i item, sfFloatRect obstacle);
+int isInside(sfVector2f item, sfFloatRect obstacle);
 

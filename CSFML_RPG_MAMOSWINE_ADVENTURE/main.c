@@ -6,6 +6,8 @@ int main()
 
 	initTools();
 	initmap();
+	initView();
+
 	initplayer();
 	sfVideoMode mode = { 800,600,32 };
 	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfClose, NULL);
@@ -35,10 +37,17 @@ int main()
 			sfRenderWindow_setMouseCursorVisible(window, sfTrue);
 		}
 		updatemenu(window);
+
+		updateViewEditor(window);
+		updatePlayer(window);
+
 		sfRenderWindow_clear(window, sfBlack);
 		displayMap(window);
 	
 		updateMap(window);
+
+		displayView(window);
+		
 		displayPlayer(window);
 		displaymenu(window);
 
