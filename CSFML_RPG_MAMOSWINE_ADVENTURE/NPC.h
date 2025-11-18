@@ -2,5 +2,7 @@
 
 
 void initNPC();
-void updateNPC();
+void initTextBox();
+void updateTextBox();
 void displayNPC(sfRenderWindow* _window);
+void displayTextBox(sfRenderWindow* _window);

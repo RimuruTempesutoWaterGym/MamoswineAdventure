@@ -8,6 +8,7 @@ int main()
 	initmap();
 	initplayer();
 	initNPC();
+	initTextBox();
 	sfVideoMode mode = { 800,600,32 };
 	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfClose, NULL);
 	sfEvent event;
@@ -39,7 +40,8 @@ int main()
 		sfRenderWindow_clear(window, sfBlack);
 		displayMap(window);
 
-		updateNPC();
+		updateTextBox();
+		displayTextBox(window);
 		updateMap(window);
 		displayPlayer(window);
 		displayNPC(window);

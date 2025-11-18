@@ -3,7 +3,7 @@
 
 sfRectangleShape* rectangleDialog;
 sfVector2f rectangleDialogPos = { 2.0f,30.0f };
-sfVector2f rectangleDialogSize = { 25.0f,4.6f };
+sfVector2f rectangleDialogSize = { 125.0f,23.0f };
 sfTexture* textureTextBox;
 sfFont* font;
 sfText* dialogNPC;
@@ -21,15 +21,18 @@ void initNPC()
     textureCynthia = sfTexture_createFromFile(TEXTURE_PATH"cynthia.png", NULL);
     sfSprite_setTexture(spCynthia, textureCynthia, sfTrue);
     sfSprite_setTextureRect(spCynthia, irectCynthia);
-
-    rectangleDialog = sfRectangleShape_create();
+}
+void initTextBox()
+{        
+     rectangleDialog = sfRectangleShape_create();
     sfRectangleShape_setSize(rectangleDialog, rectangleDialogSize);
     sfRectangleShape_setPosition(rectangleDialog, rectangleDialogPos);
     textureTextBox = sfTexture_createFromFile("..\\Ressources\\Textures\\text_box.png", NULL);
     sfRectangleShape_setTexture(rectangleDialog, textureTextBox, sfTrue);
+    sfRectangleShape_setTextureRect(rectangleDialog, irectTextBox);
 }
 
-void updateNPC()
+void updateTextBox()
 {
     if (sfKeyboard_isKeyPressed(sfKeyH) && state == GAME)
     {
@@ -42,7 +45,10 @@ void updateNPC()
 
 void displayNPC(sfRenderWindow* _window)
 {
-    sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
     sfRenderWindow_drawSprite(_window, spCynthia, NULL);
+}
+void displayTextBox(sfRenderWindow* _window)
+{
+    sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
     sfRenderWindow_drawText(_window, dialogNPC, NULL);
 }
