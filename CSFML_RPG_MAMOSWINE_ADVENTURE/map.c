@@ -175,6 +175,50 @@ void displayMap(sfRenderWindow* _window)
 		tilepos.y = 0;
 	}
 }
+sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direcstion, sfVector2f _vector)
+{
+	sfVector2i nextPosInTab = { 0,0 };
+	sfVector2i nextPosInTab2 = { 0,0 };
+
+	if (_direcstion == Top)
+	{
+		nextPosInTab.x = _sprite.left / 32;
+		nextPosInTab.y = (_sprite.top - _vector.y * GetDeltaTime()) / 32;
+		nextPosInTab2.x = (_sprite.left + _sprite.width) / 32;
+		nextPosInTab2.y = (_sprite.top - _vector.y * GetDeltaTime()) / 32;
+	}
+	if (_direcstion == Down)
+	{
+		nextPosInTab.x = _sprite.left / 32;
+		nextPosInTab.y = (_sprite.top + _vector.y * GetDeltaTime()) / 32;
+		nextPosInTab2.x = (_sprite.left + _sprite.width) / 32;
+		nextPosInTab2.y = (_sprite.top + _vector.y * GetDeltaTime()) / 32;
+	}
+	if (_direcstion == Right)
+	{
+		nextPosInTab.x = _sprite.left / 32;
+		nextPosInTab.y = (_sprite.top + _vector.y * GetDeltaTime()) / 32;
+		nextPosInTab2.x = (_sprite.left + _sprite.width) / 32;
+		nextPosInTab2.y = (_sprite.top + _vector.y * GetDeltaTime()) / 32;
+	}
+	if (_direcstion == Left)
+	{
+		nextPosInTab.x = _sprite.left / 32;
+		nextPosInTab.y = (_sprite.top + _vector.y * GetDeltaTime()) / 32;
+		nextPosInTab2.x = (_sprite.left + _sprite.width) / 32;
+		nextPosInTab2.y = (_sprite.top - _vector.y * GetDeltaTime()) / 32;
+	}
+	// Si la ou les case(s) est une case non traversable (entre 3 et 6)
+	if (tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber >= 3 && tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber <= 6 || tileMap[nextPosInTab2.y][nextPosInTab2.x].tileNumber >= 3 && tileMap[nextPosInTab2.y][nextPosInTab2.x].tileNumber <= 6)
+	{
+		return sfTrue;
+	}
+
+	return sfFalse;
+}
+
+
+
 void changeTileset(tilesetType tileType)
 {
 	switch (tileType)

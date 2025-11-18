@@ -9,12 +9,11 @@
 
 sfSprite* spPlayer;
 sfTexture* texPlayer;
-sfIntRect irectPlayer = { 0,0,17,23 };
 float PlayerTimer = 0.0f;
 float timer = 0.0f;
 float timerattack = 0.0f;
 int compt = -1;
-sfVector2f playerPos = { 400, 300 };
+sfVector2f playerPos = { 100, 100 };
 int frameX = 0;
 int frameY = 0;
 int isAttacking = 0;
@@ -41,7 +40,7 @@ void updatePlayer()
 
     PlayerTimer += GetDeltaTime();
 
-    //if (state == GAME)
+    if (state == GAME)
     {
         //  initcamera();
         sfFloatRect playerfrect = sfSprite_getGlobalBounds(linkSprite);
@@ -61,7 +60,7 @@ void updatePlayer()
             hasMoved = sfFalse;
             if (sfKeyboard_isKeyPressed(sfKeyS) && posLink.y < (MAP_HEIGHT * TILE_HEIGHT) - 23 && timer <= 0) {
                 frameY = Down;
-                if (!collisionMapPlayer(playerfrect, Down, speed))
+                if (!collisionMapPlayer(playerfrect, Down, &speed))
                 {
                     posLink.y += speed.y * GetDeltaTime();
                 }
@@ -72,7 +71,7 @@ void updatePlayer()
 
                 frameY = Top;
 
-                if (!collisionMapPlayer(playerfrect, Top, speed))
+                if (!collisionMapPlayer(playerfrect, Top, &speed))
                 {
                     posLink.y -= speed.y * GetDeltaTime();
                 }
@@ -82,7 +81,7 @@ void updatePlayer()
             if (sfKeyboard_isKeyPressed(sfKeyD) && posLink.x < (MAP_WIDTH * TILE_WIDTH) - 17 && timer <= 0)
             {
                 frameY = Right;
-                if (!collisionMapPlayer(playerfrect, Right, speed))
+                if (!collisionMapPlayer(playerfrect, Right, &speed))
                 {
                     posLink.x += speed.x * GetDeltaTime();
                 }
@@ -92,7 +91,7 @@ void updatePlayer()
             if (sfKeyboard_isKeyPressed(sfKeyQ) && posLink.x > 0 && timer <= 0)
             {
                 frameY = Left;
-                if (!collisionMapPlayer(playerfrect, Left, speed))
+                if (!collisionMapPlayer(playerfrect, Left, &speed))
                 {
                     posLink.x -= speed.x * GetDeltaTime();
                 }
@@ -171,10 +170,6 @@ void updatePlayer()
         sfSprite_setTextureRect(linkSprite, linkAnimation);
         sfSprite_setPosition(linkSprite, posLink);
     }
-    //else if (state == EDITOR)
-    //{
-
-    //}
     //updateCamera(posLink, linkAnimation, _window);
 }
 
