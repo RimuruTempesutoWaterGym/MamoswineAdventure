@@ -92,10 +92,14 @@ void updateMap(sfRenderWindow* _window)
 	}
 	tilepos.y = 0;
 		keyMapTimer += GetDeltaTime();
-		if (sfKeyboard_isKeyPressed(sfKeyN) && selectedTiles < 24 && keyMapTimer > 0.5f)
+		if (sfKeyboard_isKeyPressed(sfKeyN) && selectedTiles < 100 && keyMapTimer > 0.5f)
 		{
+		
 			selectedTiles++;
 			keyMapTimer = 0.0f;
+			tile = giveSpriteTextureDim(tile, selectedTiles);
+			printf("top:%d\n", tile.top);
+			printf("left:%d\n", tile.left);
 		}
 		if (sfKeyboard_isKeyPressed(sfKeyS) && keyMapTimer > 1.f)
 		{
@@ -108,10 +112,11 @@ void updateMap(sfRenderWindow* _window)
 			selectedTiles--;
 			keyMapTimer = 0.0f;
 		}
-		tile.left = selectedTiles * tile.width;
-		tile.top = 0; 
 
-	
+		
+		
+		tile = giveSpriteTextureDim(tile, selectedTiles);
+		
 
 		changeTileset(selectedTexture);
 		sfSprite_setTextureRect(mapSprite, tile);
@@ -153,7 +158,8 @@ void displayMap(sfRenderWindow* _window)
 			for (int y = 0; y < MAP_WIDTH; y++)
 			{
 
-				tile.left = tileMap[x][y].tileNumber * tile.width;
+				tile = giveSpriteTextureDim(tile, tileMap[x][y].tileNumber);
+
 				tileType = tileMap[x][y].texture;
 				changeTileset(tileType);
 
@@ -261,4 +267,11 @@ void createMap()
 			tileMap[i][j].tileNumber = 4;
 		}
 	}
+}
+sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber)
+{
+
+			tile.top = (tileNumber / 16) * tile.height;
+			tile.left = (tileNumber - (tile.top - 8 *tile.top / tile.height) ) * tile.width;
+			return tile;
 }

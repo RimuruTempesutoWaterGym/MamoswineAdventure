@@ -21,3 +21,4 @@ void changeTileset(tilesetType tileType);
 void saveMap(const char* filename);
 void loadMap(const char* filename);
 void createMap();
+sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber);
