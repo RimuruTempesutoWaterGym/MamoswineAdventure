@@ -5,8 +5,8 @@
 #include "SFML/Graphics.h"
 #include "SFML/audio.h"
 
-#define MAP_HEIGHT 14
-#define MAP_WIDTH 16
+#define MAP_HEIGHT 100
+#define MAP_WIDTH 100
 #define TILE_WIDTH 24
 #define TILE_HEIGHT 24
 #define TEXTURE_PATH "../ressources/Textures/"
@@ -21,4 +21,5 @@ int pressed;
 void initTools();
 void restartClock();
 float GetDeltaTime();
+int isInside(sfVector2i item, sfFloatRect obstacle);
 
