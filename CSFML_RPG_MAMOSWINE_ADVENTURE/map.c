@@ -175,6 +175,7 @@ void displayMap(sfRenderWindow* _window)
 		tilepos.y = 0;
 	}
 }
+
 void changeTileset(tilesetType tileType)
 {
 	switch (tileType)

@@ -6,6 +6,7 @@ int main()
 
 	initTools();
 	initmap();
+	initplayer();
 	sfVideoMode mode = { 800,600,32 };
 	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfClose, NULL);
 	sfEvent event;
@@ -38,7 +39,9 @@ int main()
 		displayMap(window);
 	
 		updateMap(window);
+		displayPlayer(window);
 		displaymenu(window);
+
 		sfRenderWindow_display(window);
 	}
 
