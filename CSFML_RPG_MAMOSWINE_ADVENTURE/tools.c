@@ -19,7 +19,7 @@ float GetDeltaTime()
 {
 	return sfTime_asSeconds(sftime);
 }
-int isInside(sfVector2i item, sfFloatRect obstacle)
+int isInside(sfVector2f item, sfFloatRect obstacle)
 {
 	if (item.x > obstacle.left &&
 		item.x < (obstacle.width + obstacle.left) &&

@@ -1,7 +1,7 @@
 
 #include "map.h"
 sfRectangleShape* selectTileSetSquare;
-sfVector2i mousepos;
+sfVector2f mousepos;
 sfRectangleShape* RectangleTilesetPanel;
 sfVector2f tailleTilesetPanel = { TILE_WIDTH + 10.f, TILE_HEIGHT*MAP_HEIGHT };
 sfVector2f PositionTilesetPanel = { 0.f,0.f };
@@ -18,6 +18,7 @@ sfIntRect tile = { 0, 0, TILE_WIDTH, TILE_HEIGHT };
 sfVector2f tilepos = { 0.0f,0.0f };
 int selectedTiles = 1;
 int selectedTexture = 1;
+
 
 float keyMapTimer = 0.0f;
 int tileSelection;
@@ -62,7 +63,8 @@ void updateMap(sfRenderWindow* _window)
 {
 	if (state == EDITOR)
 	{
-		mousepos = sfMouse_getPositionRenderWindow(_window);
+		mousepos = updatePixelToWorld(_window);
+	
 
 	tilepos.y +=10;
 	sfVector2i posNewTile = { 0,0 };
@@ -73,6 +75,7 @@ void updateMap(sfRenderWindow* _window)
 	{
 	
 		changeTileset(i);
+		
 		sfSprite_setTextureRect(mapSprite, tile);
 		sfSprite_setPosition(mapSprite, tilepos);
 		
@@ -97,9 +100,6 @@ void updateMap(sfRenderWindow* _window)
 		
 			selectedTiles++;
 			keyMapTimer = 0.0f;
-			tile = giveSpriteTextureDim(tile, selectedTiles);
-			printf("top:%d\n", tile.top);
-			printf("left:%d\n", tile.left);
 		}
 		if (sfKeyboard_isKeyPressed(sfKeyS) && keyMapTimer > 1.f)
 		{
@@ -114,13 +114,14 @@ void updateMap(sfRenderWindow* _window)
 		}
 
 		
-		
+	
 		tile = giveSpriteTextureDim(tile, selectedTiles);
 		
-
+		
 		changeTileset(selectedTexture);
+	
 		sfSprite_setTextureRect(mapSprite, tile);
-		sfSprite_setPosition(mapSprite, (sfVector2f) { (float)mousepos.x, (float)mousepos.y });
+		sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
 		sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 		if (selectedTiles == 0)
 		{
@@ -162,14 +163,8 @@ void displayMap(sfRenderWindow* _window)
 
 				tileType = tileMap[x][y].texture;
 				changeTileset(tileType);
-
-
-
 				sfSprite_setTextureRect(mapSprite, tile);
-
-
 				sfSprite_setPosition(mapSprite, tilepos);
-
 				sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 				tilepos.x += tile.width;
 

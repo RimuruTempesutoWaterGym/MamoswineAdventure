@@ -9,6 +9,7 @@ sfVector2f PositionRectangle = { 250.0f,100.0f };
 sfVector2f PositionRectangleEdit = { 250.0f,250.0f };
 sfVector2f PositionRectangleLeave = { 250.0f,400.0f };
 sfVector2f positionOnScreen = { 0.0f,0.0f };
+sfVector2f positionFond = { 00.0f,-2750.0f };
 sfVector2i mousepos;
 sfVector2f PosText1 = { 335.0f, 110.0f };
 sfVector2f PosText2 = { 320.0f, 260.0f };
@@ -21,13 +22,14 @@ sfSprite* fondmenu;
 sfTexture* wallpaper;
 sfTexture* rpgbutton;
 sfIntRect irectbutton = { 0,0,178,60 };
-sfVector2f ScaleFond = { 0.7f,0.40f };
+sfVector2f ScaleFond = { 0.67f,0.67f };
 
 void initmenu()
 {
 	fondmenu = sfSprite_create();
 	wallpaper = sfTexture_createFromFile("..\\Ressources\\Textures\\wallpaper.jpg", NULL);
 	sfSprite_setTexture(fondmenu, wallpaper, sfTrue);
+	sfSprite_setPosition(fondmenu, positionFond);
 	sfSprite_setScale(fondmenu, ScaleFond);
 
 	// Touche lancement du jeu
