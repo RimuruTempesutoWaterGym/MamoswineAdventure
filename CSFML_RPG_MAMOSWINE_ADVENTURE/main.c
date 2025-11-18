@@ -6,6 +6,7 @@ int main()
 
 	initTools();
 	initmap();
+	initView();
 	initplayer();
 	initNPC();
 	initTextBox();
@@ -37,12 +38,16 @@ int main()
 			sfRenderWindow_setMouseCursorVisible(window, sfTrue);
 		}
 		updatemenu(window);
+		updateViewEditor(window);
+		updatePlayer(window);
+		updateTextBox();
+		updateMap(window);
 		sfRenderWindow_clear(window, sfBlack);
 		displayMap(window);
 
-		updateTextBox();
+		
 		displayTextBox(window);
-		updateMap(window);
+		displayView(window);
 		displayPlayer(window);
 		displayNPC(window);
 		displaymenu(window);
