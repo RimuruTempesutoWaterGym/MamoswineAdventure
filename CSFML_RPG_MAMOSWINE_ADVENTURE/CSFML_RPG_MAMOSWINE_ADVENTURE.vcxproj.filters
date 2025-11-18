@@ -27,13 +27,6 @@
     <ClCompile Include="menu.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="view.c">
-=======
-    <ClCompile Include="player.c">
->>>>>>> 328e17a767edef2539b82b97417c6c06604d7b45
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tools.h">
@@ -43,13 +36,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="menu.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="view.h">
-=======
-    <ClInclude Include="player.h">
->>>>>>> 328e17a767edef2539b82b97417c6c06604d7b45
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
