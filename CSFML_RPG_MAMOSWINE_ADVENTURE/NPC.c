@@ -2,15 +2,15 @@
 
 
 sfSprite* spCynthia;
-sfTexture* texCynthia;
-sfIntRect irectCynthia = { 0,0,24,38 };
-sfVector2f cynthiaPos = { 100, 100 };
+sfTexture* textureCynthia;
+sfIntRect irectCynthia = { 0,0,26,38 };
+sfVector2f cynthiaPos = { 500.0f,40.0f };
 
 void initNPC()
 {
     spCynthia = sfSprite_create();
-    texCynthia = sfTexture_createFromFile(TEXTURE_PATH"cynthia.png", NULL);
-    sfSprite_setTexture(spCynthia, texCynthia, sfTrue);
+    textureCynthia = sfTexture_createFromFile(TEXTURE_PATH"cynthia.png", NULL);
+    sfSprite_setTexture(spCynthia, textureCynthia, sfTrue);
     sfSprite_setTextureRect(spCynthia, irectCynthia);
 }
 
@@ -20,4 +20,9 @@ void update()
     {
         printf("working\n");
     }
+}
+
+void displayNPC(sfRenderWindow* _window)
+{
+    sfRenderWindow_drawSprite(_window, spCynthia, NULL);
 }
