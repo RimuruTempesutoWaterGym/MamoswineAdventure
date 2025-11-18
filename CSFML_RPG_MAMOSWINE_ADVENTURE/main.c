@@ -7,7 +7,7 @@ int main()
 	initTools();
 	initmap();
 	sfVideoMode mode = { 800,600,32 };
-	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfResize | sfClose, NULL);
+	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfClose, NULL);
 	sfEvent event;
 	initmenu();
 	while (sfRenderWindow_isOpen(window))
@@ -27,6 +27,11 @@ int main()
 			{
 				pressed = 0;
 			}
+		}
+
+		if (state == MENU)
+		{
+			sfRenderWindow_setMouseCursorVisible(window, sfTrue);
 		}
 		updatemenu(window);
 		sfRenderWindow_clear(window, sfBlack);

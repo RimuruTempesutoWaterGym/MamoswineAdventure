@@ -20,3 +20,4 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 void changeTileset(tilesetType tileType);
 void saveMap(const char* filename);
 void loadMap(const char* filename);
+void createMap();

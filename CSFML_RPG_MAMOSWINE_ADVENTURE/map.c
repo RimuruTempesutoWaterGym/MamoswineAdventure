@@ -31,27 +31,12 @@ typedef struct {
 	int tileNumber;
 } tileOf;
 char pathFile[100];
-
+tileOf tileMap[MAP_HEIGHT][MAP_WIDTH];
 tilesetType tileType;
 
-tileOf tileMap[MAP_HEIGHT][MAP_WIDTH] =
-{
- { {1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
-{{2,2}, {3,2}, {4,2}, {5,2},{6,3},{7,3},{2,3},{2,3},{2,3},{2,4},{2,4},{2,4},{2,4},{2,4},{2,4},{1,2}, },
-{{ 1,2 },{1,2},{1,2},{1,2}, {5,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},},
-{{2,2}, {2,2}, {2,2}, {2,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
-{ { 1,2 },{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
-{{2,2}, {2,2}, {2,2}, {2,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
- {{ 1,2 },{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, {1,2},{1,2},{1,2},{1,2},},
-{{2,2}, {2,2}, {2,2}, {2,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
- {{ 1,2 },{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
-{{2,2}, {2,2}, {2,2}, {2,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
-{ { 1,2 },{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
-{ {1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
-{{2,2}, {2,2}, {2,2}, {2,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2}, },
-{{2,2}, {2,2}, {2,2}, {2,2}, {1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},{1,2},}
+ 
 
-};
+
 
 
 void initmap()
@@ -95,10 +80,7 @@ void updateMap(sfRenderWindow* _window)
 	
 		sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
 		if (sfMouse_isButtonPressed(sfMouseLeft) &&
-			mousepos.x > mapfrect.left &&
-			mousepos.x < (mapfrect.width + mapfrect.left) &&
-			mousepos.y > mapfrect.top &&
-			mousepos.y < (mapfrect.top + mapfrect.height))
+			isInside(mousepos, mapfrect))
 		{
 			selectedTexture = i;
 				selectedTiles = 1;
@@ -223,6 +205,7 @@ void changeTileset(tilesetType tileType)
 }
 void saveMap(const char* filename)
 {
+
 	FILE* file = fopen(filename, "wb");
 	if (file == NULL)
 	{
@@ -247,6 +230,7 @@ void loadMap(const char* filename)
 	if (file == NULL)
 	{
 		printf("Aucune sauvegarde trouvée. Création de %s...\n", filename);
+		createMap();
 		saveMap(filename);
 		return;
 	}
@@ -265,4 +249,15 @@ void loadMap(const char* filename)
 	fread(tileMap, sizeof(tileOf), MAP_HEIGHT * MAP_WIDTH, file);
 	fclose(file);
 	printf("Map chargée depuis %s\n", filename);
+}
+void createMap()
+{
+	for (int i = 0; i < MAP_HEIGHT; i++)
+	{
+		for (int j = 0; j < MAP_WIDTH; j++)
+		{
+			tileMap[i][j].texture = 1;
+			tileMap[i][j].tileNumber = 4;
+		}
+	}
 }
