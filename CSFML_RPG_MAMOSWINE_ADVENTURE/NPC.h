@@ -2,5 +2,5 @@
 
 
 void initNPC();
-void update();
+void updateNPC();
 void displayNPC(sfRenderWindow* _window);

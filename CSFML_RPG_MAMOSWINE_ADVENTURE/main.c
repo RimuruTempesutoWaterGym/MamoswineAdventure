@@ -38,7 +38,8 @@ int main()
 		updatemenu(window);
 		sfRenderWindow_clear(window, sfBlack);
 		displayMap(window);
-	
+
+		updateNPC();
 		updateMap(window);
 		displayPlayer(window);
 		displayNPC(window);
