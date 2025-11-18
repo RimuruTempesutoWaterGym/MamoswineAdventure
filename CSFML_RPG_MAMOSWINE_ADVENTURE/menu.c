@@ -10,36 +10,78 @@ sfVector2f PositionRectangleEdit = { 250.0f,250.0f };
 sfVector2f PositionRectangleLeave = { 250.0f,400.0f };
 sfVector2f positionOnScreen = { 0.0f,0.0f };
 sfVector2i mousepos;
-sfVector2f PosText1 = { 330.0f, 110.0f };
+sfVector2f PosText1 = { 335.0f, 110.0f };
+sfVector2f PosText2 = { 320.0f, 260.0f };
+sfVector2f PosText3 = { 320.0f, 410.0f };
 sfText* Game;
+sfText* Edit;
+sfText* Leave;
 sfFont* MC;
+sfSprite* fondmenu;
+sfTexture* wallpaper;
+sfTexture* rpgbutton;
+sfIntRect irectbutton = { 0,0,178,60 };
+sfVector2f ScaleFond = { 0.7f,0.40f };
 
 void initmenu()
 {
-	// game
+	fondmenu = sfSprite_create();
+	wallpaper = sfTexture_createFromFile("..\\Ressources\\Textures\\wallpaper.jpg", NULL);
+	sfSprite_setTexture(fondmenu, wallpaper, sfTrue);
+	sfSprite_setScale(fondmenu, ScaleFond);
+
+	// Touche lancement du jeu
 	RectangleGame = sfRectangleShape_create();
 	sfRectangleShape_setSize(RectangleGame, tailleRectangle);
-	sfRectangleShape_setFillColor(RectangleGame, sfRed);
 	sfRectangleShape_setPosition(RectangleGame, PositionRectangle);
-	// edit
+	rpgbutton = sfTexture_createFromFile("..\\Ressources\\Textures\\bouton.png", NULL);
+	sfRectangleShape_setTexture(RectangleGame, rpgbutton, sfTrue);
+	sfRectangleShape_setTextureRect(RectangleGame, irectbutton);
+
+
+	// Touche mode editeur
 	RectangleEditor = sfRectangleShape_create();
 	sfRectangleShape_setSize(RectangleEditor, tailleRectangle);
-	sfRectangleShape_setFillColor(RectangleEditor, sfRed);
 	sfRectangleShape_setPosition(RectangleEditor, PositionRectangleEdit);
-	// Quitter
+	sfRectangleShape_setTexture(RectangleEditor, rpgbutton, sfTrue);
+	sfRectangleShape_setTextureRect(RectangleEditor, irectbutton);
+
+	// Touche pour quitter le jeu
 	RectangleLeave = sfRectangleShape_create();
 	sfRectangleShape_setSize(RectangleLeave, tailleRectangle);
-	sfRectangleShape_setFillColor(RectangleLeave, sfRed);
 	sfRectangleShape_setPosition(RectangleLeave, PositionRectangleLeave);
+	sfRectangleShape_setTexture(RectangleLeave, rpgbutton, sfTrue);
+	sfRectangleShape_setTextureRect(RectangleLeave, irectbutton);
 
 
+	// Texte touche lancement du jeu
 	Game = sfText_create();
-	sfText_setString(Game, "GAME");
+	sfText_setString(Game, "Jouer");
 	sfText_setPosition(Game, PosText1);
 	sfText_setColor(Game, sfWhite);
 	sfText_setCharacterSize(Game, 50);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Game, MC);
+
+	// Texte touche mode editeur
+	Edit = sfText_create();
+	sfText_setString(Edit, "Editeur");
+	sfText_setPosition(Edit, PosText2);
+	sfText_setColor(Edit, sfWhite);
+	sfText_setCharacterSize(Edit, 50);
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	sfText_setFont(Edit, MC);
+
+	// Texte touche quitter le jeu
+	Leave = sfText_create();
+	sfText_setString(Leave, "Quitter");
+	sfText_setPosition(Leave, PosText3);
+	sfText_setColor(Leave, sfWhite);
+	sfText_setCharacterSize(Leave, 50);
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	sfText_setFont(Leave, MC);
+
+
 
 
 }
@@ -50,16 +92,19 @@ void displaymenu(sfRenderWindow* _window)
 {
 	if (state == MENU)
 	{
+		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
 		sfRenderWindow_drawRectangleShape(_window, RectangleGame, NULL);
 		sfRenderWindow_drawRectangleShape(_window, RectangleEditor, NULL);
 		sfRenderWindow_drawRectangleShape(_window, RectangleLeave, NULL);
 		sfRenderWindow_drawText(_window, Game, NULL);
+		sfRenderWindow_drawText(_window, Edit, NULL);
+		sfRenderWindow_drawText(_window, Leave, NULL);
 	}
 }
 
 void updatemenu(sfRenderWindow* _window)
 {
-	if (sfKeyboard_isKeyPressed(sfKeyM))
+	if (sfKeyboard_isKeyPressed(sfKeyEscape))
 	{
 		state = MENU;
 	}
