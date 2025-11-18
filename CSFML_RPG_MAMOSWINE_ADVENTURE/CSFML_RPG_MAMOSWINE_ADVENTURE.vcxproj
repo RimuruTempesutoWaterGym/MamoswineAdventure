@@ -23,11 +23,13 @@
     <ClCompile Include="map.c" />
     <ClCompile Include="menu.c" />
     <ClCompile Include="tools.c" />
+    <ClCompile Include="view.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="map.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="tools.h" />
+    <ClInclude Include="view.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
