@@ -1,4 +1,3 @@
-#pragma once
 #include "tools.h"
 
 void initplayer();
