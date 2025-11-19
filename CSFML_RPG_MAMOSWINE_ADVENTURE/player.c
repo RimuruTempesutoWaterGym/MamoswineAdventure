@@ -40,7 +40,9 @@ void updatePlayer(sfRenderWindow* _window)
 {
     if (collisionNPC(posMamoswine))
     {
-        updateTextBox();
+        displayTextBox(_window);
+        printf("working");
+        system("cls");
     }
     
     PlayerTimer += GetDeltaTime();

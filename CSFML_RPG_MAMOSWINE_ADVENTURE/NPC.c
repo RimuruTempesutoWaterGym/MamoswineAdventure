@@ -11,7 +11,7 @@ sfSprite* spCynthia;
 sfTexture* textureCynthia;
 sfIntRect irectTextBox = { 0,0,178,60 };
 sfIntRect irectCynthia = { 0,0,26,38 };
-sfVector2f cynthiaPos = { 500.0f,40.0f };
+sfVector2f cynthiaPos = { 20.0f,30.0f };
 sfVector2f dialogPos = { 2.0f,30.0f };
 
 void initNPC()
@@ -20,16 +20,19 @@ void initNPC()
     spCynthia = sfSprite_create();
     textureCynthia = sfTexture_createFromFile(TEXTURE_PATH"cynthia.png", NULL);
     sfSprite_setTexture(spCynthia, textureCynthia, sfTrue);
+    sfSprite_setPosition(spCynthia, cynthiaPos);
     sfSprite_setTextureRect(spCynthia, irectCynthia);
 }
 void initTextBox()
 {        
-     rectangleDialog = sfRectangleShape_create();
+    rectangleDialog = sfRectangleShape_create();
     sfRectangleShape_setSize(rectangleDialog, rectangleDialogSize);
     sfRectangleShape_setPosition(rectangleDialog, rectangleDialogPos);
     textureTextBox = sfTexture_createFromFile("..\\Ressources\\Textures\\text_box.png", NULL);
     sfRectangleShape_setTexture(rectangleDialog, textureTextBox, sfTrue);
     sfRectangleShape_setTextureRect(rectangleDialog, irectTextBox);
+    font = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+
 }
 
 void updateTextBox()
@@ -38,7 +41,6 @@ void updateTextBox()
     {
         sfText_setString(dialogNPC, "working");
         sfText_setPosition(dialogNPC, dialogPos);
-        font = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
         sfText_setFont(dialogNPC, font);
     }
 }
