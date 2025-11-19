@@ -34,7 +34,7 @@ void initTextBox()
 
 void updateTextBox()
 {
-    if (sfKeyboard_isKeyPressed(sfKeyH) && state == GAME)
+    if (state == GAME)
     {
         sfText_setString(dialogNPC, "working");
         sfText_setPosition(dialogNPC, dialogPos);
@@ -51,4 +51,15 @@ void displayTextBox(sfRenderWindow* _window)
 {
     sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
     sfRenderWindow_drawText(_window, dialogNPC, NULL);
+}
+
+sfBool collisionNPC(sfVector2f _playerPos)
+{
+    sfBool collision = sfFalse;
+    if (_playerPos.x > cynthiaPos.x - 30 && _playerPos.y > cynthiaPos.y - 30 && _playerPos.x < cynthiaPos.x + 30 && _playerPos.y < cynthiaPos.y + 30)
+    {
+        collision = sfTrue;
+        return collision;
+    }
+    return collision;
 }
