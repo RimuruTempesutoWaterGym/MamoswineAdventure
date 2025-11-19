@@ -186,6 +186,6 @@ void displayPlayer(sfRenderWindow* _window)
     sfRenderWindow_drawSprite(_window, mamoswineSprite, NULL);
     if (collisionNPC(posMamoswine))
     {
-        displayTextBox(_window);
+        displayTextBox(_window, posMamoswine, mamoswineAnimation);
     }
 }

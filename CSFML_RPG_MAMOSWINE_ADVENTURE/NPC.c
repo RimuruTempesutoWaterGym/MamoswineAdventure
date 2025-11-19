@@ -2,16 +2,17 @@
 
 
 sfRectangleShape* rectangleDialog;
-sfVector2f rectangleDialogSize = { 125.0f,20.0f };
+sfVector2f rectangleDialogSize = { 250.0f,46.0f };
 sfTexture* textureTextBox;
 sfFont* font;
 sfText* dialogNPC;
 sfSprite* spCynthia;
 sfTexture* textureCynthia;
-sfIntRect irectTextBox = { 0,0,252,46 };
+sfIntRect irecttextureTextBox = { 0,0,252,46 };
 sfIntRect irectCynthia = { 0,0,26,38 };
 sfVector2f cynthiaPos = { 20.0f,30.0f };
 sfVector2f dialogPos = { 30.0f,30.0f };
+sfVector2f dialogSize = { 0.5f,0.5f };
 
 void initNPC()
 {        
@@ -26,13 +27,13 @@ void initTextBox()
 {        
     rectangleDialog = sfRectangleShape_create();
     sfRectangleShape_setSize(rectangleDialog, rectangleDialogSize);
-    sfRectangleShape_setPosition(rectangleDialog, dialogPos);
     textureTextBox = sfTexture_createFromFile("..\\Ressources\\Textures\\text_box.png", NULL);
     sfRectangleShape_setTexture(rectangleDialog, textureTextBox, sfTrue);
-    sfRectangleShape_setTextureRect(rectangleDialog, irectTextBox);
+    sfRectangleShape_setTextureRect(rectangleDialog, irecttextureTextBox);
     font = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+    sfText_setColor(dialogNPC, sfBlack);
     sfText_setString(dialogNPC, "working");
-    sfText_setPosition(dialogNPC, dialogPos);
+    sfText_setScale(dialogNPC, dialogSize);
     sfText_setFont(dialogNPC, font);
 
 }
@@ -52,14 +53,16 @@ void displayNPC(sfRenderWindow* _window)
     }
 }
 
-void displayTextBox(sfRenderWindow* _window)
+void displayTextBox(sfRenderWindow* _window, sfVector2f playerPos, sfIntRect playerHitbox)
 {
     if (state == GAME)
     {
-        sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
-        sfRenderWindow_drawText(_window, dialogNPC, NULL);
-        printf("working");
-        system("cls");
+            sfRectangleShape_setPosition(rectangleDialog, dialogPos);
+            sfText_setPosition(dialogNPC, dialogPos);
+            sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
+            sfRenderWindow_drawText(_window, dialogNPC, NULL);
+            printf("working");
+            system("cls");
     }
 }
 
