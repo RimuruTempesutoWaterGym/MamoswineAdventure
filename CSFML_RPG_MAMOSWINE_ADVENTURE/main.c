@@ -4,16 +4,12 @@
 int main()
 {
 
-	initTools();
-	initmap();
-	initView();
-	initplayer();
-	initNPC();
-	initTextBox();
+	initAll();
+
 	sfVideoMode mode = { 800,600,32 };
 	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfClose, NULL);
 	sfEvent event;
-	initmenu();
+
 	while (sfRenderWindow_isOpen(window))
 	{
 		restartClock();
@@ -37,20 +33,9 @@ int main()
 		{
 			sfRenderWindow_setMouseCursorVisible(window, sfTrue);
 		}
-		updatemenu(window);
-		updateViewEditor(window);
-		updatePlayer(window);
-		updateTextBox();
-		updateMap(window);
+		updateAll(window);
 		sfRenderWindow_clear(window, sfBlack);
-		displayMap(window);
-
-		
-		displayTextBox(window);
-		displayView(window);
-		displayPlayer(window);
-		displayNPC(window);
-		displaymenu(window);
+		displayAll(window);
 
 		sfRenderWindow_display(window);
 	}

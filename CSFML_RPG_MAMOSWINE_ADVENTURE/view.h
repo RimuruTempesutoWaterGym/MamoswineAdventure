@@ -4,3 +4,4 @@ void updateView(sfVector2f playerPos, sfIntRect playerHitbox, sfRenderWindow* _w
 void updateEditorView(sfVector2f playerPos, sfIntRect playerHitbox, sfRenderWindow* _window);
 void displayView(sfRenderWindow* _window);
 sfVector2f updatePixelToWorld(sfRenderWindow* _window);
+sfView* getCurrentView(sfRenderWindow* _window);

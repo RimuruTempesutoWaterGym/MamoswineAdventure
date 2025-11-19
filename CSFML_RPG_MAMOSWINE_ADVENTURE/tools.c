@@ -31,3 +31,33 @@ int isInside(sfVector2f item, sfFloatRect obstacle)
 }
 return 0;
 }
+
+
+void initAll()
+{
+	initTools();
+	initmap();
+	initView();
+	initplayer();
+	initNPC();
+	initTextBox();
+	initmenu();
+}
+
+void updateAll(sfRenderWindow* _window)
+{
+	updatemenu(_window);
+	updateViewEditor(_window);
+	updatePlayer(_window);
+	updateTextBox();
+	updateMap(_window);
+}
+void displayAll(sfRenderWindow* _window)
+{
+	displayMap(_window);
+	displayTextBox(_window);
+	displayView(_window);
+	displayPlayer(_window);
+	//displayNPC(_window);
+	displaymenu(_window);
+}

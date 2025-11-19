@@ -13,7 +13,23 @@ typedef enum {
 	fire,
 
 }tilesetType;
+typedef enum {
+	isNotWall = 0,
+	isWall 
+
+
+}selectionTileType;
+typedef struct {
+	tilesetType tileset;
+	int* nbOfTiles	;
+	int isWall[200];
+} tileSet;
+typedef struct {
+	int texture;
+	int tileNumber;
+} tileOf;
 void initmap();
+void initTileset();
 void updateMap(sfRenderWindow* _window);
 void displayMap(sfRenderWindow* _window);
 sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f* _vitesse);
@@ -22,3 +38,6 @@ void saveMap(const char* filename);
 void loadMap(const char* filename);
 void createMap();
 sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber);
+void updateTilesetPanel(sfRenderWindow* _window);
+void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection);
+tileSet* getCurrentTileset(tilesetType type);

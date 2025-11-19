@@ -19,6 +19,9 @@ typedef enum {
 State state;
 int pressed;
 void initTools();
+void initAll();
+void updateAll(sfRenderWindow* _window);
+void displayAll(sfRenderWindow* _window);
 void restartClock();
 float GetDeltaTime();
 int isInside(sfVector2f item, sfFloatRect obstacle);
