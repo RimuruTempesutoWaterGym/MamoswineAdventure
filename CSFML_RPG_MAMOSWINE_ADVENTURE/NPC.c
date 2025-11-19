@@ -2,7 +2,6 @@
 
 
 sfRectangleShape* rectangleDialog;
-sfVector2f rectangleDialogPos = { 2.0f,30.0f };
 sfVector2f rectangleDialogSize = { 125.0f,23.0f };
 sfTexture* textureTextBox;
 sfFont* font;
@@ -12,7 +11,7 @@ sfTexture* textureCynthia;
 sfIntRect irectTextBox = { 0,0,178,60 };
 sfIntRect irectCynthia = { 0,0,26,38 };
 sfVector2f cynthiaPos = { 20.0f,30.0f };
-sfVector2f dialogPos = { 2.0f,30.0f };
+sfVector2f dialogPos = { 30.0f,30.0f };
 
 void initNPC()
 {        
@@ -27,11 +26,14 @@ void initTextBox()
 {        
     rectangleDialog = sfRectangleShape_create();
     sfRectangleShape_setSize(rectangleDialog, rectangleDialogSize);
-    sfRectangleShape_setPosition(rectangleDialog, rectangleDialogPos);
+    sfRectangleShape_setPosition(rectangleDialog, dialogPos);
     textureTextBox = sfTexture_createFromFile("..\\Ressources\\Textures\\text_box.png", NULL);
     sfRectangleShape_setTexture(rectangleDialog, textureTextBox, sfTrue);
     sfRectangleShape_setTextureRect(rectangleDialog, irectTextBox);
     font = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+    sfText_setString(dialogNPC, "working");
+    sfText_setPosition(dialogNPC, dialogPos);
+    sfText_setFont(dialogNPC, font);
 
 }
 
@@ -39,16 +41,17 @@ void updateTextBox()
 {
     if (state == GAME)
     {
-        sfText_setString(dialogNPC, "working");
-        sfText_setPosition(dialogNPC, dialogPos);
-        sfText_setFont(dialogNPC, font);
     }
 }
 
 void displayNPC(sfRenderWindow* _window)
 {
-    sfRenderWindow_drawSprite(_window, spCynthia, NULL);
+    if (state == GAME)
+    {
+        sfRenderWindow_drawSprite(_window, spCynthia, NULL);
+    }
 }
+
 void displayTextBox(sfRenderWindow* _window)
 {
     sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
