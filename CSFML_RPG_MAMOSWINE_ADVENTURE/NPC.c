@@ -32,7 +32,7 @@ void initTextBox()
     sfRectangleShape_setTextureRect(rectangleDialog, irecttextureTextBox);
     font = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
     sfText_setColor(dialogNPC, sfBlack);
-    sfText_setString(dialogNPC, "working");
+    sfText_setString(dialogNPC, "working\nyes it is");
     sfText_setScale(dialogNPC, dialogSize);
     sfText_setFont(dialogNPC, font);
 
@@ -61,16 +61,14 @@ void displayTextBox(sfRenderWindow* _window, sfVector2f playerPos, sfIntRect pla
             sfText_setPosition(dialogNPC, dialogPos);
             sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
             sfRenderWindow_drawText(_window, dialogNPC, NULL);
-            printf("working");
-            system("cls");
     }
 }
 
 sfBool collisionNPC(sfVector2f _playerPos)
 {
     sfBool collision = sfFalse;
-    if (_playerPos.x > cynthiaPos.x - 30 && _playerPos.y > cynthiaPos.y - 30 && _playerPos.x < cynthiaPos.x + 30 && _playerPos.y < cynthiaPos.y + 30)
-    {
+    sfFloatRect cynthiafrect = sfSprite_getGlobalBounds(spCynthia);
+    if (isInside(_playerPos, cynthiafrect)) {
         collision = sfTrue;
         return collision;
     }
