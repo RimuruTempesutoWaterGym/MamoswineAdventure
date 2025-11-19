@@ -55,9 +55,9 @@ void updateAll(sfRenderWindow* _window)
 void displayAll(sfRenderWindow* _window)
 {
 	displayMap(_window);
-	displayTextBox(_window);
 	displayView(_window);
 	displayPlayer(_window);
 	displayNPC(_window);
 	displaymenu(_window);
+	//displayTextBox(_window);
 }
