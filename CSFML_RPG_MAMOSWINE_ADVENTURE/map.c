@@ -499,6 +499,58 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 			}
 		}
 	}
+sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f* _vitesse)
+{
+
+	sfVector2i nextPosInTab = { 0,0 };
+	sfVector2i nextPosInTab2 = { 0,0 };
+
+
+		float delataTime = GetDeltaTime();
+			switch (_direction)
+			{
+			case Down:
+				nextPosInTab.y = (int)((_sprite.top + _sprite.height + _vitesse->y * delataTime) / TILE_WIDTH);
+				nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
+				nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
+				nextPosInTab2.y = (int)((_sprite.top + _sprite.height + _vitesse->y * delataTime) / TILE_WIDTH);
+			
+				break;
+			case Top:
+				
+				nextPosInTab.y = (int)((_sprite.top + (_sprite.height/2) - _vitesse->y * delataTime )/ TILE_WIDTH);
+				nextPosInTab.x =(int)(_sprite.left / TILE_WIDTH);
+				nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
+				nextPosInTab2.y = (int)((_sprite.top + (_sprite.height / 2) - _vitesse->y * delataTime) / TILE_WIDTH);
+		
+			
+				break;
+			case Right:
+				nextPosInTab.y = (int)((_sprite.top +(_sprite.height / 2))   / TILE_WIDTH);
+				nextPosInTab.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
+				nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
+				nextPosInTab2.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
+		
+				break;
+			case Left:
+				nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
+				nextPosInTab.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
+				nextPosInTab2.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
+				nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
+				
+		
+				break;
+			}
+			tileSet* tilesetInFront = getCurrentTileset(tileMap[nextPosInTab.y][nextPosInTab.x].texture);
+			tileSet* tilesetNearFront = getCurrentTileset(tileMap[nextPosInTab2.y][nextPosInTab2.x].texture);
+			
+			if (tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0 || tilesetNearFront->isWall[tileMap[nextPosInTab2.y][nextPosInTab2.x].tileNumber] > 0)
+			{
+							return sfTrue;
+			}
+				
+			return sfFalse;
+}
 
 tileSet* getCurrentTileset(tilesetType type)
 {
@@ -559,7 +611,7 @@ void initTileset()
 	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	 1,1,1,1,1,1,1,1,1,1,1,0,0,0} };
 
-	waterTileset = (tileSet){ water,129,
+	waterTileset = (tileSet){ water,137,
 	{1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	 0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,
@@ -568,7 +620,7 @@ void initTileset()
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,
 	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-	 1} };
+	 1,0,0,0,0,0,0,0,0} };
 
 	deepWaterTileset = (tileSet){ deepWater,129,
 	{1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
