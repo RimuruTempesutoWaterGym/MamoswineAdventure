@@ -6,10 +6,10 @@ sfRectangleShape* RectangleTilesetPanel;
 sfRectangleShape* RectangleTileSelectionPanel;
 sfRectangleShape* RectangleButtonSwitchTileWall;
 sfVector2f tailleTilesetPanel = { TILE_WIDTH + 10.f, TILE_HEIGHT*MAP_HEIGHT };
-sfVector2f tailleTileSelectionPanel = { 100.f, TILE_HEIGHT * MAP_HEIGHT };
-sfVector2f tailleButtonSwitchTileWall = { 50.f, 20.f };
-sfVector2f PositionTilesetPanel = { 0.f,0.f };
-sfVector2f PositionButtonSwitchTileWall = { 25.f,530.f };
+sfVector2f tailleTileSelectionPanel = { 110.f, TILE_HEIGHT * MAP_HEIGHT }; 
+sfVector2f tailleButtonSwitchTileWall = { 70.f, 25.f };
+sfVector2f PositionTilesetPanel = { 0.f,-100.f };
+sfVector2f PositionButtonSwitchTileWall = { 20.f,525.f };
 sfSprite* mapSprite;
 sfTexture* peacefulTexture;
 sfTexture* naturalTexture;
@@ -17,7 +17,10 @@ sfTexture* swampTexture;
 sfTexture* waterTexture;
 sfTexture* deepWaterTexture;
 sfTexture* fireTexture;
+sfTexture* switchRectangleTexture;
 sfTexture* thunderedTexture;
+sfTexture* tilesetBarTexture;
+sfTexture*	directionTexture;
 selectionTileType filterTile = 0;
 float switchTileTypeTimer = 0.0f;
 
@@ -58,37 +61,45 @@ void initmap()
 {
 	initTileset();
 loadMap("maps/mymap.dat");
-
+peacefulTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-grassy-peaceful.png", NULL);
+tilesetBarTexture = sfTexture_createFromFile(TEXTURE_PATH"box.png", NULL);
+directionTexture = sfTexture_createFromFile(TEXTURE_PATH"scroll.png", NULL);
+switchRectangleTexture = sfTexture_createFromFile(TEXTURE_PATH"switch.png", NULL);
+naturalTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-natural.png", NULL);
+swampTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-swamp.png", NULL);
+waterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-water.png", NULL);
+deepWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-deep-water.png", NULL);
+fireTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-fire.png", NULL);
+thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL);
 buttonPrevPage = sfRectangleShape_create();
-sfRectangleShape_setSize(buttonPrevPage, (sfVector2f) { 40.f, 30.f });
-sfRectangleShape_setFillColor(buttonPrevPage, sfColor_fromRGB(100, 100, 255));
-sfRectangleShape_setPosition(buttonPrevPage, (sfVector2f) { 5.f, 570.f });
+sfRectangleShape_setSize(buttonPrevPage, (sfVector2f) { 30.f, 30.f });
+sfRectangleShape_setPosition(buttonPrevPage, (sfVector2f) { 45.f, 600.f });
+sfRectangleShape_setTexture(buttonPrevPage, directionTexture,sfTrue);
+sfRectangleShape_setRotation(buttonPrevPage, 180.f);
 
 buttonNextPage = sfRectangleShape_create();
-sfRectangleShape_setSize(buttonNextPage, (sfVector2f) { 40.f, 30.f });
-sfRectangleShape_setFillColor(buttonNextPage, sfColor_fromRGB(100, 100, 255));
-sfRectangleShape_setPosition(buttonNextPage, (sfVector2f) { 55.f, 570.f });
+sfRectangleShape_setSize(buttonNextPage, (sfVector2f) { 30.f, 30.f });
+sfRectangleShape_setPosition(buttonNextPage, (sfVector2f) { 69.f, 570.f });
+sfRectangleShape_setTexture(buttonNextPage, directionTexture, sfTrue);
 
 
 	RectangleTilesetPanel = sfRectangleShape_create();
+	sfRectangleShape_setTexture(RectangleTilesetPanel, tilesetBarTexture, sfTrue);
 	sfRectangleShape_setSize(RectangleTilesetPanel, tailleTilesetPanel);
 	sfRectangleShape_setFillColor(RectangleTilesetPanel, sfWhite);
 	sfRectangleShape_setPosition(RectangleTilesetPanel, PositionTilesetPanel);
+
 	RectangleTileSelectionPanel = sfRectangleShape_create();
+	sfRectangleShape_setTexture(RectangleTileSelectionPanel, tilesetBarTexture, sfTrue);
 	sfRectangleShape_setSize(RectangleTileSelectionPanel, tailleTileSelectionPanel);
 	sfRectangleShape_setFillColor(RectangleTileSelectionPanel, sfWhite);
 	sfRectangleShape_setPosition(RectangleTileSelectionPanel, PositionTilesetPanel);
+
 	RectangleButtonSwitchTileWall = sfRectangleShape_create();
 	sfRectangleShape_setSize(RectangleButtonSwitchTileWall, tailleButtonSwitchTileWall);
 	sfRectangleShape_setFillColor(RectangleButtonSwitchTileWall, sfBlue);
 	sfRectangleShape_setPosition(RectangleButtonSwitchTileWall, PositionButtonSwitchTileWall);
-	peacefulTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-grassy-peaceful.png", NULL);
-	naturalTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-natural.png", NULL);
-	swampTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-swamp.png", NULL);
-	waterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-water.png", NULL);
-	deepWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-deep-water.png", NULL);
-	fireTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-fire.png", NULL);
-	thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL); 
+	sfRectangleShape_setTexture(RectangleButtonSwitchTileWall, switchRectangleTexture, sfTrue);
 	mapSprite = sfSprite_create();
 
 
@@ -97,9 +108,10 @@ sfRectangleShape_setPosition(buttonNextPage, (sfVector2f) { 55.f, 570.f });
 void updateMap(sfRenderWindow* _window)
 {
 
+	
 	if (state == EDITOR)
 	{
-
+		keyMapTimer += GetDeltaTime();
 		mousepos = updatePixelToWorld(_window);
 	
 
@@ -110,10 +122,12 @@ void updateMap(sfRenderWindow* _window)
 	tilepos.y = 0;
 	
 	
-		if (sfKeyboard_isKeyPressed(sfKeyS) && keyMapTimer > 1.f)
+		if (sfKeyboard_isKeyPressed(sfKeyS) && keyMapTimer > 1.0f)
 		{
-			saveMap("maps/mymap.dat");
+			printf("%f", keyMapTimer);
 			keyMapTimer = 0.0f;
+			saveMap("maps/mymap.dat");
+			
 		}
 
 	
@@ -287,7 +301,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 
 		sfVector2f tilepos_ui = { 5.0f, 10.0f };
 
-
+		
 		sfRenderWindow_drawRectangleShape(_window, RectangleTilesetPanel, NULL);
 		tile.left = 0;
 		tile.top = 0;
@@ -350,7 +364,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 	{
 		switchTileTypeTimer += GetDeltaTime();
 		pageButtonTimer += GetDeltaTime();
-
+		
 		sfRenderWindow_drawRectangleShape(_window, RectangleTileSelectionPanel, NULL);
 		sfRenderWindow_drawRectangleShape(_window, RectangleButtonSwitchTileWall, NULL);
 		sfRenderWindow_drawRectangleShape(_window, buttonPrevPage, NULL);
@@ -427,7 +441,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 			if (endIndex > filteredCount) endIndex = filteredCount;
 
 
-			sfVector2f tilepos_ui = { 5.0f, 10.0f };
+			sfVector2f tilepos_ui = { 15.0f, 10.0f };
 			int tilesPerRow = 3;
 			int currentCol = 0;
 			changeTileset(selectedTexture);
@@ -466,7 +480,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 				if (currentCol >= tilesPerRow)
 				{
 					currentCol = 0;
-					tilepos_ui.x = 5.0f;
+					tilepos_ui.x = 15.0f;
 					tilepos_ui.y += tile.height + 5;
 				}
 				else
@@ -474,7 +488,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 					tilepos_ui.x += tile.width + 5;
 				}
 			}
-			keyMapTimer += GetDeltaTime();
+		
 
 				tile = giveSpriteTextureDim(tile, selectedTiles);
 
@@ -502,7 +516,7 @@ tileSet* getCurrentTileset(tilesetType type)
 }
 void initTileset()
 {
-	//Equivalent des tilesets en binaire 1 si c'est un wall 0 sinon
+	//Equivalent des tilesets en binaire 1 /si c'est un wall 0 sinon
 	//16 tiles par ligne
 	//{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	 //1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -534,14 +548,16 @@ void initTileset()
 	 1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0} };
 
 	swampTileset = (tileSet){ swamp,128,
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	{1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,
+	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	 0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,
+	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	 1,1,0,0,0,1,0,0,0,0,0,0,0,0,1,1,
+
+	 1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	 0,0,0,0,0,1,1,1,1,1,1,0,0,1,1,1,
 	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1} };
+	 1,1,1,1,1,1,1,1,1,1,1,0,0,0} };
 
 	waterTileset = (tileSet){ water,129,
 	{1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
@@ -585,7 +601,7 @@ void initTileset()
 	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
 	 0,0,0,1,1,1,1,0,1,1,0,0,0,1,1,1,
 	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-	 1,1,1,1,1,0,1,1,1,1,1,1,0,0,0,0,
+	 1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,
 	 0,0,0,0} };
 
 }
