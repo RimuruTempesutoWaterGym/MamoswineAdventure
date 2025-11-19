@@ -10,7 +10,7 @@ sfVector2f posViewPlayer = { 400.0f,300.0f };
 sfVector2f viewEditSize = { 800,600 };
 sfVector2f viewPlayerSize = { 400,300.0f };
 sfVector2f viewEditUISize = { TILE_WIDTH + 10.f , 600.f };
-sfVector2f viewTileSelectionSize = { 100.f, 600.f };
+sfVector2f viewTileSelectionSize = { 110.f, 600.f };
 sfVector2f velocityViewEdit = { 300.f,300.f };
 sfVector2f posViewEditUi;
 sfVector2f posViewTileSelection;
