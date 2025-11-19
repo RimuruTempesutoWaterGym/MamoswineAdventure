@@ -36,7 +36,6 @@ return 0;
 void initAll()
 {
 	initTools();
-	initMusic();
 	initmap();
 	initView();
 	initplayer();
