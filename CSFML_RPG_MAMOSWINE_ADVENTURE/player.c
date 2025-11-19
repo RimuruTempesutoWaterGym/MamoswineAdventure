@@ -38,12 +38,7 @@ void initplayer()
 }
 void updatePlayer(sfRenderWindow* _window)
 {
-    if (collisionNPC(posMamoswine))
-    {
-        displayTextBox(_window);
-        printf("working");
-        system("cls");
-    }
+    
     
     PlayerTimer += GetDeltaTime();
 
@@ -176,7 +171,7 @@ void updatePlayer(sfRenderWindow* _window)
         sfSprite_setTextureRect(mamoswineSprite, mamoswineAnimation);
         sfSprite_setPosition(mamoswineSprite, posMamoswine);
     }
-    
+
     //else if (state == EDITOR)
     //{
 
@@ -189,4 +184,8 @@ void displayPlayer(sfRenderWindow* _window)
 {
 
     sfRenderWindow_drawSprite(_window, mamoswineSprite, NULL);
+    if (collisionNPC(posMamoswine))
+    {
+        displayTextBox(_window);
+    }
 }

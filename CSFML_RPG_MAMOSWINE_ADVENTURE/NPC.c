@@ -2,13 +2,13 @@
 
 
 sfRectangleShape* rectangleDialog;
-sfVector2f rectangleDialogSize = { 125.0f,23.0f };
+sfVector2f rectangleDialogSize = { 125.0f,20.0f };
 sfTexture* textureTextBox;
 sfFont* font;
 sfText* dialogNPC;
 sfSprite* spCynthia;
 sfTexture* textureCynthia;
-sfIntRect irectTextBox = { 0,0,178,60 };
+sfIntRect irectTextBox = { 0,0,252,46 };
 sfIntRect irectCynthia = { 0,0,26,38 };
 sfVector2f cynthiaPos = { 20.0f,30.0f };
 sfVector2f dialogPos = { 30.0f,30.0f };
@@ -54,8 +54,13 @@ void displayNPC(sfRenderWindow* _window)
 
 void displayTextBox(sfRenderWindow* _window)
 {
-    sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
-    sfRenderWindow_drawText(_window, dialogNPC, NULL);
+    if (state == GAME)
+    {
+        sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
+        sfRenderWindow_drawText(_window, dialogNPC, NULL);
+        printf("working");
+        system("cls");
+    }
 }
 
 sfBool collisionNPC(sfVector2f _playerPos)
