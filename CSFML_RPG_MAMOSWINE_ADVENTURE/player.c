@@ -7,6 +7,7 @@ sfSprite* spPlayer;
 sfTexture* texPlayer;
 sfIntRect irectPlayer = { 0,0,17,23 };
 float PlayerTimer = 0.0f;
+
 float timer = 0.0f;
 float timerattack = 0.0f;
 int compt = -1;

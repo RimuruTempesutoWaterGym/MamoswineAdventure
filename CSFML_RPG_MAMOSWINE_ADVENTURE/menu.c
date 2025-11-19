@@ -9,7 +9,7 @@ sfVector2f PositionRectangle = { 250.0f,100.0f };
 sfVector2f PositionRectangleEdit = { 250.0f,250.0f };
 sfVector2f PositionRectangleLeave = { 250.0f,400.0f };
 sfVector2f positionOnScreen = { 0.0f,0.0f };
-sfVector2f positionFond = { 00.0f,-2750.0f };
+sfVector2f positionFond = { 00.0f,-275.0f };
 sfVector2i mousepos;
 sfVector2f PosText1 = { 335.0f, 110.0f };
 sfVector2f PosText2 = { 320.0f, 260.0f };
