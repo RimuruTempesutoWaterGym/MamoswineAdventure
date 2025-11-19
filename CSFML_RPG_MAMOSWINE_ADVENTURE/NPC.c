@@ -68,7 +68,8 @@ sfBool collisionNPC(sfVector2f _playerPos)
 {
     sfBool collision = sfFalse;
     sfFloatRect cynthiafrect = sfSprite_getGlobalBounds(spCynthia);
-    if (isInside(_playerPos, cynthiafrect)) {
+    if (isInside(_playerPos, cynthiafrect))
+    {
         collision = sfTrue;
         return collision;
     }
