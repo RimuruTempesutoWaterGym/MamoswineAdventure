@@ -58,6 +58,6 @@ void displayAll(sfRenderWindow* _window)
 	displayTextBox(_window);
 	displayView(_window);
 	displayPlayer(_window);
-	//displayNPC(_window);
+	displayNPC(_window);
 	displaymenu(_window);
 }
