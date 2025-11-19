@@ -109,24 +109,14 @@ void updateMap(sfRenderWindow* _window)
 	
 	tilepos.y = 0;
 	
-		keyMapTimer += GetDeltaTime();
-		if (sfKeyboard_isKeyPressed(sfKeyN) && selectedTiles < 100 && keyMapTimer > 0.5f)
-		{
-		
-			selectedTiles++;
-			keyMapTimer = 0.0f;
-		}
+	
 		if (sfKeyboard_isKeyPressed(sfKeyS) && keyMapTimer > 1.f)
 		{
 			saveMap("maps/mymap.dat");
 			keyMapTimer = 0.0f;
 		}
 
-		if (sfKeyboard_isKeyPressed(sfKeyB) && selectedTiles > 1 && keyMapTimer > 0.5f)
-		{
-			selectedTiles--;
-			keyMapTimer = 0.0f;
-		}
+	
 
 		
 	
@@ -467,9 +457,9 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 				sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
 				if (sfMouse_isButtonPressed(sfMouseLeft) && isInside(viewMousePos, mapfrect))
 				{
-					selectedTiles = tileNum;
+					selectedTiles = filteredTiles[i];
 				}
-
+		
 				sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 
 				currentCol++;
@@ -484,7 +474,8 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 					tilepos_ui.x += tile.width + 5;
 				}
 			}
-		
+			keyMapTimer += GetDeltaTime();
+
 				tile = giveSpriteTextureDim(tile, selectedTiles);
 
 				changeTileset(selectedTexture);
