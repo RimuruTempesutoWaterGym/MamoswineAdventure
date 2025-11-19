@@ -36,16 +36,24 @@ return 0;
 void initAll()
 {
 	initTools();
+
 	initmap();
+
 	initView();
+
 	initplayer();
+
 	initNPC();
+
 	initTextBox();
+	
 	initmenu();
+	
 }
 
 void updateAll(sfRenderWindow* _window)
 {
+
 	updatemenu(_window);
 	updateViewEditor(_window);
 	updatePlayer(_window);

@@ -7,11 +7,14 @@ int main()
 	initAll();
 
 	sfVideoMode mode = { 800,600,32 };
-	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfClose, NULL);
-	sfEvent event;
 
+	sfRenderWindow* window = sfRenderWindow_create(mode, "Test", sfClose, NULL);
+
+	sfEvent event;
+	
 	while (sfRenderWindow_isOpen(window))
 	{
+	
 		restartClock();
 		while (sfRenderWindow_pollEvent(window, &event))
 		{
