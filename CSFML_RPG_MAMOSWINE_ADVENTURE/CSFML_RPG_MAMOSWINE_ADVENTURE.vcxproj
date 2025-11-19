@@ -22,6 +22,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
     <ClCompile Include="menu.c" />
+    <ClCompile Include="music.c" />
     <ClCompile Include="NPC.c" />
     <ClCompile Include="player.c" />
     <ClCompile Include="tools.c" />
@@ -30,6 +31,7 @@
   <ItemGroup>
     <ClInclude Include="map.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="music.h" />
     <ClInclude Include="NPC.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="tools.h" />
