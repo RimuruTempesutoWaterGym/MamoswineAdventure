@@ -16,7 +16,7 @@ sfVector2f playerPos = { 400, 300 };
 int frameX = 0;
 int frameY = 0;
 int isAttacking = 0;
-sfVector2f playerVel = { 60.0f,60.0f };
+sfVector2f playerVel = { 72.0f,72.0f };
 sfVector2f posMamoswine = { 500.0f,40.0f };
 sfVector2f speed;
 
