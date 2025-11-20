@@ -48,21 +48,21 @@ void updateView(sfVector2f playerPos, sfIntRect playerHitbox,sfRenderWindow* _wi
 
 	if (state == GAME)
 	{
-		if (playerPos.x >= (MAP_WIDTH * TILE_WIDTH) - (viewPlayerSize.x / 2 * 1.10))
+		if (playerPos.x + (playerHitbox.width / 2) >= (MAP_WIDTH * TILE_WIDTH) - (viewPlayerSize.x / 2 ))
 	{
 			posViewPlayer.x = (MAP_WIDTH * TILE_WIDTH) - (viewPlayerSize.x / 2);
 		}
-		else if (playerPos.x < (viewPlayerSize.x / 2*0.91)) {
+		else if (playerPos.x + (playerHitbox.width / 2) < (viewPlayerSize.x / 2)) {
 			posViewPlayer.x = viewPlayerSize.x / 2;
 		}
 		else {
 			posViewPlayer.x = playerPos.x + playerHitbox.width / 2;
 		}
-		if (playerPos.y >= (MAP_HEIGHT * TILE_HEIGHT) - (viewPlayerSize.y / 2 * 1.20))
+		if (playerPos.y + (playerHitbox.height / 2) > (MAP_HEIGHT * TILE_HEIGHT) - (viewPlayerSize.y / 2))
 		{
 			posViewPlayer.y = (MAP_HEIGHT * TILE_HEIGHT) - (viewPlayerSize.y / 2);
 		}
-		else if (playerPos.y < (viewPlayerSize.y / 2 *0.80)) {
+		else if (playerPos.y+ (playerHitbox.height/2) < +(viewPlayerSize.y / 2)) {
 			posViewPlayer.y = viewPlayerSize.y / 2;
 		}
 		else {
