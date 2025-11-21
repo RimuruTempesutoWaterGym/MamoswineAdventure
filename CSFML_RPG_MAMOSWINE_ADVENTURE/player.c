@@ -17,7 +17,6 @@ int isAttacking = 0;
 sfVector2f playerVel = { 72.0f,72.0f };
 sfVector2f posMamoswine = { 1200.0f,300.0f };
 sfVector2f speed;
-
 sfBool hasMoved = sfFalse;
 sfSprite* mamoswineSprite;
 sfTexture* myTextureMamoswine;
