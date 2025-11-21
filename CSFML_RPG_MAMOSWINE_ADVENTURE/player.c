@@ -6,18 +6,16 @@
 
 sfSprite* spPlayer;
 sfTexture* texPlayer;
-sfIntRect irectPlayer = { 0,0,17,23 };
 float PlayerTimer = 0.0f;
 
 float timer = 0.0f;
 float timerattack = 0.0f;
 int compt = -1;
-sfVector2f playerPos = { 400, 300 };
 int frameX = 0;
 int frameY = 0;
 int isAttacking = 0;
 sfVector2f playerVel = { 72.0f,72.0f };
-sfVector2f posMamoswine = { 500.0f,40.0f };
+sfVector2f posMamoswine = { 1200.0f,300.0f };
 sfVector2f speed;
 
 sfBool hasMoved = sfFalse;
@@ -44,7 +42,6 @@ void updatePlayer(sfRenderWindow* _window)
 
     if (state == GAME)
     {
-        
         sfFloatRect playerfrect = sfSprite_getGlobalBounds(mamoswineSprite);
 
         //if (sfKeyboard_isKeyPressed(sfKeySpace) && posMamoswine.x > 0)
