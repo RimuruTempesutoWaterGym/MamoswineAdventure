@@ -44,7 +44,7 @@ void updatePlayer(sfRenderWindow* _window)
 
     if (state == GAME)
     {
-
+        
         sfFloatRect playerfrect = sfSprite_getGlobalBounds(mamoswineSprite);
 
         //if (sfKeyboard_isKeyPressed(sfKeySpace) && posMamoswine.x > 0)
@@ -57,32 +57,34 @@ void updatePlayer(sfRenderWindow* _window)
         //}
         speed = playerVel;
         hasMoved = sfFalse;
-        if (sfKeyboard_isKeyPressed(sfKeyS) && posMamoswine.y < (MAP_HEIGHT * TILE_HEIGHT) - 23 && isAttacking == 0) {
+        if(isAttacking == 0)
+        {
+        if (sfKeyboard_isKeyPressed(sfKeyS) && posMamoswine.y < (MAP_HEIGHT * TILE_HEIGHT) - 23) {
             frameY = Down;
-               if (!collisionMapPlayer(playerfrect, Down, &speed))
-               {
-            posMamoswine.y += speed.y * GetDeltaTime();
+            if (!collisionMapPlayer(playerfrect, Down, &speed))
+            {
+                posMamoswine.y += speed.y * GetDeltaTime();
             }
             mamoswineAnimation.top = frameY * mamoswineAnimation.height;
             hasMoved = sfTrue;
         }
-        if (sfKeyboard_isKeyPressed(sfKeyZ) && posMamoswine.y > 0 && isAttacking == 0) {
+        if (sfKeyboard_isKeyPressed(sfKeyZ) && posMamoswine.y > 0) {
 
             frameY = Top;
 
-                if (!collisionMapPlayer(playerfrect, Top, &speed))
-                {
-            posMamoswine.y -= speed.y * GetDeltaTime();
+            if (!collisionMapPlayer(playerfrect, Top, &speed))
+            {
+                posMamoswine.y -= speed.y * GetDeltaTime();
             }
             mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
             hasMoved = sfTrue;
         }
-        if (sfKeyboard_isKeyPressed(sfKeyD) && posMamoswine.x < (MAP_WIDTH * TILE_WIDTH ) - 17 && isAttacking == 0)
+        if (sfKeyboard_isKeyPressed(sfKeyD) && posMamoswine.x < (MAP_WIDTH * TILE_WIDTH) - 17)
         {
             frameY = Right;
-               if (!collisionMapPlayer(playerfrect, Right, &speed) && isAttacking == 0)
-               {
-            posMamoswine.x += speed.x * GetDeltaTime();
+            if (!collisionMapPlayer(playerfrect, Right, &speed))
+            {
+                posMamoswine.x += speed.x * GetDeltaTime();
             }
             mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
             hasMoved = sfTrue;
@@ -90,41 +92,41 @@ void updatePlayer(sfRenderWindow* _window)
         if (sfKeyboard_isKeyPressed(sfKeyQ) && posMamoswine.x > 0)
         {
             frameY = Left;
-                if (!collisionMapPlayer(playerfrect, Left, &speed) && isAttacking == 0)
-                {
-            posMamoswine.x -= speed.x * GetDeltaTime();
-               }
+            if (!collisionMapPlayer(playerfrect, Left, &speed))
+            {
+                posMamoswine.x -= speed.x * GetDeltaTime();
+            }
             mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
             hasMoved = sfTrue;
         }
-        if (sfKeyboard_isKeyPressed(sfKeyQ) && sfKeyboard_isKeyPressed(sfKeyZ) && isAttacking == 0)
+        if (sfKeyboard_isKeyPressed(sfKeyQ) && sfKeyboard_isKeyPressed(sfKeyZ))
         {
             frameY = RightTop;
 
             mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
 
         }
-        if (sfKeyboard_isKeyPressed(sfKeyD) && sfKeyboard_isKeyPressed(sfKeyZ) && isAttacking == 0)
+        if (sfKeyboard_isKeyPressed(sfKeyD) && sfKeyboard_isKeyPressed(sfKeyZ))
         {
             frameY = TopLeft;
 
             mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
 
         }
-        if (sfKeyboard_isKeyPressed(sfKeyD) && sfKeyboard_isKeyPressed(sfKeyS) && isAttacking == 0)
+        if (sfKeyboard_isKeyPressed(sfKeyD) && sfKeyboard_isKeyPressed(sfKeyS))
         {
             frameY = DownLeft;
 
             mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
 
         }
-        if (sfKeyboard_isKeyPressed(sfKeyQ) && sfKeyboard_isKeyPressed(sfKeyS) && isAttacking == 0)
+        if (sfKeyboard_isKeyPressed(sfKeyQ) && sfKeyboard_isKeyPressed(sfKeyS))
         {
             frameY = DownRight;
 
             mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
         }
-
+    }
         if (sfKeyboard_isKeyPressed(sfKeyF) && timer <= 0 || isAttacking == 1)
         {
             isAttacking = 1;
