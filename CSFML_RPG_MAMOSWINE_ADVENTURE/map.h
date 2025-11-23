@@ -38,6 +38,7 @@ typedef struct {
 	specialTileType selectedSpecialTiles;
 } tileOf;
 
+
 void initmap();
 void initTileset();
 void updateMap(sfRenderWindow* _window);

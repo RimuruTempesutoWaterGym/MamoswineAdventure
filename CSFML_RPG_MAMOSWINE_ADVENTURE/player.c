@@ -55,9 +55,10 @@ void updatePlayer(sfRenderWindow* _window)
 
         //}
         speed = playerVel;
-      
+   
         if(isAttacking == 0)
         {
+          
             hasMoved = sfFalse;
             if (sfKeyboard_isKeyPressed(sfKeyS) && posMamoswine.y < (MAP_HEIGHT * TILE_HEIGHT) - 23) {
                 frameY = Down;
@@ -127,23 +128,23 @@ void updatePlayer(sfRenderWindow* _window)
                 mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
             }
         }
-        if (sfKeyboard_isKeyPressed(sfKeyF) && timerCdAttack > 3.f || isAttacking == 1 )
+        if (sfKeyboard_isKeyPressed(sfKeyF) && timerCdAttack > 2.f || isAttacking == 1 )
         {
             timerattack += GetDeltaTime();
             isAttacking = 1;
-            frameX = 0;
-            if (timerattack <= 0.5f)
+
+            if (timerattack <= 0.25f)
             {
 
-                mamoswineAnimation.left = frameX * mamoswineAnimation.height + 180;
+                mamoswineAnimation.left =    180;
 
             }
-            else if (timerattack > 0.5f && timerattack < 1)
+            else if (timerattack > 0.25f && timerattack < 0.5f)
             {
-                mamoswineAnimation.left = frameX * mamoswineAnimation.height + 180 + 49;
+                mamoswineAnimation.left =    180 + 49;
              
             }
-           else if (timerattack >= 1)
+           else if (timerattack >= 0.5f)
             {
                 timerattack = 0;
                 isAttacking = 0;
@@ -151,7 +152,8 @@ void updatePlayer(sfRenderWindow* _window)
                 mamoswineAnimation.left = 0;
             }
         } 
-     
+
+        printf("%d", frameX);
         if (PlayerTimer > 0.3f)
         {
             if (hasMoved)
