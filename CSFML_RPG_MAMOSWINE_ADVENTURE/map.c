@@ -17,6 +17,9 @@ sfTexture* swampTexture;
 sfTexture* waterTexture;
 sfTexture* deepWaterTexture;
 sfTexture* fireTexture;
+sfTexture* plantTexture;
+sfTexture* boulderTexture;
+sfTexture* electricToggleTexture;
 sfTexture* switchRectangleTexture;
 sfTexture* thunderedTexture;
 sfTexture* tilesetBarTexture;
@@ -43,6 +46,7 @@ sfIntRect tile = { 0, 0, TILE_WIDTH, TILE_HEIGHT };
 sfVector2f tilepos = { 0.0f,0.0f };
 int selectedTiles = 1;
 int selectedTexture = 1;
+int selectedSpecialTiles = 1;
 
 
 float keyMapTimer = 0.0f;
@@ -51,6 +55,7 @@ int tileSelection;
 char pathFile[100];
 tileOf tileMap[MAP_HEIGHT][MAP_WIDTH];
 tilesetType tileType;
+specialTileType specialTile;
 
  
 
@@ -59,6 +64,7 @@ tilesetType tileType;
 
 void initmap()
 {
+
 	initTileset();
 loadMap("maps/mymap.dat");
 peacefulTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-grassy-peaceful.png", NULL);
@@ -71,6 +77,9 @@ waterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-water.png", NULL);
 deepWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-deep-water.png", NULL);
 fireTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-fire.png", NULL);
 thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL);
+plantTexture = sfTexture_createFromFile(TEXTURE_PATH"treeDestruction.png", NULL);
+boulderTexture = sfTexture_createFromFile(TEXTURE_PATH"boulder.png", NULL);
+//electricToggleTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL); a trouver une texture
 buttonPrevPage = sfRectangleShape_create();
 sfRectangleShape_setSize(buttonPrevPage, (sfVector2f) { 30.f, 30.f });
 sfRectangleShape_setPosition(buttonPrevPage, (sfVector2f) { 45.f, 600.f });
@@ -187,7 +196,43 @@ void displayMap(sfRenderWindow* _window)
 				sfSprite_setTextureRect(mapSprite, tile);
 				sfSprite_setPosition(mapSprite, tilepos);
 				sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+			
+			
 				tilepos.x += tile.width;
+
+			
+
+			}
+			tilepos.y += tile.height;
+			tilepos.x = 0;
+		}
+		tilepos.y = 0;
+
+		for (int x = 0; x < MAP_HEIGHT; x++)
+		{
+			for (int y = 0; y < MAP_WIDTH; y++)
+			{
+				specialTile = 1;
+			
+				if (specialTile != none)
+				{
+					changeSpecialTiles(specialTile);
+					sfSprite_setPosition(mapSprite, tilepos);
+					if (x > 0 && y > 0 && y <  MAP_WIDTH && x < MAP_HEIGHT)
+					{
+						sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+					
+					}
+
+					if (specialTile == plant)
+					{
+						tilepos.x += 4;
+						tilepos.y += 16;
+					}
+				}
+
+				tilepos.x += tile.width;
+
 
 
 			}
@@ -196,6 +241,7 @@ void displayMap(sfRenderWindow* _window)
 		}
 		tilepos.y = 0;
 	}
+
 }
 
 void changeTileset(tilesetType tileType)
@@ -223,6 +269,23 @@ void changeTileset(tilesetType tileType)
 		break;
 	case fire:
 		sfSprite_setTexture(mapSprite, fireTexture, sfTrue);
+		break;
+	}
+}
+void changeSpecialTiles(specialTileType specialTile)
+{
+	switch (specialTile)
+	{
+
+	case plant:
+		sfSprite_setTexture(mapSprite, plantTexture, sfTrue);
+		tilepos.x -= 4;
+		tilepos.y -= 16;
+
+		sfSprite_setTextureRect(mapSprite, (sfIntRect){0,0,32,32});
+		break;
+	case boulder:
+		sfSprite_setTexture(mapSprite, boulderTexture, sfTrue);
 		break;
 	}
 }
@@ -258,7 +321,7 @@ void loadMap(const char* filename)
 		return;
 	}
 
-	int width, height;
+	int width, height; 
 	fread(&width, sizeof(int), 1, file);
 	fread(&height, sizeof(int), 1, file);
 
@@ -270,7 +333,10 @@ void loadMap(const char* filename)
 	}
 
 	fread(tileMap, sizeof(tileOf), MAP_HEIGHT * MAP_WIDTH, file);
+
 	fclose(file);
+
+
 	printf("Map chargée depuis %s\n", filename);
 }
 void createMap()
@@ -281,6 +347,7 @@ void createMap()
 		{
 			tileMap[i][j].texture = 1;
 			tileMap[i][j].tileNumber = 4;
+			tileMap[i][j].selectedSpecialTiles = 0;
 		}
 	}
 }
