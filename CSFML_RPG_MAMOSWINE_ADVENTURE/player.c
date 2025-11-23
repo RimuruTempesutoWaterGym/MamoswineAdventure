@@ -136,12 +136,12 @@ void updatePlayer(sfRenderWindow* _window)
             if (timerattack <= 0.25f)
             {
 
-                mamoswineAnimation.left =    180;
+                mamoswineAnimation.left = 180;
 
             }
             else if (timerattack > 0.25f && timerattack < 0.5f)
             {
-                mamoswineAnimation.left =    180 + 49;
+                mamoswineAnimation.left = 180 + 49;
              
             }
            else if (timerattack >= 0.5f)
