@@ -170,7 +170,7 @@ void updateMap(sfRenderWindow* _window)
 					posNewTile.y = (int)(mousepos.y / TILE_WIDTH);
 					if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT)
 					{
-						printf("pos x: %d \n pos y: %d", posNewTile.y, posNewTile.x);
+
 						tileMap[posNewTile.y][posNewTile.x].texture = selectedTexture;
 						tileMap[posNewTile.y][posNewTile.x].tileNumber = selectedTiles;
 					}
@@ -188,7 +188,7 @@ void displayMap(sfRenderWindow* _window)
 		{
 			for (int y = 0; y < MAP_WIDTH; y++)
 			{
-				
+
 				tile = giveSpriteTextureDim(tile, tileMap[x][y].tileNumber);
 
 				tileType = tileMap[x][y].texture;

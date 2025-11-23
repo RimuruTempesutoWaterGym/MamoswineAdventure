@@ -10,6 +10,7 @@ float PlayerTimer = 0.0f;
 
 float timer = 0.0f;
 float timerattack = 0.0f;
+float timerCdAttack = 0.0f;
 int compt = -1;
 int frameX = 0;
 int frameY = 0;
@@ -39,8 +40,10 @@ void updatePlayer(sfRenderWindow* _window)
     
     PlayerTimer += GetDeltaTime();
 
+
     if (state == GAME)
     {
+        timerCdAttack += GetDeltaTime();
         sfFloatRect playerfrect = sfSprite_getGlobalBounds(mamoswineSprite);
 
         //if (sfKeyboard_isKeyPressed(sfKeySpace) && posMamoswine.x > 0)
@@ -52,9 +55,10 @@ void updatePlayer(sfRenderWindow* _window)
 
         //}
         speed = playerVel;
-        hasMoved = sfFalse;
+      
         if(isAttacking == 0)
         {
+            hasMoved = sfFalse;
             if (sfKeyboard_isKeyPressed(sfKeyS) && posMamoswine.y < (MAP_HEIGHT * TILE_HEIGHT) - 23) {
                 frameY = Down;
                 if (!collisionMapPlayer(playerfrect, Down, &speed))
@@ -123,27 +127,31 @@ void updatePlayer(sfRenderWindow* _window)
                 mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
             }
         }
-        if (sfKeyboard_isKeyPressed(sfKeyF) && timer <= 0 || isAttacking == 1)
+        if (sfKeyboard_isKeyPressed(sfKeyF) && timerCdAttack > 3.f || isAttacking == 1 )
         {
+            timerattack += GetDeltaTime();
             isAttacking = 1;
             frameX = 0;
-            if (timerattack <= 1)
+            if (timerattack <= 0.5f)
             {
 
                 mamoswineAnimation.left = frameX * mamoswineAnimation.height + 180;
 
             }
-            else if (timerattack >= 1)
+            else if (timerattack > 0.5f && timerattack < 1)
             {
                 mamoswineAnimation.left = frameX * mamoswineAnimation.height + 180 + 49;
              
             }
+           else if (timerattack >= 1)
+            {
+                timerattack = 0;
+                isAttacking = 0;
+                timerCdAttack = 0.f;
+                mamoswineAnimation.left = 0;
+            }
         } 
-        if (timerattack > 3)
-        {
-            timerattack = 0;
-            isAttacking = 0;
-        }
+     
         if (PlayerTimer > 0.3f)
         {
             if (hasMoved)
@@ -159,11 +167,7 @@ void updatePlayer(sfRenderWindow* _window)
             }
             PlayerTimer = 0;
         }
-        if (timer > 0)
-        {
-            timer -= 0.1;
-            timerattack += 0.1;
-        }
+      
         updateView(posMamoswine, mamoswineAnimation, _window);
         sfSprite_setTextureRect(mamoswineSprite, mamoswineAnimation);
         sfSprite_setPosition(mamoswineSprite, posMamoswine);
