@@ -14,7 +14,7 @@ typedef enum {
 	Down, DownRight, Left, RightTop, Top, TopLeft, Right, DownLeft
 }Direction;
 typedef enum {
-	MENU, GAME, EDITOR, LEAVE,
+	MENU, GAME, EDITOR, LEAVE, PAUSE, SETTINGS, TUTORIAL, AUDIO
 }State;
 State state;
 int pressed;
