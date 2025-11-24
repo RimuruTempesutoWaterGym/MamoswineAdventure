@@ -23,6 +23,7 @@ sfTexture* deepWaterTexture;
 sfTexture* fireTexture;
 sfTexture* plantTexture;
 sfTexture* boulderTexture;
+sfTexture* voidTilesetTexture;
 sfTexture* voidTexture;
 sfTexture* electricToggleTexture;
 sfTexture* switchRectangleTexture;
@@ -37,6 +38,8 @@ int tilesPerPage = 45;  // 15 colonnes × 3 lignes = 45 tiles par page
 float pageButtonTimer = 0.0f;
 float bushCutTimer = 0.0f;
 float bushCutTimer2 = 0.0f;
+float rockStrengthTimer = 0.0f;
+float rockStrengthTimer2 = 0.0f;
 sfRectangleShape* buttonPrevPage;
 sfRectangleShape* buttonNextPage;
 
@@ -46,6 +49,7 @@ tileSet naturalTileset;
 tileSet waterTileset;
 tileSet deepWaterTileset ;
 tileSet fireTileset ;
+tileSet voidTileset;
 tileSet thunderedTileset;
 int bushFrameX = 0;
 int bushFrameY = 0;
@@ -90,6 +94,7 @@ thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NU
 plantTexture = sfTexture_createFromFile(TEXTURE_PATH"treeDestruction.png", NULL);
 boulderTexture = sfTexture_createFromFile(TEXTURE_PATH"boulder.png", NULL);
 voidTexture = sfTexture_createFromFile(TEXTURE_PATH"voidTile.png", NULL);
+voidTilesetTexture = sfTexture_createFromFile(TEXTURE_PATH"voidTileset.png", NULL);
 //electricToggleTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL); a trouver une texture
 buttonPrevPage = sfRectangleShape_create();
 sfRectangleShape_setSize(buttonPrevPage, (sfVector2f) { 30.f, 30.f });
@@ -191,7 +196,7 @@ void updateMap(sfRenderWindow* _window)
 					if (keyMapTimer > 0.02f) {
 						posNewTile.x = (int)(mousepos.x / TILE_WIDTH);
 						posNewTile.y = (int)(mousepos.y / TILE_WIDTH);
-						if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT)
+						if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT && tileMap[posNewTile.y][posNewTile.x].selectedSpecialTiles.SpecialTilesType == none)
 						{
 
 							tileMap[posNewTile.y][posNewTile.x].texture = selectedTexture;
@@ -290,9 +295,9 @@ void displayMap(sfRenderWindow* _window)
 					{
 						if (tileMap[x][y].selectedSpecialTiles.state > 0)
 						{
-							tile.top = 32 * ((tileMap[x][y].selectedSpecialTiles.state - 1) / 4);
+							tile.top = 32 * ((tileMap[x][y].selectedSpecialTiles.state ) / 4);
 							tile.width = 32;
-							tile.left = 32 * ((tileMap[x][y].selectedSpecialTiles.state - 1) % 4);
+							tile.left = 32 * ((tileMap[x][y].selectedSpecialTiles.state ) % 4);
 							tile.height = 32;
 							sfSprite_setTextureRect(mapSprite, tile);
 						}
@@ -307,6 +312,21 @@ void displayMap(sfRenderWindow* _window)
 						tile.height = 24;
 						tile.width = 24;
 					}
+					//else if (typeOfSpecialTile == boulder)
+					//{
+					//	if (tileMap[x][y].selectedSpecialTiles.state > 0)
+					//	{
+					//		if (sideOfNewTileY != 0)
+					//		{
+					//			tilepos.y -= 3 * state *sideOfNewTileY;
+					//		}
+					//		if (sideOfNewTileX != 0)
+					//		{
+					//			tilepos.x -= 3 * state * sideOfNewTileX;
+					//		}
+					//	}
+					//	sfSprite_setPosition(mapSprite, tilepos);
+					//}
 					else
 					{
 						sfSprite_setPosition(mapSprite, tilepos);
@@ -359,6 +379,9 @@ void changeTileset(tilesetType tileType)
 		break;
 	case fire:
 		sfSprite_setTexture(mapSprite, fireTexture, sfTrue);
+		break;
+	case voiding:
+		sfSprite_setTexture(mapSprite, voidTilesetTexture, sfTrue);
 		break;
 	}
 }
@@ -424,6 +447,14 @@ void loadMap(const char* filename)
 	fread(tileMap, sizeof(tileOf), MAP_HEIGHT * MAP_WIDTH, file);
 
 	fclose(file);
+	for (int i = 0; i < MAP_HEIGHT; i++)
+	{
+		for (int j = 0; j < MAP_WIDTH; j++)
+		{
+
+			tileMap[i][j].selectedSpecialTiles.state = 0;
+		}
+	}
 	printf("Map chargée depuis %s\n", filename);
 }
 void createMap()
@@ -482,7 +513,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 		if (selectedTileMode == 1)
 		{
 			
-			for (int i = 1; i < 8; i++)
+			for (int i = 1; i < 9; i++)
 			{
 
 				changeTileset(i);
@@ -740,52 +771,130 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f* _vitesse)
 {
 
-	sfVector2i nextPosInTab = { 0,0 };
+	_sprite.left += _sprite.width / 4;
+	_sprite.top += _sprite.height / 2;
+	_sprite.height /= 2;
+	_sprite.width /= 2;
+	int sideOfNewTileY = 0;
+	int sideOfNewTileX = 0;
+	sfVector2i isTreeInNextPosInTab = { 0,0 };
+	sfVector2i isTreeInNextPosInTab2 = { 0,0 };
 	sfVector2i nextPosInTab2 = { 0,0 };
-	sfVector2i nextPosInTab3 = { 0,0 };
+	sfVector2i nextPosInTab = { 0,0 };
+
 
 		float delataTime = GetDeltaTime();
 			switch (_direction)
 			{
 			case Down:
-				nextPosInTab.y = (int)((_sprite.top + _sprite.height + _vitesse->y * delataTime) / TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top + (_sprite.height/2) + _vitesse->y * delataTime) / TILE_WIDTH);
 				nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
+				isTreeInNextPosInTab.y = (int)((_sprite.top + 16+ (_sprite.height / 2) + _vitesse->y * delataTime) / TILE_WIDTH);
+				isTreeInNextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
 				nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-				nextPosInTab2.y = (int)((_sprite.top + _sprite.height + _vitesse->y * delataTime) / TILE_WIDTH);
-				nextPosInTab3.x = (_sprite.left + (_sprite.width / 2)) / TILE_WIDTH;
-				nextPosInTab3.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH) / TILE_WIDTH);
+				nextPosInTab2.y = (int)((_sprite.top + (_sprite.height / 2) + _vitesse->y * delataTime) / TILE_WIDTH);
+				isTreeInNextPosInTab2.y = (int)((_sprite.top + 16 +(_sprite.height / 2) + _vitesse->y * delataTime) / TILE_WIDTH);
+				isTreeInNextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
+				sideOfNewTileY = 1;
 				break;
 			case Top:
 				
-				nextPosInTab.y = (int)((_sprite.top + (_sprite.height/2) - _vitesse->y * delataTime )/ TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top  - _vitesse->y * delataTime )/ TILE_WIDTH);
 				nextPosInTab.x =(int)(_sprite.left / TILE_WIDTH);
 				nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-				nextPosInTab2.y = (int)((_sprite.top + (_sprite.height / 2) - _vitesse->y * delataTime) / TILE_WIDTH);
-				nextPosInTab3.x = (_sprite.left + (_sprite.width / 2) / TILE_WIDTH);
-				nextPosInTab3.y = (int)((_sprite.top + (_sprite.height / 2) - TILE_WIDTH) / TILE_WIDTH);
+				nextPosInTab2.y = (int)((_sprite.top - _vitesse->y * delataTime) / TILE_WIDTH);
+				isTreeInNextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
+				isTreeInNextPosInTab.y = (int)((_sprite.top + 6 - _vitesse->y * delataTime) / TILE_WIDTH);
+				isTreeInNextPosInTab2.y = (int)((_sprite.top + 6 - _vitesse->y * delataTime) / TILE_WIDTH);
+				isTreeInNextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
+				sideOfNewTileY = -1;
 			
 				break;
 			case Right:
-				nextPosInTab.y = (int)((_sprite.top +(_sprite.height / 2))   / TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top )   / TILE_WIDTH);
 				nextPosInTab.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
-				nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
+				nextPosInTab2.y = (_sprite.top + _sprite.height / 2) / TILE_WIDTH;
 				nextPosInTab2.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
-				nextPosInTab3.y = (_sprite.top + (_sprite.height / 2)) / TILE_WIDTH;
-				nextPosInTab3.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);;
+				isTreeInNextPosInTab.y = (int)((_sprite.top + 6) / TILE_WIDTH);
+				isTreeInNextPosInTab.x = (int)((_sprite.left +  _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
+				isTreeInNextPosInTab2.y = (_sprite.top+ 16 + _sprite.height / 2) / TILE_WIDTH;
+				isTreeInNextPosInTab2.x = (int)((_sprite.left +  _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
+				sideOfNewTileX = 1;
 				break;
 			case Left:
-				nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top ) / TILE_WIDTH);
 				nextPosInTab.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
 				nextPosInTab2.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
-				nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
-				nextPosInTab3.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
-				nextPosInTab3.y = (_sprite.top + (_sprite.height / 2)) / TILE_WIDTH;
+				nextPosInTab2.y = (_sprite.top + _sprite.height/2) / TILE_WIDTH;
+				isTreeInNextPosInTab.y = (int)((_sprite.top + 6) / TILE_WIDTH);
+				isTreeInNextPosInTab.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
+				isTreeInNextPosInTab2.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
+				isTreeInNextPosInTab2.y = (_sprite.top + 16 + _sprite.height / 2) / TILE_WIDTH;
+				sideOfNewTileX = -1;
 				break;
 			}
 			tileSet* tilesetInFront = getCurrentTileset(tileMap[nextPosInTab.y][nextPosInTab.x].texture);
 			tileSet* tilesetNearFront = getCurrentTileset(tileMap[nextPosInTab2.y][nextPosInTab2.x].texture);
+			tileSet* tilesetInFrontBehind = getCurrentTileset(tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].texture);
+			tileSet* tilesetNearFrontBehind = getCurrentTileset(tileMap[nextPosInTab2.y + sideOfNewTileY][nextPosInTab2.x + sideOfNewTileX].texture);
+				if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 2 
+					&& (nextPosInTab.y + sideOfNewTileY > 0 || nextPosInTab.y + sideOfNewTileY < MAP_HEIGHT)
+					&& (nextPosInTab.x + sideOfNewTileX > 0 || nextPosInTab.x + sideOfNewTileX < MAP_HEIGHT)
+					&& tilesetInFrontBehind->isWall[tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].tileNumber] <= 0
+					&& tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].selectedSpecialTiles.SpecialTilesType == none)
+				{
+					rockStrengthTimer += GetDeltaTime();
+					if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state == 0)
+					{
+						tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state = 1;
+					}
+					if (rockStrengthTimer > 0.03f * tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state && tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state < 8)
+					{
+						tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state++;
+					}
+					if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state == 8)
+					{
+
+						tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].selectedSpecialTiles.SpecialTilesType = 2;
+						tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType = 0;
+						rockStrengthTimer = 0;
+
+					}
+				}
+				if (tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == 2 && (nextPosInTab2.y + sideOfNewTileY > 0 ||
+					nextPosInTab2.y + sideOfNewTileY < MAP_HEIGHT) && (nextPosInTab2.x + sideOfNewTileX > 0 || 
+					nextPosInTab2.x + sideOfNewTileX < MAP_HEIGHT )&& 
+					tilesetNearFrontBehind->isWall[tileMap[nextPosInTab2.y + sideOfNewTileY][nextPosInTab2.x + sideOfNewTileX].tileNumber] <= 0
+					&& tileMap[nextPosInTab2.y + sideOfNewTileY][nextPosInTab2.x + sideOfNewTileX].selectedSpecialTiles.SpecialTilesType == none)
+				{
+					rockStrengthTimer2 += GetDeltaTime();
+					if (tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state == 0)
+					{
+						tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state = 1;
+					}
+					if (rockStrengthTimer2 > 0.03f * tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state && tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state < 8)
+					{
+						tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state++;
+					}
+					if (tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state == 8)
+					{
+						tileMap[nextPosInTab2.y + sideOfNewTileY][nextPosInTab2.x + sideOfNewTileX].selectedSpecialTiles.SpecialTilesType = 2;
+						tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType = 0;
+						rockStrengthTimer2 = 0;
+
+					}
 			
-			if (tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0 || tilesetInFront->isWall[tileMap[nextPosInTab3.y][nextPosInTab3.x].tileNumber] > 0 || tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType > 0 && tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state < 16 || tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.SpecialTilesType > 0 && tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.state < 16 || tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType > 0 && tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state < 16)
+				}
+			
+			
+			if (tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0  
+				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType > 1 
+				|| (tileMap[isTreeInNextPosInTab.y][isTreeInNextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 1
+				&& tileMap[isTreeInNextPosInTab.y][isTreeInNextPosInTab.x].selectedSpecialTiles.state < 15)
+				||tilesetNearFront->isWall[tileMap[nextPosInTab2.y][nextPosInTab2.x].tileNumber] > 0
+				|| tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType > 1 
+				|| (tileMap[isTreeInNextPosInTab2.y][isTreeInNextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == 1
+				&& tileMap[isTreeInNextPosInTab2.y][isTreeInNextPosInTab2.x].selectedSpecialTiles.state < 15))
 			{
 							return sfTrue;
 			}
@@ -795,84 +904,77 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction)
 {
 
+	_sprite.left += _sprite.width / 4;
+	
+	_sprite.top += _sprite.height / 2;
+	_sprite.height /= 2;
+	_sprite.width /= 2;
 	sfVector2i nextPosInTab = { 0,0 };
 	sfVector2i nextPosInTab2 = { 0,0 };
-	sfVector2i nextPosInTab3 = { 0,0 };
-
-
 	float delataTime = GetDeltaTime();
 	switch (_direction)
 	{
 	case Down:
-		nextPosInTab.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH) / TILE_WIDTH);
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH - 1) / TILE_WIDTH);
 		nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
 		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-		nextPosInTab2.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab3.x = (_sprite.left + (_sprite.width/2)) / TILE_WIDTH;
-		nextPosInTab3.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH) / TILE_WIDTH);
+		nextPosInTab2.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH-1) / TILE_WIDTH);
+
 
 		break;
 	case Top:
 
-		nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2) - TILE_WIDTH) / TILE_WIDTH);
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height - TILE_WIDTH + 1) / TILE_WIDTH);
 		nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
 		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-		nextPosInTab2.y = (int)((_sprite.top + (_sprite.height / 2) - TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab3.x = (_sprite.left + (_sprite.width / 2) / TILE_WIDTH);
-		nextPosInTab3.y = (int)((_sprite.top + (_sprite.height / 2) - TILE_WIDTH) / TILE_WIDTH);
+		nextPosInTab2.y = (int)((_sprite.top + _sprite.height  - TILE_WIDTH + 1) / TILE_WIDTH);
+
 
 		break;
 	case Right:
-		nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
-		nextPosInTab.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
-		nextPosInTab2.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab3.y = (_sprite.top + (_sprite.height/2)) / TILE_WIDTH;
-		nextPosInTab3.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);;
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height ) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
+		nextPosInTab2.y = (_sprite.top ) / TILE_WIDTH;
+		nextPosInTab2.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
+
 		break;
 	case RightTop:
-		nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
-		nextPosInTab.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height ) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
 		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
-		nextPosInTab2.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab3.y = (_sprite.top + (_sprite.height / 2)) / TILE_WIDTH;
-		nextPosInTab3.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);;
+		nextPosInTab2.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
+
 
 		break;
 	case  DownRight:
-		nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
-		nextPosInTab.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height ) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
 		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
-		nextPosInTab2.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab3.y = (_sprite.top + (_sprite.height / 2)) / TILE_WIDTH;
-		nextPosInTab3.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH) / TILE_WIDTH);;
+		nextPosInTab2.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
 
 		break;
 	case Left:
-		nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
-		nextPosInTab.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab2.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
-		nextPosInTab3.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab3.y = (_sprite.top + (_sprite.height / 2)) / TILE_WIDTH;
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height ) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.y = (_sprite.top ) / TILE_WIDTH;
+
 
 		break;
 	case DownLeft:
-		nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
-		nextPosInTab.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab2.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height ) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
 		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
-		nextPosInTab3.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab3.y = (_sprite.top + (_sprite.height / 2)) / TILE_WIDTH;
+
 
 		break;
 	case  TopLeft:
-		nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
-		nextPosInTab.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab2.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height ) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
 		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
-		nextPosInTab3.x = (int)((_sprite.left - TILE_WIDTH) / TILE_WIDTH);
-		nextPosInTab3.y = (_sprite.top + (_sprite.height / 2)) / TILE_WIDTH;
+
 
 
 		break;
@@ -881,58 +983,45 @@ void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction)
 	tileSet* tilesetInFront = getCurrentTileset(tileMap[nextPosInTab.y][nextPosInTab.x].texture);
 	tileSet* tilesetNearFront = getCurrentTileset(tileMap[nextPosInTab2.y][nextPosInTab2.x].texture);
 
-	if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 1 && tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state < 16)
+	if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 1 && tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state < 15)
 	{
 		bushCutTimer += GetDeltaTime();
 		if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state == 0)
 		{
 			tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state = 1;
 		}
-		if (bushCutTimer < 0.03f * tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state && tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state < 16)
+		if (bushCutTimer > 0.03f * tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state && tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state < 15)
 		{
 			tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state++;
 		}
-		if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state == 16)
+		if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state == 15)
 		{
 			bushCutTimer = 0;
 		}
 	}
-	if (tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == 1 && tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state < 16)
+	if (tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == 1 && tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state < 15)
 	{
 		bushCutTimer2 += GetDeltaTime();
 		if (tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state == 0)
 		{
 			tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state = 1;
 		}
-	if (bushCutTimer < 0.03f * tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state && tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state < 16)
+	if (bushCutTimer2  > 0.03f * tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state && tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state < 15)
 	{
 		tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state++;
 	}
-	if (tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state == 16)
+	if (tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state == 15)
 	{
 		bushCutTimer2 = 0;
 	}
 }
-	if (tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.SpecialTilesType == 1 && tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.state < 16)
-	{
-		bushCutTimer2 += GetDeltaTime();
-		if (tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.state == 0)
-		{
-			tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.state = 1;
-		}
-		if (bushCutTimer < 0.03f * tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.state && tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.state < 16)
-		{
-			tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.state++;
-		}
-		if (tileMap[nextPosInTab3.y][nextPosInTab3.x].selectedSpecialTiles.state == 16)
-		{
-			bushCutTimer2 = 0;
-		}
-	}
+
+
 
 	
 
 }
+
 tileSet* getCurrentTileset(tilesetType type)
 {
 	switch (type )
@@ -944,6 +1033,7 @@ tileSet* getCurrentTileset(tilesetType type)
 	case deepWater: return &deepWaterTileset;
 	case fire: return &fireTileset;
 	case thundered: return &thunderedTileset;
+	case voiding: return &voidTileset;
 	default: return &peacefulTileset;
 	}
 }
@@ -1036,5 +1126,11 @@ void initTileset()
 	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	 1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,
 	 0,0,0,0} };
+	voidTileset = (tileSet){ voiding ,68,
+{1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,1,
+ 1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,
+ 0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,
+ 0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+ 1,1,1,1} };
 
 }
