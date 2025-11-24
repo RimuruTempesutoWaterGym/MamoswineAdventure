@@ -132,6 +132,7 @@ void updatePlayer(sfRenderWindow* _window)
         {
             timerattack += GetDeltaTime();
             isAttacking = 1;
+
             bushCutPlayerMap(playerfrect, frameY);
             if (timerattack <= 0.25f)
             {
