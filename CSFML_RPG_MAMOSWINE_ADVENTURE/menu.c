@@ -1,61 +1,98 @@
 #include "menu.h"
 
 
-sfRectangleShape* RectangleGame;
-sfRectangleShape* RectangleEditor;
-sfRectangleShape* RectangleLeave;
+// BASES MENU
 sfVector2f tailleRectangle = { 300.0f, 80.0f };
-sfVector2f PositionRectangle = { 250.0f,100.0f };
-sfVector2f PositionRectangleEdit = { 250.0f,250.0f };
-sfVector2f PositionRectangleLeave = { 250.0f,400.0f };
-sfVector2f positionOnScreen = { 0.0f,0.0f };
-sfVector2f positionFond = { 00.0f,-275.0f };
-sfVector2i mousepos;
-sfVector2f PosText1 = { 335.0f, 110.0f };
-sfVector2f PosText2 = { 320.0f, 260.0f };
-sfVector2f PosText3 = { 320.0f, 410.0f };
-sfText* Game;
-sfText* Edit;
-sfText* Leave;
-sfFont* MC;
-sfSprite* fondmenu;
-sfTexture* wallpaper;
 sfTexture* rpgbutton;
-sfIntRect irectbutton = { 0,0,178,60 };
+sfIntRect irectbutton = { 0,0,45,12 };
+sfFont* MC;
+sfTexture* settingsbutton;
+sfIntRect irectSettings = {0, 0, 12, 12};
+sfTexture* FondSettings;
+
+// MENU PRINCIPAL:
+// GAME
+sfRectangleShape* ToucheGame;
+sfVector2f PositionGame = { 250.0f,100.0f };
+sfText* Game;
+sfVector2f PosText1 = { 335.0f, 110.0f };
+
+// EDIT
+sfRectangleShape* ToucheEditor;
+sfVector2f PositionEdit = { 250.0f,250.0f };
+sfText* Edit;
+sfVector2f PosText2 = { 320.0f, 260.0f };
+
+// QUITTER
+sfRectangleShape* ToucheLeave;
+sfVector2f PositionLeave = { 250.0f,400.0f };
+sfText* Leave;
+sfVector2f PosText3 = { 320.0f, 410.0f };
+
+
+// SETTINGS
+sfRectangleShape* ToucheSettings;
+sfVector2f PositionSettings = { 700.0f,510.0f };
+sfVector2f tailleSettings = { 70.0f, 70.0f };
+//FIN MENU PRINCIPAL
+
+// MENU SETTINGS:
+sfRectangleShape* FondMenuSettings;
+sfVector2f PositionFondSettings = { 100.0f, 50.0f };
+sfVector2f tailleFondMenuSettings = { 600.0f , 500.0f };
+
+// AudioSettings
+sfRectangleShape* ToucheAudio;
+sfVector2f PositionToucheAudio = { 250.0f,100.0f };
+sfText* TextAudio;
+sfVector2f PosTextAudio = { 340.0f, 110.0f };
+
+// Affichage des touches
+sfRectangleShape* ToucheTutoMapping;
+sfVector2f PositionToucheMapping = { 250.0f,250.0f };
+sfText* TextMapping;
+sfVector2f PosTextMapping = { 300.0f, 260.0f };
+
+
+// Retourner menu principal
+sfRectangleShape* ToucheRetourMenu;
+sfVector2f PositionToucheRetourMenu = { 250.0f,400.0f };
+sfText* TextRetourMenu;
+sfVector2f PosTextRetourMenu = { 340.0f, 410.0f };
+
+// FOND ECRAN PRINCIPAL
+sfSprite* fondmenu;
+sfVector2f positionFond = { 0.0f,-275.0f };
 sfVector2f ScaleFond = { 0.67f,0.67f };
+sfTexture* wallpaper;
+
+// AUTRES UTILITES POUR MENU
+sfVector2i mousepos;
+sfVector2f positionOnScreen = { 0.0f,0.0f };
+
+
+float keytimer = 0.0f;
 
 void initmenu()
 {
-	fondmenu = sfSprite_create();
 	wallpaper = sfTexture_createFromFile("..\\Ressources\\Textures\\wallpaper.jpg", NULL);
+	rpgbutton = sfTexture_createFromFile("..\\Ressources\\Textures\\Touche.png", NULL);
+	settingsbutton = sfTexture_createFromFile("..\\Ressources\\Textures\\ToucheSettings.png", NULL);
+	FondSettings = sfTexture_createFromFile("..\\Ressources\\Textures\\Fond.png", NULL);
+	
+
+	fondmenu = sfSprite_create();
 	sfSprite_setTexture(fondmenu, wallpaper, sfTrue);
 	sfSprite_setPosition(fondmenu, positionFond);
 	sfSprite_setScale(fondmenu, ScaleFond);
 
+	// MENU PRINCIPAL:
 	// Touche lancement du jeu
-	RectangleGame = sfRectangleShape_create();
-	sfRectangleShape_setSize(RectangleGame, tailleRectangle);
-	sfRectangleShape_setPosition(RectangleGame, PositionRectangle);
-	rpgbutton = sfTexture_createFromFile("..\\Ressources\\Textures\\bouton.png", NULL);
-	sfRectangleShape_setTexture(RectangleGame, rpgbutton, sfTrue);
-	sfRectangleShape_setTextureRect(RectangleGame, irectbutton);
-
-
-	// Touche mode editeur
-	RectangleEditor = sfRectangleShape_create();
-	sfRectangleShape_setSize(RectangleEditor, tailleRectangle);
-	sfRectangleShape_setPosition(RectangleEditor, PositionRectangleEdit);
-	sfRectangleShape_setTexture(RectangleEditor, rpgbutton, sfTrue);
-	sfRectangleShape_setTextureRect(RectangleEditor, irectbutton);
-
-	// Touche pour quitter le jeu
-	RectangleLeave = sfRectangleShape_create();
-	sfRectangleShape_setSize(RectangleLeave, tailleRectangle);
-	sfRectangleShape_setPosition(RectangleLeave, PositionRectangleLeave);
-	sfRectangleShape_setTexture(RectangleLeave, rpgbutton, sfTrue);
-	sfRectangleShape_setTextureRect(RectangleLeave, irectbutton);
-
-
+	ToucheGame = sfRectangleShape_create();
+	sfRectangleShape_setSize(ToucheGame, tailleRectangle);
+	sfRectangleShape_setPosition(ToucheGame, PositionGame);
+	sfRectangleShape_setTexture(ToucheGame, rpgbutton, sfTrue);
+	sfRectangleShape_setTextureRect(ToucheGame, irectbutton);
 	// Texte touche lancement du jeu
 	Game = sfText_create();
 	sfText_setString(Game, "Jouer");
@@ -65,6 +102,13 @@ void initmenu()
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Game, MC);
 
+
+	// Touche mode editeur
+	ToucheEditor = sfRectangleShape_create();
+	sfRectangleShape_setSize(ToucheEditor, tailleRectangle);
+	sfRectangleShape_setPosition(ToucheEditor, PositionEdit);
+	sfRectangleShape_setTexture(ToucheEditor, rpgbutton, sfTrue);
+	sfRectangleShape_setTextureRect(ToucheEditor, irectbutton);
 	// Texte touche mode editeur
 	Edit = sfText_create();
 	sfText_setString(Edit, "Editeur");
@@ -74,6 +118,13 @@ void initmenu()
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Edit, MC);
 
+
+	// Touche pour quitter le jeu
+	ToucheLeave = sfRectangleShape_create();
+	sfRectangleShape_setSize(ToucheLeave, tailleRectangle);
+	sfRectangleShape_setPosition(ToucheLeave, PositionLeave);
+	sfRectangleShape_setTexture(ToucheLeave, rpgbutton, sfTrue);
+	sfRectangleShape_setTextureRect(ToucheLeave, irectbutton);
 	// Texte touche quitter le jeu
 	Leave = sfText_create();
 	sfText_setString(Leave, "Quitter");
@@ -83,29 +134,108 @@ void initmenu()
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Leave, MC);
 
+	// Touche settings
 
+	ToucheSettings = sfRectangleShape_create();
+	sfRectangleShape_setSize(ToucheSettings, tailleSettings);
+	sfRectangleShape_setPosition(ToucheSettings, PositionSettings);
+	sfRectangleShape_setTexture(ToucheSettings, settingsbutton, sfTrue);
+	sfRectangleShape_setTextureRect(ToucheSettings, irectSettings);
+	//FIN MENU PRINCIPAL
 
+	// MENU SETTINGS:
+	FondMenuSettings = sfRectangleShape_create();
+	sfRectangleShape_setPosition(FondMenuSettings, PositionFondSettings);
+	sfRectangleShape_setSize(FondMenuSettings, tailleFondMenuSettings);
+	sfRectangleShape_setTexture(FondMenuSettings, FondSettings, sfTrue);
+
+	//Touche Audio
+	ToucheAudio = sfRectangleShape_create();
+	sfRectangleShape_setSize(ToucheAudio, tailleRectangle);
+	sfRectangleShape_setPosition(ToucheAudio, PositionToucheAudio);
+	sfRectangleShape_setTexture(ToucheAudio, rpgbutton, sfTrue);
+	sfRectangleShape_setTextureRect(ToucheAudio, irectbutton);
+
+	
+	TextAudio = sfText_create();
+	sfText_setString(TextAudio, "Audio");
+	sfText_setPosition(TextAudio, PosTextAudio);
+	sfText_setColor(TextAudio, sfWhite);
+	sfText_setCharacterSize(TextAudio, 50);
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	sfText_setFont(TextAudio, MC);
+
+	//Touche Tuto Mapping
+	ToucheTutoMapping = sfRectangleShape_create();
+	sfRectangleShape_setSize(ToucheTutoMapping, tailleRectangle);
+	sfRectangleShape_setPosition(ToucheTutoMapping, PositionToucheMapping);
+	sfRectangleShape_setTexture(ToucheTutoMapping, rpgbutton, sfTrue);
+	sfRectangleShape_setTextureRect(ToucheTutoMapping, irectbutton);
+
+	TextMapping = sfText_create();
+	sfText_setString(TextMapping, "Touches");
+	sfText_setPosition(TextMapping, PosTextMapping);
+	sfText_setColor(TextMapping, sfWhite);
+	sfText_setCharacterSize(TextMapping, 50);
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	sfText_setFont(TextMapping, MC);
+
+	//Touche Retour Menu
+	ToucheRetourMenu = sfRectangleShape_create();
+	sfRectangleShape_setSize(ToucheRetourMenu, tailleRectangle);
+	sfRectangleShape_setPosition(ToucheRetourMenu, PositionToucheRetourMenu);
+	sfRectangleShape_setTexture(ToucheRetourMenu, rpgbutton, sfTrue);
+	sfRectangleShape_setTextureRect(ToucheRetourMenu, irectbutton);
+
+	TextRetourMenu = sfText_create();
+	sfText_setString(TextRetourMenu, "Menu");
+	sfText_setPosition(TextRetourMenu, PosTextRetourMenu);
+	sfText_setColor(TextRetourMenu, sfWhite);
+	sfText_setCharacterSize(TextRetourMenu, 50);
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	sfText_setFont(TextRetourMenu, MC);
 
 }
-
-
 
 void displaymenu(sfRenderWindow* _window)
 {
 	if (state == MENU)
 	{
 		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
-		sfRenderWindow_drawRectangleShape(_window, RectangleGame, NULL);
-		sfRenderWindow_drawRectangleShape(_window, RectangleEditor, NULL);
-		sfRenderWindow_drawRectangleShape(_window, RectangleLeave, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheGame, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheEditor, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheLeave, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheSettings, NULL);
 		sfRenderWindow_drawText(_window, Game, NULL);
 		sfRenderWindow_drawText(_window, Edit, NULL);
 		sfRenderWindow_drawText(_window, Leave, NULL);
+		
+	}
+	if (state == SETTINGS)
+	{
+		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheAudio, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheTutoMapping, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheRetourMenu, NULL);
+		sfRenderWindow_drawText(_window, TextAudio, NULL);
+		sfRenderWindow_drawText(_window, TextMapping, NULL);
+		sfRenderWindow_drawText(_window, TextRetourMenu, NULL);
+	}
+	if (state == AUDIO)
+	{
+		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
+		sfRenderWindow_drawRectangleShape(_window, FondMenuSettings, NULL);
+	}
+	if (state == TUTORIAL)
+	{
+		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
+		sfRenderWindow_drawRectangleShape(_window, FondMenuSettings, NULL);
 	}
 }
 
 void updatemenu(sfRenderWindow* _window)
 {
+	keytimer += GetDeltaTime();
 	if (sfKeyboard_isKeyPressed(sfKeyEscape))
 	{
 		state = MENU;
@@ -120,29 +250,64 @@ void updatemenu(sfRenderWindow* _window)
 	}
 	if (state == MENU)
 	{
-		sfFloatRect Rectangle = sfRectangleShape_getGlobalBounds(RectangleGame);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && mousepos.x > Rectangle.left && mousepos.x < (Rectangle.width + Rectangle.left) && mousepos.y > Rectangle.top && mousepos.y < (Rectangle.top + Rectangle.height))
+		sfFloatRect Rectangle = sfRectangleShape_getGlobalBounds(ToucheGame);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle.left && mousepos.x < (Rectangle.width + Rectangle.left) && mousepos.y > Rectangle.top && mousepos.y < (Rectangle.top + Rectangle.height))
 		{
 			state = GAME;
+			keytimer = 0.0f;
 		}
-		sfFloatRect Rectangle2 = sfRectangleShape_getGlobalBounds(RectangleEditor);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && mousepos.x > Rectangle2.left && mousepos.x < (Rectangle2.width + Rectangle2.left) && mousepos.y > Rectangle2.top && mousepos.y < (Rectangle2.top + Rectangle2.height))
+		sfFloatRect Rectangle2 = sfRectangleShape_getGlobalBounds(ToucheEditor);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle2.left && mousepos.x < (Rectangle2.width + Rectangle2.left) && mousepos.y > Rectangle2.top && mousepos.y < (Rectangle2.top + Rectangle2.height))
 		{
 			state = EDITOR;
+			keytimer = 0.0f;
 		}
-		sfFloatRect Rectangle3 = sfRectangleShape_getGlobalBounds(RectangleLeave);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && mousepos.x > Rectangle3.left && mousepos.x < (Rectangle3.width + Rectangle3.left) && mousepos.y > Rectangle3.top && mousepos.y < (Rectangle3.top + Rectangle3.height))
+		sfFloatRect Rectangle3 = sfRectangleShape_getGlobalBounds(ToucheLeave);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle3.left && mousepos.x < (Rectangle3.width + Rectangle3.left) && mousepos.y > Rectangle3.top && mousepos.y < (Rectangle3.top + Rectangle3.height))
 		{
 			state = LEAVE;
 			if (state == LEAVE)
 			{
 				sfRenderWindow_close(_window);
 			}
+			keytimer = 0.0f;
+			
+		}
+		sfFloatRect Rectangle4 = sfRectangleShape_getGlobalBounds(ToucheSettings);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle4.left && mousepos.x < (Rectangle4.width + Rectangle4.left) && mousepos.y > Rectangle4.top && mousepos.y < (Rectangle4.top + Rectangle4.height))
+		{
+			state = SETTINGS;
+			keytimer = 0.0f;
+		}
+
+	
+	}
+	if (state == SETTINGS)
+	{
+		sfFloatRect Rectangle = sfRectangleShape_getGlobalBounds(ToucheAudio);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle.left && mousepos.x < (Rectangle.width + Rectangle.left) && mousepos.y > Rectangle.top && mousepos.y < (Rectangle.top + Rectangle.height))
+		{
+			state = AUDIO;
+			keytimer = 0.0f;
+			
+		}
+		sfFloatRect Rectangle2 = sfRectangleShape_getGlobalBounds(ToucheTutoMapping);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle2.left && mousepos.x < (Rectangle2.width + Rectangle2.left) && mousepos.y > Rectangle2.top && mousepos.y < (Rectangle2.top + Rectangle2.height))
+		{
+			state = TUTORIAL;
+			keytimer = 0.0f;
+		}
+		sfFloatRect Rectangle3 = sfRectangleShape_getGlobalBounds(ToucheRetourMenu);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle3.left && mousepos.x < (Rectangle3.width + Rectangle3.left) && mousepos.y > Rectangle3.top && mousepos.y < (Rectangle3.top + Rectangle3.height))
+		{
+			state = MENU;
+			keytimer = 0.0f;
 		}
 	}
 	mousepos = sfMouse_getPosition(_window);
 	positionOnScreen.x = (float)mousepos.x;
 	positionOnScreen.y = (float)mousepos.y;
+
 }
 
 
