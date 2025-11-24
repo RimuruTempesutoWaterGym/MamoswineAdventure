@@ -27,17 +27,26 @@ typedef enum {
 
 
 }specialTileType;
+
 typedef struct {
 	tilesetType tileset;
 	int* nbOfTiles	;
 	int isWall[200];
 } tileSet;
 typedef struct {
+	int state;
+	specialTileType SpecialTilesType;
+} specialTile;
+typedef struct {
 	int texture;
 	int tileNumber;
-	specialTileType selectedSpecialTiles;
+	specialTile selectedSpecialTiles;
 } tileOf;
 
+
+typedef enum {
+	tiles = 1, specialTiles, sprite
+}Tilemode;
 
 void initmap();
 void initTileset();
@@ -53,3 +62,4 @@ void updateTilesetPanel(sfRenderWindow* _window);
 void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection);
 tileSet* getCurrentTileset(tilesetType type);
 void changeSpecialTiles(specialTileType specialTile);
+void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction );
