@@ -11,6 +11,7 @@ typedef enum {
 	deepWater,
 	thundered,
 	fire,
+	voiding,
 
 }tilesetType;
 typedef enum {

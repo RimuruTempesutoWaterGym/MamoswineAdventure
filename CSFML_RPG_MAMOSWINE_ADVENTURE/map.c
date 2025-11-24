@@ -23,6 +23,7 @@ sfTexture* deepWaterTexture;
 sfTexture* fireTexture;
 sfTexture* plantTexture;
 sfTexture* boulderTexture;
+sfTexture* voidTilesetTexture;
 sfTexture* voidTexture;
 sfTexture* electricToggleTexture;
 sfTexture* switchRectangleTexture;
@@ -48,6 +49,7 @@ tileSet naturalTileset;
 tileSet waterTileset;
 tileSet deepWaterTileset ;
 tileSet fireTileset ;
+tileSet voidTileset;
 tileSet thunderedTileset;
 int bushFrameX = 0;
 int bushFrameY = 0;
@@ -92,6 +94,7 @@ thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NU
 plantTexture = sfTexture_createFromFile(TEXTURE_PATH"treeDestruction.png", NULL);
 boulderTexture = sfTexture_createFromFile(TEXTURE_PATH"boulder.png", NULL);
 voidTexture = sfTexture_createFromFile(TEXTURE_PATH"voidTile.png", NULL);
+voidTilesetTexture = sfTexture_createFromFile(TEXTURE_PATH"voidTileset.png", NULL);
 //electricToggleTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL); a trouver une texture
 buttonPrevPage = sfRectangleShape_create();
 sfRectangleShape_setSize(buttonPrevPage, (sfVector2f) { 30.f, 30.f });
@@ -377,6 +380,9 @@ void changeTileset(tilesetType tileType)
 	case fire:
 		sfSprite_setTexture(mapSprite, fireTexture, sfTrue);
 		break;
+	case voiding:
+		sfSprite_setTexture(mapSprite, voidTilesetTexture, sfTrue);
+		break;
 	}
 }
 void changeSpecialTiles(specialTileType specialTile)
@@ -507,7 +513,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 		if (selectedTileMode == 1)
 		{
 			
-			for (int i = 1; i < 8; i++)
+			for (int i = 1; i < 9; i++)
 			{
 
 				changeTileset(i);
@@ -1027,6 +1033,7 @@ tileSet* getCurrentTileset(tilesetType type)
 	case deepWater: return &deepWaterTileset;
 	case fire: return &fireTileset;
 	case thundered: return &thunderedTileset;
+	case voiding: return &voidTileset;
 	default: return &peacefulTileset;
 	}
 }
@@ -1119,5 +1126,11 @@ void initTileset()
 	 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	 1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,
 	 0,0,0,0} };
+	voidTileset = (tileSet){ voiding ,68,
+{1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,1,
+ 1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,
+ 0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,
+ 0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+ 1,1,1,1} };
 
 }
