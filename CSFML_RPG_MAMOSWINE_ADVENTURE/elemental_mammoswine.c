@@ -56,43 +56,39 @@ sfBool displayElementalMammoswine(sfWindow* _window, sfVector2f playerPos)
 	sfFloatRect mammoswinefRectElec = sfSprite_getGlobalBounds(mammoswineElectric);
 	if (isInside(playerPos, mammoswinefRectFire) || isGaseredFire)
 	{
-		isGasered = sfFalse;
 		isGaseredFire = 1;
 	}
 	else
 	{
 		sfRenderWindow_drawSprite(_window, mammoswineFire, NULL);
-		isGasered = sfTrue;
 	}
 	if (isInside(playerPos, mammoswinefRectWater) || isGaseredWater)
 	{
-		isGasered = sfFalse;
 		isGaseredWater = 1;
 	}
 	else
 	{
 		sfRenderWindow_drawSprite(_window, mammoswineWater, NULL);
-		isGasered = sfTrue;
 	}
 	if (isInside(playerPos, mammoswinefRectGrass) || isGaseredGrass)
 	{
-		isGasered = sfFalse;
 		isGaseredGrass = 1;
 	}
 	else
 	{
 		sfRenderWindow_drawSprite(_window, mammoswineGrass, NULL);
-		isGasered = sfTrue;
 	}
 	if (isInside(playerPos, mammoswinefRectElec) || isGaseredElec)
 	{
-		isGasered = sfFalse;
 		isGaseredElec = 1;
 	}
 	else
 	{
 		sfRenderWindow_drawSprite(_window, mammoswineElectric, NULL);
-		isGasered = sfTrue;
+	}
+	if (isGaseredFire && isGaseredWater && isGaseredGrass && isGaseredElec)
+	{
+		return sfFalse;
 	}
 	return isGasered;
 }
