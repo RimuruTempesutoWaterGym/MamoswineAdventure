@@ -69,7 +69,32 @@ sfTexture* wallpaper;
 // AUTRES UTILITES POUR MENU
 sfVector2i mousepos;
 sfVector2f positionOnScreen = { 0.0f,0.0f };
+//FIN MENU SETTINGS
 
+//MENU TUTO MAPPING
+sfSprite* ToucheZ;
+sfTexture* Z;
+sfVector2f positionZ = { 160.0f, 160.0f };
+
+sfSprite* ToucheQ;
+sfTexture* Q;
+sfVector2f positionQ = { 110.0f, 220.0f };
+
+sfSprite* ToucheS;
+sfTexture* S;
+sfVector2f positionS = { 160.0f, 220.0f };
+
+sfSprite* ToucheD;
+sfTexture* D;
+sfVector2f positionD = { 210.0f, 220.0f };
+
+sfSprite* ToucheF;
+sfTexture* F;
+sfVector2f positionF = { 110.0f, 310.0f };
+
+sfSprite* ToucheE;
+sfTexture* E;
+sfVector2f positionE = { 110.0f, 390.0f };
 
 float keytimer = 0.0f;
 
@@ -156,7 +181,6 @@ void initmenu()
 	sfRectangleShape_setTexture(ToucheAudio, rpgbutton, sfTrue);
 	sfRectangleShape_setTextureRect(ToucheAudio, irectbutton);
 
-	
 	TextAudio = sfText_create();
 	sfText_setString(TextAudio, "Audio");
 	sfText_setPosition(TextAudio, PosTextAudio);
@@ -195,6 +219,37 @@ void initmenu()
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(TextRetourMenu, MC);
 
+	//MENU Tuto du mapping
+	ToucheZ = sfSprite_create();
+	Z = sfTexture_createFromFile("..\\Ressources\\Textures\\ToucheZ.png", NULL);
+	sfSprite_setPosition(ToucheZ, positionZ);
+	sfSprite_setTexture(ToucheZ, Z, sfTrue);
+
+	ToucheQ = sfSprite_create();
+	Q = sfTexture_createFromFile("..\\Ressources\\Textures\\ToucheQ.png", NULL);
+	sfSprite_setPosition(ToucheQ, positionQ);
+	sfSprite_setTexture(ToucheQ, Q, sfTrue);
+
+	ToucheS = sfSprite_create();
+	S = sfTexture_createFromFile("..\\Ressources\\Textures\\ToucheS.png", NULL);
+	sfSprite_setPosition(ToucheS, positionS);
+	sfSprite_setTexture(ToucheS, S, sfTrue);
+
+	ToucheD = sfSprite_create();
+	D = sfTexture_createFromFile("..\\Ressources\\Textures\\ToucheD.png", NULL);
+	sfSprite_setPosition(ToucheD, positionD);
+	sfSprite_setTexture(ToucheD, D, sfTrue);
+
+	ToucheF = sfSprite_create();
+	F = sfTexture_createFromFile("..\\Ressources\\Textures\\ToucheF.png", NULL);
+	sfSprite_setPosition(ToucheF, positionF);
+	sfSprite_setTexture(ToucheF, F, sfTrue);
+
+	ToucheE = sfSprite_create();
+	E = sfTexture_createFromFile("..\\Ressources\\Textures\\ToucheE.png", NULL);
+	sfSprite_setPosition(ToucheE, positionE);
+	sfSprite_setTexture(ToucheE, E, sfTrue);
+
 }
 
 void displaymenu(sfRenderWindow* _window)
@@ -230,6 +285,12 @@ void displaymenu(sfRenderWindow* _window)
 	{
 		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
 		sfRenderWindow_drawRectangleShape(_window, FondMenuSettings, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheZ, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheS, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheD, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheQ, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheE, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheF, NULL);
 	}
 }
 
