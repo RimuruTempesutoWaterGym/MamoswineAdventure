@@ -28,7 +28,7 @@ void initTextBox()
 {
     rectangleDialog = sfRectangleShape_create();
     sfRectangleShape_setSize(rectangleDialog, rectangleDialogSize);
-    textureTextBox = sfTexture_createFromFile("..\\Ressources\\Textures\\text_box.png", NULL);
+    textureTextBox = sfTexture_createFromFile(TEXTURE_PATH"text_box.png", NULL);
     sfRectangleShape_setTexture(rectangleDialog, textureTextBox, sfTrue);
     sfRectangleShape_setTextureRect(rectangleDialog, irecttextureTextBox);
     font = sfFont_createFromFile("..\\Ressources\\Font\\PKMN-Mystery-Dungeon.ttf");
