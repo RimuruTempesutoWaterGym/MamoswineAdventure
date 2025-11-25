@@ -45,7 +45,8 @@ sfRectangleShape* buttonNextPage;
 
 tileSet peacefulTileset;
 tileSet naturalTileset;
-/*what is not a wall */ tileSet swampTileset;
+ 
+tileSet swampTileset;
 tileSet waterTileset;
 tileSet deepWaterTileset ;
 tileSet fireTileset ;
@@ -312,25 +313,25 @@ void displayMap(sfRenderWindow* _window)
 						tile.height = 24;
 						tile.width = 24;
 					}
-					//else if (typeOfSpecialTile == boulder)
-					//{
-					//	if (tileMap[x][y].selectedSpecialTiles.state > 0)
-					//	{
-					//		if (sideOfNewTileY != 0)
-					//		{
-					//			tilepos.y -= 3 * state *sideOfNewTileY;
-					//		}
-					//		if (sideOfNewTileX != 0)
-					//		{
-					//			tilepos.x -= 3 * state * sideOfNewTileX;
-					//		}
-					//	}
-					//	sfSprite_setPosition(mapSprite, tilepos);
-					//}
+				/*	else if (typeOfSpecialTile == boulder)
+					{
+						if (tileMap[x][y].selectedSpecialTiles.state > 0)
+						{
+							if (sideOfNewTileY != 0)
+							{
+								tilepos.y -= 3 * state *sideOfNewTileY;
+							}
+							if (sideOfNewTileX != 0)
+							{
+								tilepos.x -= 3 * state * sideOfNewTileX;
+							}
+						}
+						sfSprite_setPosition(mapSprite, tilepos);
+					}
 					else
 					{
 						sfSprite_setPosition(mapSprite, tilepos);
-					}
+					}*/
 			
 					if (x > 0 && y > 0 && y <  MAP_WIDTH && x < MAP_HEIGHT)
 					{
