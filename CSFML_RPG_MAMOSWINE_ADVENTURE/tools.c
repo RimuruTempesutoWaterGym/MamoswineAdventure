@@ -37,7 +37,7 @@ void initAll()
 {
 	initTools();
 
-
+	initDoor();
 
 	initMusic();
 
@@ -53,6 +53,7 @@ void initAll()
 	
 	initmenu();
 	
+	initElementalMammoswine();
 }
 
 void updateAll(sfRenderWindow* _window)
@@ -71,5 +72,6 @@ void displayAll(sfRenderWindow* _window)
 	displayPlayer(_window);
 	displayNPC(_window);
 	displaymenu(_window);
+	//displayDoor(_window);
 	//displayTextBox(_window);
 }
