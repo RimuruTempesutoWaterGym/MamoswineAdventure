@@ -9,3 +9,8 @@ void initMusic()
 	sfMusic_setLoop(music, sfTrue);
 	sfMusic_play(music);
 }
+
+void volumMusic(float _volume)
+{
+	sfMusic_setVolume(music, _volume);
+}
