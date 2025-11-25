@@ -1,23 +1,27 @@
 #include"door.h"
+#include"elemental_mammoswine.h"
 
 
 
 //temporary variables
-sfRectangleShape* door;
-sfVector2f doorSize = { 50, 50 };
+sfSprite* door;
+sfVector2f doorSize = { 2006, 126 };
+sfIntRect doorTextureRect = { 0, 0,118,126 };
 //temporary variables
-
+sfTexture* doorTexture;
 sfVector2f doorPos = { 1201, 320 };
 
 
 
 void initDoor()
-{
+
+{ 
+	door = sfSprite_create();
+	doorTexture = sfTexture_createFromFile(TEXTURE_PATH"door/doorSpritesheet.png",NULL);
+	sfSprite_setTexture(door, doorTexture, sfTrue); 
 	//temporary
-	door = sfRectangleShape_create();
-	sfRectangleShape_setSize(door, doorSize);
-	sfRectangleShape_setPosition(door, doorPos);
-	sfRectangleShape_setFillColor(door, sfWhite);
+
+	sfSprite_setPosition(door, doorPos);
 	//temporary
 }
 
@@ -26,10 +30,13 @@ void updateDoor()
 	 
 }
 
-void displayDoor(sfVector2f* _window, sfVector2f playerPos)
+void displayDoor(sfVector2f* _window)
 {
-	if (displayElementalMammoswine(_window, playerPos))
+	if (state == GAME)
 	{
-		sfRenderWindow_drawRectangleShape(_window, door, NULL);
+		doorTextureRect.left = 118 * GetMamoswineElementalCount();
+		sfSprite_setTextureRect(door, doorTextureRect);
+			sfRenderWindow_drawRectangleShape(_window, door, NULL);
+		
 	}
 }

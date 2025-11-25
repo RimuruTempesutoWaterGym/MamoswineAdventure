@@ -24,5 +24,5 @@ void updateAll(sfRenderWindow* _window);
 void displayAll(sfRenderWindow* _window);
 void restartClock();
 float GetDeltaTime();
-int isInside(sfVector2f item, sfFloatRect obstacle);
+int isInsideMouse(sfVector2f item, sfFloatRect obstacle);
 

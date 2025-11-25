@@ -9,33 +9,35 @@ sfTexture* textureMammoswineFire;
 sfTexture* textureMammoswineWater;
 sfTexture* textureMammoswinGrasse;
 sfTexture* textureMammoswineElec;
-sfIntRect mammoswineRect = {1220, 450};
-sfVector2f mammoswineSize = { 50, 50 };
-sfVector2f mammoswineFirePos = { 1250, 450 };
-sfVector2f mammoswineWaterPos = { 1190, 350 };
-sfVector2f mammoswineGrassPos = { 1250, 260 };
+sfIntRect mammoswineRect = {0,0,48,48};
+sfVector2f mammoswineFirePos = { 1000, 700 };
+sfVector2f mammoswineWaterPos = { 1100, 700 };
+sfVector2f mammoswineGrassPos = { 900, 700 };
 sfVector2f mammoswineElectricPos = { 1190,460 };
+char mamoswineElementalCount;
 
-float isGaseredFire = 0;
-float isGaseredWater = 0;
-float isGaseredGrass = 0;
-float isGaseredElec = 0;
 
 
 void initElementalMammoswine()
 {
+	
+	loadMamowsineData("data/keydata.bin");
 	mammoswineFire = sfSprite_create();
 	mammoswineWater = sfSprite_create();
 	mammoswineGrass = sfSprite_create();
 	mammoswineElectric = sfSprite_create();
-	textureMammoswineFire = sfTexture_createFromFile(TEXTURE_PATH"coffre32.png", NULL);
-	textureMammoswineWater = sfTexture_createFromFile(TEXTURE_PATH"ToucheD.png", NULL);
-	textureMammoswinGrasse = sfTexture_createFromFile(TEXTURE_PATH"settings.png", NULL);
-	textureMammoswineElec = sfTexture_createFromFile(TEXTURE_PATH"boulder.png", NULL);
+	textureMammoswineFire = sfTexture_createFromFile(TEXTURE_PATH"mamoswine.png", NULL);
+	textureMammoswineWater = sfTexture_createFromFile(TEXTURE_PATH"mamoswine.png", NULL);
+	textureMammoswinGrasse = sfTexture_createFromFile(TEXTURE_PATH"mamoswine.png", NULL);
+	textureMammoswineElec = sfTexture_createFromFile(TEXTURE_PATH"mamoswine.png", NULL);
 	sfSprite_setTexture(mammoswineFire, textureMammoswineFire, sfTrue);
 	sfSprite_setTexture(mammoswineWater, textureMammoswineWater, sfTrue);
 	sfSprite_setTexture(mammoswineGrass, textureMammoswinGrasse, sfTrue);
 	sfSprite_setTexture(mammoswineElectric, textureMammoswineElec, sfTrue);
+	sfSprite_setTextureRect(mammoswineFire, mammoswineRect);
+	sfSprite_setTextureRect(mammoswineWater, mammoswineRect);
+	sfSprite_setTextureRect(mammoswineGrass, mammoswineRect);
+	sfSprite_setTextureRect(mammoswineElectric, mammoswineRect);
 	sfSprite_setPosition(mammoswineFire, mammoswineFirePos);
 	sfSprite_setPosition(mammoswineWater, mammoswineWaterPos);
 	sfSprite_setPosition(mammoswineGrass, mammoswineGrassPos);
@@ -44,55 +46,101 @@ void initElementalMammoswine()
 
 void updateElementalMammoswine()
 {
+	saveMamowsineData("data/keydata.bin");
+}
+void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
+{
+	sfFloatRect mammoswinefRectFire = sfSprite_getGlobalBounds(mammoswineFire);
+	if (isInsidePlayer(playerPos, mammoswinefRectFire))
+	{
+		mamoswineElementalCount |= mamoswineFire;
+		printf("%d", (mamoswineElementalCount & mamoswineFire) >> MAMOSWINE_FIRE);
+	}
+}
+void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos)
+{
+	sfFloatRect mammoswinefRectWater = sfSprite_getGlobalBounds(mammoswineWater);
+	if (isInsidePlayer(playerPos, mammoswinefRectWater))
+	{
+		mamoswineElementalCount |= mamoswineWater;
+		printf("%d", (mamoswineElementalCount & mamoswineWater) >> MAMOSWINE_WATER);
+	}
+}
+void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos)
+{
+
+	sfFloatRect mammoswinefRectGrass = sfSprite_getGlobalBounds(mammoswineGrass);
+	if (isInsidePlayer(playerPos, mammoswinefRectGrass))
+	{
+		mamoswineElementalCount |= mamoswineGrass;
+		printf("%d", (mamoswineElementalCount & mamoswineGrass) >> MAMOSWINE_GRASS);
+	}
+}
+void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos)
+{
+
+	sfFloatRect mammoswinefRectElec = sfSprite_getGlobalBounds(mammoswineElectric);
+
+
+	if (isInsidePlayer(playerPos, mammoswinefRectElec))
+	{
+		mamoswineElementalCount |= mamoswineElectric;
+		printf("%d", (mamoswineElementalCount & mamoswineElectric) >> MAMOSWINE_ELECTRIC);
+		printf("%d", mamoswineElementalCount);
+
+	}
+}
+void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)
+{
+	SetMamoswineFire(_window, playerPos);
+	SetMamoswineWater(_window, playerPos);
+	SetMamoswineGrass(_window, playerPos);
+	SetMamoswineElectric(_window, playerPos);
 
 }
-
-sfBool displayElementalMammoswine(sfWindow* _window, sfVector2f playerPos)
+void displayElementalMammoswine(sfRenderWindow* _window)
 {
-	sfBool isGasered = sfTrue;
-	sfFloatRect mammoswinefRectFire = sfSprite_getGlobalBounds(mammoswineFire);
-	sfFloatRect mammoswinefRectWater = sfSprite_getGlobalBounds(mammoswineWater);
-	sfFloatRect mammoswinefRectGrass = sfSprite_getGlobalBounds(mammoswineGrass);
-	sfFloatRect mammoswinefRectElec = sfSprite_getGlobalBounds(mammoswineElectric);
-	if (isInside(playerPos, mammoswinefRectFire) || isGaseredFire)
-	{
-		isGasered = sfFalse;
-		isGaseredFire = 1;
-	}
-	else
+	if (state == GAME)
 	{
 		sfRenderWindow_drawSprite(_window, mammoswineFire, NULL);
-		isGasered = sfTrue;
-	}
-	if (isInside(playerPos, mammoswinefRectWater) || isGaseredWater)
-	{
-		isGasered = sfFalse;
-		isGaseredWater = 1;
-	}
-	else
-	{
-		sfRenderWindow_drawSprite(_window, mammoswineWater, NULL);
-		isGasered = sfTrue;
-	}
-	if (isInside(playerPos, mammoswinefRectGrass) || isGaseredGrass)
-	{
-		isGasered = sfFalse;
-		isGaseredGrass = 1;
-	}
-	else
-	{
 		sfRenderWindow_drawSprite(_window, mammoswineGrass, NULL);
-		isGasered = sfTrue;
-	}
-	if (isInside(playerPos, mammoswinefRectElec) || isGaseredElec)
-	{
-		isGasered = sfFalse;
-		isGaseredElec = 1;
-	}
-	else
-	{
+		sfRenderWindow_drawSprite(_window, mammoswineWater, NULL);
 		sfRenderWindow_drawSprite(_window, mammoswineElectric, NULL);
-		isGasered = sfTrue;
 	}
-	return isGasered;
+	}
+int GetMamoswineElementalCount()
+{
+
+	return mamoswineElementalCount ;
+}
+void saveMamowsineData(const char* filename)
+{
+
+	FILE* file = fopen(filename, "wb");
+	if (file == NULL)
+	{
+		printf("Erreur: Impossible de créer le fichier %s\n", filename);
+		return;
+	}
+
+
+	fwrite(&mamoswineElementalCount, sizeof(char), 1, file);
+	fclose(file);
+
+}
+void loadMamowsineData(const char* filename)
+{
+	FILE* file = fopen(filename, "rb");
+
+	if (file == NULL)
+	{
+		printf("Aucune sauvegarde trouvée. Création de %s...\n", filename);
+		saveMamowsineData(filename);
+		return;
+	}
+	fread(&mamoswineElementalCount, sizeof(char), 1, file);
+
+	fclose(file);
+
+	printf("Map chargée depuis %s\n", filename);
 }
