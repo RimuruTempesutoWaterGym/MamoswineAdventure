@@ -313,9 +313,9 @@ void displayMap(sfRenderWindow* _window)
 						tile.height = 24;
 						tile.width = 24;
 					}
-				/*	else if (typeOfSpecialTile == boulder)
+					else if (typeOfSpecialTile == boulder)
 					{
-						if (tileMap[x][y].selectedSpecialTiles.state > 0)
+				/*		if (tileMap[x][y].selectedSpecialTiles.state > 0)
 						{
 							if (sideOfNewTileY != 0)
 							{
@@ -325,13 +325,13 @@ void displayMap(sfRenderWindow* _window)
 							{
 								tilepos.x -= 3 * state * sideOfNewTileX;
 							}
-						}
+						}*/
 						sfSprite_setPosition(mapSprite, tilepos);
 					}
 					else
 					{
 						sfSprite_setPosition(mapSprite, tilepos);
-					}*/
+					}
 			
 					if (x > 0 && y > 0 && y <  MAP_WIDTH && x < MAP_HEIGHT)
 					{
@@ -497,7 +497,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 		sfRenderWindow_drawRectangleShape(_window, RectangleTilesetPanel, NULL);
 		sfRenderWindow_drawRectangleShape(_window, RectangleButtonSwitchTileMode, NULL);
 		sfFloatRect rectfrect = sfRectangleShape_getGlobalBounds(RectangleButtonSwitchTileMode);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && isInside(screenMousePosF, rectfrect) && switchTileTypeTimer >= 0.5f)
+		if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(screenMousePosF, rectfrect) && switchTileTypeTimer >= 0.5f)
 		{
 			if (selectedTileMode == 2)
 			{
@@ -525,7 +525,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 
 				sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
 				if (sfMouse_isButtonPressed(sfMouseLeft) &&
-					isInside(screenMousePosF, mapfrect))
+					isInsideMouse(screenMousePosF, mapfrect))
 				{
 					selectedTexture = i;
 					selectedTiles = 1;
@@ -581,7 +581,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 
 				sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
 				if (sfMouse_isButtonPressed(sfMouseLeft) &&
-					isInside(screenMousePosF, mapfrect))
+					isInsideMouse(screenMousePosF, mapfrect))
 				{
 					selectedTexture = i;
 				}
@@ -653,7 +653,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 			{
 				sfFloatRect rectfrect = sfRectangleShape_getGlobalBounds(RectangleButtonSwitchTileWall);
 
-				if (sfMouse_isButtonPressed(sfMouseLeft) && isInside(viewMousePos, rectfrect) && switchTileTypeTimer >= 0.5f)
+				if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(viewMousePos, rectfrect) && switchTileTypeTimer >= 0.5f)
 				{
 					switch (filterTile)
 					{
@@ -692,12 +692,12 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 
 				if (sfMouse_isButtonPressed(sfMouseLeft) && pageButtonTimer >= 0.3f)
 				{
-					if (isInside(viewMousePos, rectPrevPage) && currentPage > 0)
+					if (isInsideMouse(viewMousePos, rectPrevPage) && currentPage > 0)
 					{
 						currentPage--;
 						pageButtonTimer = 0.f;
 					}
-					else if (isInside(viewMousePos, rectNextPage) && currentPage < totalPages - 1)
+					else if (isInsideMouse(viewMousePos, rectNextPage) && currentPage < totalPages - 1)
 					{
 						currentPage++;
 						pageButtonTimer = 0.f;
@@ -738,7 +738,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 					}
 
 					sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
-					if (sfMouse_isButtonPressed(sfMouseLeft) && isInside(viewMousePos, mapfrect))
+					if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(viewMousePos, mapfrect))
 					{
 						selectedTiles = filteredTiles[i];
 					}

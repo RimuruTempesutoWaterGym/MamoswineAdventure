@@ -1,6 +1,8 @@
 #include "player.h"
 #include "map.h"
 #include "NPC.h"
+#include "elemental_mammoswine.h"
+
 //#include"camera.h"
 
 
@@ -153,7 +155,7 @@ void updatePlayer(sfRenderWindow* _window)
                 mamoswineAnimation.left = 0;
             }
         } 
-
+        SetAllMamoswine(_window, playerfrect);
        
         if (PlayerTimer > 0.3f)
         {
@@ -186,11 +188,13 @@ void updatePlayer(sfRenderWindow* _window)
 
 void displayPlayer(sfRenderWindow* _window)
 {
-
-    sfRenderWindow_drawSprite(_window, mamoswineSprite, NULL);
-    if (collisionNPC(posMamoswine))
+    if (state == GAME)
     {
-        displayTextBox(_window, posMamoswine, mamoswineAnimation);
+        sfRenderWindow_drawSprite(_window, mamoswineSprite, NULL);
+        if (collisionNPC(posMamoswine))
+        {
+            displayTextBox(_window, posMamoswine, mamoswineAnimation);
+        }
     }
 }
 //sfFloatRect gethitboxMamoswine(sfFloatRect _sprite, Direction _direction, sfFloatRect spriteHitbox)
