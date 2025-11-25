@@ -1,6 +1,8 @@
 #include "player.h"
 #include "map.h"
 #include "NPC.h"
+#include "elemental_mammoswine.h"
+
 //#include"camera.h"
 
 
@@ -188,6 +190,7 @@ void displayPlayer(sfRenderWindow* _window)
 {
 
     sfRenderWindow_drawSprite(_window, mamoswineSprite, NULL);
+    displayDoor(_window, posMamoswine);
     if (collisionNPC(posMamoswine))
     {
         displayTextBox(_window, posMamoswine, mamoswineAnimation);

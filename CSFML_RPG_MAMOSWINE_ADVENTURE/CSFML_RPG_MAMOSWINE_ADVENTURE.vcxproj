@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="door.c" />
+    <ClCompile Include="elemental_mammoswine.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
     <ClCompile Include="menu.c" />
@@ -29,6 +31,8 @@
     <ClCompile Include="view.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="door.h" />
+    <ClInclude Include="elemental_mammoswine.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="music.h" />
