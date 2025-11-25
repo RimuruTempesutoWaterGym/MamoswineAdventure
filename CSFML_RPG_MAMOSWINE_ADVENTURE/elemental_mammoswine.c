@@ -21,7 +21,7 @@ char mamoswineElementalCount;
 void initElementalMammoswine()
 {
 	
-	loadMamowsineData("data/keydata.bin");
+	loadMamowsineData("data\\keydata.bin");
 	mammoswineFire = sfSprite_create();
 	mammoswineWater = sfSprite_create();
 	mammoswineGrass = sfSprite_create();
