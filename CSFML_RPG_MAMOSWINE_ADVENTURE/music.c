@@ -1,22 +1,35 @@
 #include "music.h"
-sfMusic* music;
+sfMusic* playedMusic;
 void initMusic()
 {
 	if(state == MENU)
 	{ 
-	music = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
+		setMusic("Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
 	}
-	sfMusic_setLoop(music, sfTrue);
-	sfMusic_play(music);
+	sfMusic_setLoop(playedMusic, sfTrue);
+	sfMusic_play(playedMusic);
 }
 
 void volumeMusic(float _volume)
 {
-	sfMusic_setVolume(music, _volume);
+	sfMusic_setVolume(playedMusic, _volume);
 }
 
-void setMusic(char _music)
+void setMusic()
 {
-	_music = MUSIC_PATH + _music;
-	music = sfMusic_createFromFile(_music);
+	switch (music)
+	{
+	case Menu:
+		playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
+	case Overworld:
+		playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
+	case Fire:
+		playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
+	case Water:
+		playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
+	case Grass:
+		playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
+	case Elec:
+		playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
+	}
 }
