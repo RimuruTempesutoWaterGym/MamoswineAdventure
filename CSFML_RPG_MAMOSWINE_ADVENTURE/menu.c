@@ -206,7 +206,22 @@ sfVector2f postextchangesound = { 275.0f, 330.0f };
 
 // MENU PAUSE IN GAME
 sfRectangleShape* OverlayMenuPause;
-
+sfRectangleShape* RetourJeuPause;
+sfVector2f posretourjeu = { 250.0f,100.0f };
+sfText* RetourJeu;
+sfVector2f postextretourjeu = { 330.0f, 120.0f };
+sfRectangleShape* OptionsPause;
+sfVector2f posoptions = { 250.0f , 200.0f };
+sfText* Options;
+sfVector2f postextoptions = { 340.0f, 220.0f };
+sfRectangleShape* SauvegarderPause;
+sfVector2f possauvegarder = { 250.0f, 300.0f };
+sfText* Sauvegarder;
+sfVector2f postextsauvegarder = { 290.0f, 320.0f };
+sfRectangleShape* RetourMenuPrincipalPause;
+sfVector2f posmenuprincipal = { 250.0f, 400.0f };
+sfText* MenuPrincipal;
+sfVector2f postextmenuprincipal = { 280.0f, 420.0f };
 
 
 float keytimer = 0.0f;
@@ -231,59 +246,31 @@ void initmenu()
 
 	// MENU PRINCIPAL:
 	// Touche lancement du jeu
-	ToucheGame = sfRectangleShape_create();
-	sfRectangleShape_setSize(ToucheGame, tailleRectangle);
-	sfRectangleShape_setPosition(ToucheGame, PositionGame);
-	sfRectangleShape_setTexture(ToucheGame, rpgbutton, sfTrue);
-	sfRectangleShape_setTextureRect(ToucheGame, irectbutton);
+	ToucheGame = creationboutton(ToucheGame, tailleRectangle, PositionGame, irectbutton, rpgbutton);
 	// Texte touche lancement du jeu
-	Game = sfText_create();
-	sfText_setString(Game, "Jouer");
-	sfText_setPosition(Game, PosText1);
-	sfText_setColor(Game, sfWhite);
-	sfText_setCharacterSize(Game, 50);
+	Game = creationtexte(Game, "Jouer", PosText1, sfWhite, 50);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Game, MC);
 
 
 	// Touche mode editeur
-	ToucheEditor = sfRectangleShape_create();
-	sfRectangleShape_setSize(ToucheEditor, tailleRectangle);
-	sfRectangleShape_setPosition(ToucheEditor, PositionEdit);
-	sfRectangleShape_setTexture(ToucheEditor, rpgbutton, sfTrue);
-	sfRectangleShape_setTextureRect(ToucheEditor, irectbutton);
+	ToucheEditor = creationboutton(ToucheEditor, tailleRectangle, PositionEdit, irectbutton, rpgbutton);
 	// Texte touche mode editeur
-	Edit = sfText_create();
-	sfText_setString(Edit, "Editeur");
-	sfText_setPosition(Edit, PosText2);
-	sfText_setColor(Edit, sfWhite);
-	sfText_setCharacterSize(Edit, 50);
+	Edit = creationtexte(Edit, "Editeur", PosText2, sfWhite, 50);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Edit, MC);
 
 
 	// Touche pour quitter le jeu
-	ToucheLeave = sfRectangleShape_create();
-	sfRectangleShape_setSize(ToucheLeave, tailleRectangle);
-	sfRectangleShape_setPosition(ToucheLeave, PositionLeave);
-	sfRectangleShape_setTexture(ToucheLeave, rpgbutton, sfTrue);
-	sfRectangleShape_setTextureRect(ToucheLeave, irectbutton);
+	ToucheLeave = creationboutton(ToucheLeave, tailleRectangle, PositionLeave, irectbutton, rpgbutton);
 	// Texte touche quitter le jeu
-	Leave = sfText_create();
-	sfText_setString(Leave, "Quitter");
-	sfText_setPosition(Leave, PosText3);
-	sfText_setColor(Leave, sfWhite);
-	sfText_setCharacterSize(Leave, 50);
+	Leave = creationtexte(Leave, "Quitter", PosText3, sfWhite, 50);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Leave, MC);
 
 	// Touche settings
 
-	ToucheSettings = sfRectangleShape_create();
-	sfRectangleShape_setSize(ToucheSettings, tailleSettings);
-	sfRectangleShape_setPosition(ToucheSettings, PositionSettings);
-	sfRectangleShape_setTexture(ToucheSettings, settingsbutton, sfTrue);
-	sfRectangleShape_setTextureRect(ToucheSettings, irectSettings);
+	ToucheSettings = creationboutton(ToucheSettings, tailleSettings, PositionSettings, irectSettings, settingsbutton);
 	//FIN MENU PRINCIPAL
 
 	// MENU SETTINGS:
@@ -293,124 +280,65 @@ void initmenu()
 	sfRectangleShape_setTexture(FondMenuSettings, FondSettings, sfTrue);
 
 	//Touche Audio
-	ToucheAudio = sfRectangleShape_create();
-	sfRectangleShape_setSize(ToucheAudio, tailleRectangle);
-	sfRectangleShape_setPosition(ToucheAudio, PositionToucheAudio);
-	sfRectangleShape_setTexture(ToucheAudio, rpgbutton, sfTrue);
-	sfRectangleShape_setTextureRect(ToucheAudio, irectbutton);
+	ToucheAudio = creationboutton(ToucheAudio, tailleRectangle, PositionToucheAudio, irectbutton, rpgbutton);
 
-	TextAudio = sfText_create();
-	sfText_setString(TextAudio, "Audio");
-	sfText_setPosition(TextAudio, PosTextAudio);
-	sfText_setColor(TextAudio, sfWhite);
-	sfText_setCharacterSize(TextAudio, 50);
+	TextAudio = creationtexte(TextAudio, "Audio", PosTextAudio, sfWhite, 50);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(TextAudio, MC);
 
 	//Touche Tuto Mapping
-	ToucheTutoMapping = sfRectangleShape_create();
-	sfRectangleShape_setSize(ToucheTutoMapping, tailleRectangle);
-	sfRectangleShape_setPosition(ToucheTutoMapping, PositionToucheMapping);
-	sfRectangleShape_setTexture(ToucheTutoMapping, rpgbutton, sfTrue);
-	sfRectangleShape_setTextureRect(ToucheTutoMapping, irectbutton);
+	ToucheTutoMapping = creationboutton(ToucheTutoMapping, tailleRectangle, PositionToucheMapping, irectbutton, rpgbutton);
 
-	TextMapping = sfText_create();
-	sfText_setString(TextMapping, "Touches");
-	sfText_setPosition(TextMapping, PosTextMapping);
-	sfText_setColor(TextMapping, sfWhite);
-	sfText_setCharacterSize(TextMapping, 50);
+	TextMapping = creationtexte(TextMapping, "Touches", PosTextMapping, sfWhite, 50);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(TextMapping, MC);
 
 	//Touche Retour Menu
-	ToucheRetourMenu = sfRectangleShape_create();
-	sfRectangleShape_setSize(ToucheRetourMenu, tailleRectangle);
-	sfRectangleShape_setPosition(ToucheRetourMenu, PositionToucheRetourMenu);
-	sfRectangleShape_setTexture(ToucheRetourMenu, rpgbutton, sfTrue);
-	sfRectangleShape_setTextureRect(ToucheRetourMenu, irectbutton);
+	ToucheRetourMenu = creationboutton(ToucheRetourMenu, tailleRectangle, PositionToucheRetourMenu, irectbutton, rpgbutton);
 
-	TextRetourMenu = sfText_create();
-	sfText_setString(TextRetourMenu, "Menu");
-	sfText_setPosition(TextRetourMenu, PosTextRetourMenu);
-	sfText_setColor(TextRetourMenu, sfWhite);
-	sfText_setCharacterSize(TextRetourMenu, 50);
+	TextRetourMenu = creationtexte(TextRetourMenu, "Menu", PosTextRetourMenu, sfWhite, 50);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(TextRetourMenu, MC);
 
 	//MENU Tuto du mapping
 
 	// Texte tuto Jeu
-	Jeu = sfText_create();
-	sfText_setString(Jeu, "En jeu");
-	sfText_setPosition(Jeu, postextjeu);
-	sfText_setColor(Jeu, sfWhite);
-	sfText_setCharacterSize(Jeu, 25);
+	Jeu = creationtexte(Jeu, "En jeu", postextjeu, sfWhite, 25);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Jeu, MC);
 
-	deplacement = sfText_create();
-	sfText_setString(deplacement, "Deplacements");
-	sfText_setPosition(deplacement, posdeplacement);
-	sfText_setColor(deplacement, sfWhite);
-	sfText_setCharacterSize(deplacement, 20);
+	deplacement = creationtexte(deplacement, "Deplacements", posdeplacement, sfWhite, 20);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(deplacement, MC);
 
-	Frapper = sfText_create();
-	sfText_setString(Frapper, "Frapper");
-	sfText_setPosition(Frapper, postextfrapper);
-	sfText_setColor(Frapper, sfWhite);
-	sfText_setCharacterSize(Frapper, 20);
+	Frapper = creationtexte(Frapper, "Frapper", postextfrapper, sfWhite, 20);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Frapper, MC);
 
-	Interagir = sfText_create();
-	sfText_setString(Interagir, "Interagir");
-	sfText_setPosition(Interagir, postextinteract);
-	sfText_setColor(Interagir, sfWhite);
-	sfText_setCharacterSize(Interagir, 20);
+	Interagir = creationtexte(Interagir, "Interagir", postextinteract, sfWhite, 20);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(Interagir, MC);
 
 	// Texte Tuto edit
-	editor = sfText_create();
-	sfText_setString(editor, "Mode editeur");
-	sfText_setPosition(editor, postexteditor);
-	sfText_setColor(editor, sfWhite);
-	sfText_setCharacterSize(editor, 25);
+	editor = creationtexte(editor, "Mode editeur", postexteditor, sfWhite, 25);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(editor, MC);
 
-	deplacement2 = sfText_create();
-	sfText_setString(deplacement2, "Deplacements");
-	sfText_setPosition(deplacement2, posdeplacement2);
-	sfText_setColor(deplacement2, sfWhite);
-	sfText_setCharacterSize(deplacement2, 20);
+	deplacement2 = creationtexte(deplacement2, "Deplacements", posdeplacement2, sfWhite, 20);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(deplacement2, MC);
 
-	SelectTile = sfText_create();
-	sfText_setString(SelectTile, "Selectionner");
-	sfText_setPosition(SelectTile, postextselecttile);
-	sfText_setColor(SelectTile, sfWhite);
-	sfText_setCharacterSize(SelectTile, 20);
+	SelectTile = creationtexte(SelectTile, "Selectionner", postextselecttile, sfWhite, 20);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(SelectTile, MC);
 
-	DrawTile = sfText_create();
-	sfText_setString(DrawTile, "Poser Tile");
-	sfText_setPosition(DrawTile, postextdrawtile);
-	sfText_setCharacterSize(DrawTile, 20);
+	DrawTile = creationtexte(DrawTile, "Poser Tile", postextdrawtile, sfWhite, 20);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(DrawTile, MC);
 
 	// Affichage Sprites tuto
 
-	BoutonClose = sfRectangleShape_create();
-	sfRectangleShape_setPosition(BoutonClose, positionClose);
-	sfRectangleShape_setSize(BoutonClose, tailleboutonclose);
-	sfRectangleShape_setTexture(BoutonClose, Close, sfTrue);
-	sfRectangleShape_setTextureRect(BoutonClose, irectclose);
+	BoutonClose = creationboutton(BoutonClose, tailleboutonclose, positionClose, irectclose, Close);
 	sfRectangleShape_setScale(BoutonClose, scaleclose);
 	
 
@@ -495,57 +423,29 @@ void initmenu()
 	
 	// Touche pour mute le son général
 	coche = VALIDE;
-	CaseMute = sfRectangleShape_create();
-	sfRectangleShape_setSize(CaseMute, taillecasemute);
-	sfRectangleShape_setPosition(CaseMute, positioncasemute);
-	sfRectangleShape_setTextureRect(CaseMute, irectcasemute);
+	CaseMute = creationboutton(CaseMute, taillecasemute, positioncasemute, irectcasemute, casecoche);
 	sfRectangleShape_setScale(CaseMute, scalecasemute);
-	sfRectangleShape_setTexture(CaseMute, casevide, sfTrue);
 
-	CaseDemute = sfRectangleShape_create();
-	sfRectangleShape_setSize(CaseDemute, taillecasemute);
-	sfRectangleShape_setPosition(CaseDemute, positioncasemute);
-	sfRectangleShape_setTextureRect(CaseDemute, irectcasemute);
+	CaseDemute = creationboutton(CaseDemute, taillecasemute, positioncasemute, irectcasemute, casevide);
 	sfRectangleShape_setScale(CaseDemute, scalecasemute);
-	sfRectangleShape_setTexture(CaseDemute, casecoche, sfTrue);
 
-	SoundMuted = sfText_create();
-	sfText_setString(SoundMuted, "Activer le son:");
-	sfText_setPosition(SoundMuted, postextsoundmuted);
-	sfText_setColor(SoundMuted, sfWhite);
-	sfText_setCharacterSize(SoundMuted, 30);
+	SoundMuted = creationtexte(SoundMuted, "Activer le son:", postextsoundmuted, sfWhite, 30);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(SoundMuted, MC);
 	
 	// Barre pour monter le son ou le descendre
-	Barreson = sfRectangleShape_create();
-	sfRectangleShape_setPosition(Barreson, positionbarreson);
-	sfRectangleShape_setSize(Barreson, taillebarreson);
-	sfRectangleShape_setTexture(Barreson, barre2son, sfTrue);
-	sfRectangleShape_setTextureRect(Barreson, irectbarreson);
+	Barreson = creationboutton(Barreson, taillebarreson, positionbarreson, irectbarreson, barre2son);
 	sfRectangleShape_setScale(Barreson, scalebarreson);
 
-	ChangeSound = sfText_create();
-	sfText_setString(ChangeSound, "Modifier le volume:");
-	sfText_setPosition(ChangeSound, postextchangesound);
-	sfText_setColor(ChangeSound, sfWhite);
-	sfText_setCharacterSize(ChangeSound, 30);
+	ChangeSound = creationtexte(ChangeSound, "Modifier le volume:", postextchangesound, sfWhite, 30);
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(ChangeSound, MC);
 
 	// Boutons pour monter ou descendre le son
-	BoutonPlus = sfRectangleShape_create();
-	sfRectangleShape_setPosition(BoutonPlus, positionboutonplus);
-	sfRectangleShape_setSize(BoutonPlus, tailleboutonplus);
-	sfRectangleShape_setTexture(BoutonPlus, TouchePlus, sfTrue);
-	sfRectangleShape_setTextureRect(BoutonPlus, irectboutonplus);
+	BoutonPlus = creationboutton(BoutonPlus, tailleboutonplus, positionboutonplus, irectboutonplus, TouchePlus);
 	sfRectangleShape_setScale(BoutonPlus, scaleboutonplus);
 
-	BoutonMoins = sfRectangleShape_create();
-	sfRectangleShape_setPosition(BoutonMoins, positionboutonmoins);
-	sfRectangleShape_setSize(BoutonMoins, tailleboutonmoins);
-	sfRectangleShape_setTexture(BoutonMoins, ToucheMoins, sfTrue);
-	sfRectangleShape_setTextureRect(BoutonMoins, irectboutonmoins);
+	BoutonMoins = creationboutton(BoutonMoins, tailleboutonmoins, positionboutonmoins, irectboutonmoins, ToucheMoins);
 	sfRectangleShape_setScale(BoutonMoins, scaleboutonmoins);
 	//FIN MENU AUDIO
 
@@ -555,6 +455,25 @@ void initmenu()
 	sfRectangleShape_setPosition(OverlayMenuPause, PositionFondSettings);
 	sfRectangleShape_setTexture(OverlayMenuPause, FondSettings, sfTrue);
 
+	RetourJeuPause = creationboutton(RetourJeuPause, tailleRectangle, posretourjeu, irectbutton, rpgbutton);
+	RetourJeu = creationtexte(RetourJeu, "Resume", postextretourjeu, sfWhite, 35);
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	sfText_setFont(RetourJeu, MC);
+
+	OptionsPause = creationboutton(OptionsPause, tailleRectangle, posoptions,irectbutton, rpgbutton);
+	Options = creationtexte(Options, "Options", postextoptions, sfWhite, 35);
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	sfText_setFont(Options, MC);
+
+	SauvegarderPause = creationboutton(SauvegarderPause, tailleRectangle, possauvegarder, irectbutton, rpgbutton);
+	Sauvegarder = creationtexte(Sauvegarder, "Sauvegarder", postextsauvegarder, sfWhite, 35);
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	sfText_setFont(Sauvegarder, MC);
+
+	RetourMenuPrincipalPause = creationboutton(RetourMenuPrincipalPause, tailleRectangle, posmenuprincipal, irectbutton, rpgbutton);
+	MenuPrincipal = creationtexte(MenuPrincipal, "Menu principal", postextmenuprincipal, sfWhite, 35);
+	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	sfText_setFont(MenuPrincipal, MC);
 }
 
 
@@ -573,7 +492,7 @@ void updatemenu(sfRenderWindow* _window)
 		state = GAME;
 		keytimer = 0.0f;
 	}
-
+	
 
 	if (state == MENU)
 	{
@@ -674,6 +593,35 @@ void updatemenu(sfRenderWindow* _window)
 			
 			keytimer = 0.0f;
 		}
+		
+		
+	}
+	if (state == PAUSE)
+	{
+		sfFloatRect Rectangle = sfRectangleShape_getGlobalBounds(RetourJeuPause);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle.left && mousepos.x < (Rectangle.width + Rectangle.left) && mousepos.y > Rectangle.top && mousepos.y < (Rectangle.top + Rectangle.height))
+		{
+			state = GAME;
+			keytimer = 0.0f;
+
+		}
+		sfFloatRect Rectangle2 = sfRectangleShape_getGlobalBounds(OptionsPause);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && coche == VALIDE && keytimer > 0.5f && mousepos.x > Rectangle2.left && mousepos.x < (Rectangle2.width + Rectangle2.left) && mousepos.y > Rectangle2.top && mousepos.y < (Rectangle2.top + Rectangle2.height))
+		{
+			state = SETTINGS;
+			keytimer = 0.0f;
+		}
+		sfFloatRect Rectangle3 = sfRectangleShape_getGlobalBounds(SauvegarderPause);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && coche == NEUTRE && keytimer > 0.5f && mousepos.x > Rectangle3.left && mousepos.x < (Rectangle3.width + Rectangle3.left) && mousepos.y > Rectangle3.top && mousepos.y < (Rectangle3.top + Rectangle3.height))
+		{
+			keytimer = 0.0f;
+		}
+		sfFloatRect Rectangle4 = sfRectangleShape_getGlobalBounds(RetourMenuPrincipalPause);
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle4.left && mousepos.x < (Rectangle4.width + Rectangle4.left) && mousepos.y > Rectangle4.top && mousepos.y < (Rectangle4.top + Rectangle4.height))
+		{
+			state = MENU;
+			keytimer = 0.0f;
+		}
 	}
 	mousepos = sfMouse_getPosition(_window);
 	positionOnScreen.x = (float)mousepos.x;
@@ -753,5 +701,33 @@ void displaymenu(sfRenderWindow* _window)
 	if (state == PAUSE)
 	{
 		sfRenderWindow_drawRectangleShape(_window, OverlayMenuPause, NULL);
+		sfRenderWindow_drawRectangleShape(_window, RetourJeuPause, NULL);
+		sfRenderWindow_drawRectangleShape(_window, OptionsPause, NULL);
+		sfRenderWindow_drawRectangleShape(_window, SauvegarderPause, NULL);
+		sfRenderWindow_drawRectangleShape(_window, RetourMenuPrincipalPause, NULL);
+		sfRenderWindow_drawText(_window, RetourJeu, NULL);
+		sfRenderWindow_drawText(_window, Options, NULL);
+		sfRenderWindow_drawText(_window, Sauvegarder, NULL);
+		sfRenderWindow_drawText(_window, MenuPrincipal, NULL);
 	}
+	
+}
+sfRectangleShape* creationboutton(sfRectangleShape* _nombouton, sfVector2f _taille, sfVector2f _position, sfIntRect _irect, sfTexture * _texture)
+	{
+		_nombouton = sfRectangleShape_create();
+		sfRectangleShape_setSize(_nombouton, _taille);
+		sfRectangleShape_setPosition(_nombouton, _position);
+		sfRectangleShape_setTexture(_nombouton, _texture, sfTrue);
+		sfRectangleShape_setTextureRect(_nombouton, _irect);
+		return _nombouton;
+	}
+
+sfText* creationtexte(sfText* _text, const char* _string,sfVector2f _position, sfColor _couleur, unsigned int _size)
+{
+	_text = sfText_create();
+	sfText_setString(_text, _string);
+	sfText_setPosition(_text, _position);
+	sfText_setColor(_text, _couleur);
+	sfText_setCharacterSize(_text, _size);
+	return _text;
 }
