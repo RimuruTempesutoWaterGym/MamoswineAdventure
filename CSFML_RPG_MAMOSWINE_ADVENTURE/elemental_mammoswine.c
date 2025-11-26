@@ -1,3 +1,5 @@
+#include"tools.h"
+#include"player.h"
 #include"elemental_mammoswine.h"
 
 
@@ -51,7 +53,7 @@ void updateElementalMammoswine()
 void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 	sfFloatRect mammoswinefRectFire = sfSprite_getGlobalBounds(mammoswineFire);
-	if (isInsidePlayer(playerPos, mammoswinefRectFire))
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), getMamoswineHitboxByPos(mammoswinefRectFire)))
 	{
 		mamoswineElementalCount |= mamoswineFire;
 		printf("%d", (mamoswineElementalCount & mamoswineFire) >> MAMOSWINE_FIRE);
@@ -60,7 +62,7 @@ void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 	sfFloatRect mammoswinefRectWater = sfSprite_getGlobalBounds(mammoswineWater);
-	if (isInsidePlayer(playerPos, mammoswinefRectWater))
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), getMamoswineHitboxByPos(mammoswinefRectWater)))
 	{
 		mamoswineElementalCount |= mamoswineWater;
 		printf("%d", (mamoswineElementalCount & mamoswineWater) >> MAMOSWINE_WATER);
@@ -70,7 +72,7 @@ void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 
 	sfFloatRect mammoswinefRectGrass = sfSprite_getGlobalBounds(mammoswineGrass);
-	if (isInsidePlayer(playerPos, mammoswinefRectGrass))
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), getMamoswineHitboxByPos(mammoswinefRectGrass)))
 	{
 		mamoswineElementalCount |= mamoswineGrass;
 		printf("%d", (mamoswineElementalCount & mamoswineGrass) >> MAMOSWINE_GRASS);
@@ -82,7 +84,7 @@ void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos)
 	sfFloatRect mammoswinefRectElec = sfSprite_getGlobalBounds(mammoswineElectric);
 
 
-	if (isInsidePlayer(playerPos, mammoswinefRectElec))
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), getMamoswineHitboxByPos(mammoswinefRectElec)))
 	{
 		mamoswineElementalCount |= mamoswineElectric;
 		printf("%d", (mamoswineElementalCount & mamoswineElectric) >> MAMOSWINE_ELECTRIC);

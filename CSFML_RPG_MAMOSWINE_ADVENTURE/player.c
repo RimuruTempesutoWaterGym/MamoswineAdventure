@@ -197,6 +197,15 @@ void displayPlayer(sfRenderWindow* _window)
         }
     }
 }
+sfFloatRect getMamoswineHitboxByPos(sfFloatRect _mamoswinePos)
+{
+    _mamoswinePos.left += _mamoswinePos.width / 4;
+
+    _mamoswinePos.top += _mamoswinePos.height / 4;
+    _mamoswinePos.height /= 2;
+    _mamoswinePos.width /= 2;
+    return _mamoswinePos;
+}
 //sfFloatRect gethitboxMamoswine(sfFloatRect _sprite, Direction _direction, sfFloatRect spriteHitbox)
 //{
 //    switch (_direction)
