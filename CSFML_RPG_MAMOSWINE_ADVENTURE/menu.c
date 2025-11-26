@@ -202,6 +202,12 @@ sfTexture* ToucheMoins;
 
 sfText* ChangeSound;
 sfVector2f postextchangesound = { 275.0f, 330.0f };
+//FIN MENU AUDIO
+
+// MENU PAUSE IN GAME
+sfRectangleShape* OverlayMenuPause;
+
+
 
 float keytimer = 0.0f;
 
@@ -541,94 +547,34 @@ void initmenu()
 	sfRectangleShape_setTexture(BoutonMoins, ToucheMoins, sfTrue);
 	sfRectangleShape_setTextureRect(BoutonMoins, irectboutonmoins);
 	sfRectangleShape_setScale(BoutonMoins, scaleboutonmoins);
+	//FIN MENU AUDIO
+
+	// MENU PAUSE
+	OverlayMenuPause = sfRectangleShape_create();
+	sfRectangleShape_setSize(OverlayMenuPause, tailleFondMenuSettings);
+	sfRectangleShape_setPosition(OverlayMenuPause, PositionFondSettings);
+	sfRectangleShape_setTexture(OverlayMenuPause, FondSettings, sfTrue);
+
 }
 
-void displaymenu(sfRenderWindow* _window)
-{
-	if (state == MENU)
-	{
-		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
-		sfRenderWindow_drawRectangleShape(_window, ToucheGame, NULL);
-		sfRenderWindow_drawRectangleShape(_window, ToucheEditor, NULL);
-		sfRenderWindow_drawRectangleShape(_window, ToucheLeave, NULL);
-		sfRenderWindow_drawRectangleShape(_window, ToucheSettings, NULL);
-		sfRenderWindow_drawText(_window, Game, NULL);
-		sfRenderWindow_drawText(_window, Edit, NULL);
-		sfRenderWindow_drawText(_window, Leave, NULL);
-		
-	}
-	if (state == SETTINGS)
-	{
-		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
-		sfRenderWindow_drawRectangleShape(_window, ToucheAudio, NULL);
-		sfRenderWindow_drawRectangleShape(_window, ToucheTutoMapping, NULL);
-		sfRenderWindow_drawRectangleShape(_window, ToucheRetourMenu, NULL);
-		sfRenderWindow_drawText(_window, TextAudio, NULL);
-		sfRenderWindow_drawText(_window, TextMapping, NULL);
-		sfRenderWindow_drawText(_window, TextRetourMenu, NULL);
-	}
-	if (state == AUDIO)
-	{
-		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
-		sfRenderWindow_drawRectangleShape(_window, FondMenuSettings, NULL);
-		sfRenderWindow_drawSprite(_window, BoutonClose, NULL);
-		if (coche == NEUTRE)
-		{
-			sfRenderWindow_drawRectangleShape(_window, CaseMute, NULL);
-		}
-		if (coche == VALIDE)
-		{
-			sfRenderWindow_drawRectangleShape(_window, CaseDemute, NULL);
-		}
-		sfRenderWindow_drawRectangleShape(_window, Barreson, NULL);
-		sfRenderWindow_drawText(_window, SoundMuted, NULL);
-		sfRenderWindow_drawText(_window, ChangeSound, NULL);
-		sfRenderWindow_drawRectangleShape(_window, BoutonPlus, NULL);
-		sfRenderWindow_drawRectangleShape(_window, BoutonMoins, NULL);
-	}
-	if (state == TUTORIAL)
-	{
-		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
-		sfRenderWindow_drawRectangleShape(_window, FondMenuSettings, NULL);
-		sfRenderWindow_drawSprite(_window, BoutonClose, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheZ, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheS, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheD, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheQ, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheE, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheF, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheUp, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheDown, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheLeft, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheRight, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheRightClic, NULL);
-		sfRenderWindow_drawSprite(_window, ToucheLeftClic, NULL);
-		sfRenderWindow_drawText(_window, Jeu, NULL);
-		sfRenderWindow_drawText(_window, editor, NULL);
-		sfRenderWindow_drawText(_window, deplacement, NULL);
-		sfRenderWindow_drawText(_window, deplacement2, NULL);
-		sfRenderWindow_drawText(_window, Frapper, NULL);
-		sfRenderWindow_drawText(_window, Interagir, NULL);
-		sfRenderWindow_drawText(_window, SelectTile, NULL);
-		sfRenderWindow_drawText(_window, DrawTile, NULL);
-	}
-}
+
 
 void updatemenu(sfRenderWindow* _window)
 {
 	keytimer += GetDeltaTime();
-	if (sfKeyboard_isKeyPressed(sfKeyEscape))
+	if (state == GAME && sfKeyboard_isKeyPressed(sfKeyEscape) && keytimer > 0.5f)
 	{
-		state = MENU;
+		state = PAUSE;
+		keytimer = 0.0f;
 	}
-	if (sfKeyboard_isKeyPressed(sfKeyL))
+
+	else if (state == PAUSE && sfKeyboard_isKeyPressed(sfKeyEscape) && keytimer > 0.5f)
 	{
 		state = GAME;
+		keytimer = 0.0f;
 	}
-	if (sfKeyboard_isKeyPressed(sfKeyK))
-	{
-		state = EDITOR;
-	}
+
+
 	if (state == MENU)
 	{
 		sfFloatRect Rectangle = sfRectangleShape_getGlobalBounds(ToucheGame);
@@ -652,7 +598,7 @@ void updatemenu(sfRenderWindow* _window)
 				sfRenderWindow_close(_window);
 			}
 			keytimer = 0.0f;
-			
+
 		}
 		sfFloatRect Rectangle4 = sfRectangleShape_getGlobalBounds(ToucheSettings);
 		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle4.left && mousepos.x < (Rectangle4.width + Rectangle4.left) && mousepos.y > Rectangle4.top && mousepos.y < (Rectangle4.top + Rectangle4.height))
@@ -661,8 +607,8 @@ void updatemenu(sfRenderWindow* _window)
 			keytimer = 0.0f;
 		}
 
-	
 	}
+	
 	if (state == SETTINGS)
 	{
 		sfFloatRect Rectangle = sfRectangleShape_getGlobalBounds(ToucheAudio);
@@ -735,4 +681,77 @@ void updatemenu(sfRenderWindow* _window)
 
 }
 
+void displaymenu(sfRenderWindow* _window)
+{
+	if (state == MENU)
+	{
+		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheGame, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheEditor, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheLeave, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheSettings, NULL);
+		sfRenderWindow_drawText(_window, Game, NULL);
+		sfRenderWindow_drawText(_window, Edit, NULL);
+		sfRenderWindow_drawText(_window, Leave, NULL);
 
+	}
+	if (state == SETTINGS)
+	{
+		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheAudio, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheTutoMapping, NULL);
+		sfRenderWindow_drawRectangleShape(_window, ToucheRetourMenu, NULL);
+		sfRenderWindow_drawText(_window, TextAudio, NULL);
+		sfRenderWindow_drawText(_window, TextMapping, NULL);
+		sfRenderWindow_drawText(_window, TextRetourMenu, NULL);
+	}
+	if (state == AUDIO)
+	{
+		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
+		sfRenderWindow_drawRectangleShape(_window, FondMenuSettings, NULL);
+		sfRenderWindow_drawSprite(_window, BoutonClose, NULL);
+		if (coche == NEUTRE)
+		{
+			sfRenderWindow_drawRectangleShape(_window, CaseMute, NULL);
+		}
+		if (coche == VALIDE)
+		{
+			sfRenderWindow_drawRectangleShape(_window, CaseDemute, NULL);
+		}
+		sfRenderWindow_drawRectangleShape(_window, Barreson, NULL);
+		sfRenderWindow_drawText(_window, SoundMuted, NULL);
+		sfRenderWindow_drawText(_window, ChangeSound, NULL);
+		sfRenderWindow_drawRectangleShape(_window, BoutonPlus, NULL);
+		sfRenderWindow_drawRectangleShape(_window, BoutonMoins, NULL);
+	}
+	if (state == TUTORIAL)
+	{
+		sfRenderWindow_drawSprite(_window, fondmenu, NULL);
+		sfRenderWindow_drawRectangleShape(_window, FondMenuSettings, NULL);
+		sfRenderWindow_drawSprite(_window, BoutonClose, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheZ, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheS, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheD, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheQ, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheE, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheF, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheUp, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheDown, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheLeft, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheRight, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheRightClic, NULL);
+		sfRenderWindow_drawSprite(_window, ToucheLeftClic, NULL);
+		sfRenderWindow_drawText(_window, Jeu, NULL);
+		sfRenderWindow_drawText(_window, editor, NULL);
+		sfRenderWindow_drawText(_window, deplacement, NULL);
+		sfRenderWindow_drawText(_window, deplacement2, NULL);
+		sfRenderWindow_drawText(_window, Frapper, NULL);
+		sfRenderWindow_drawText(_window, Interagir, NULL);
+		sfRenderWindow_drawText(_window, SelectTile, NULL);
+		sfRenderWindow_drawText(_window, DrawTile, NULL);
+	}
+	if (state == PAUSE)
+	{
+		sfRenderWindow_drawRectangleShape(_window, OverlayMenuPause, NULL);
+	}
+}
