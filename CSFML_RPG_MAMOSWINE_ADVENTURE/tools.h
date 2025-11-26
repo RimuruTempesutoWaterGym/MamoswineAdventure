@@ -20,13 +20,10 @@
 typedef enum {
 	Down, DownRight, Left, RightTop, Top, TopLeft, Right, DownLeft
 }Direction;
-typedef enum {
-	Menu, Overworld, Fire, Water, Grass, Elec
-}Music;
+
 typedef enum {
 	MENU, GAME, EDITOR, LEAVE, PAUSE, SETTINGS, TUTORIAL, AUDIO
 }State;
-Music music;
 State state;
 int pressed;
 void initTools();
