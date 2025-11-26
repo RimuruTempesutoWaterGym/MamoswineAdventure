@@ -97,9 +97,11 @@ void displayAll(sfRenderWindow* _window)
 	displayMap(_window);
 	displayView(_window);
 	displayPlayer(_window);
-	displayNPC(_window);
-	displaymenu(_window);
 	displayElementalMammoswine(_window);
 	displayDoor(_window);
+	displayNPC(_window);
+	displaymenu(_window);
+
+
 	//displayTextBox(_window);
 }

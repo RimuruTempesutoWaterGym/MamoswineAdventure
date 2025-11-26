@@ -100,7 +100,7 @@ void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)
 }
 void displayElementalMammoswine(sfRenderWindow* _window)
 {
-	if (state == GAME)
+	if (state == GAME || state == EDITOR)
 	{
 		sfRenderWindow_drawSprite(_window, mammoswineFire, NULL);
 		sfRenderWindow_drawSprite(_window, mammoswineGrass, NULL);
