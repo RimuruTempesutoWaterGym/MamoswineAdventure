@@ -4,3 +4,4 @@
 void initplayer();
 void updatePlayer(sfRenderWindow* _window);
 void displayPlayer(sfRenderWindow* _window);
+sfFloatRect getMamoswineHitboxByPos(sfFloatRect _mamoswinePos);
