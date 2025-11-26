@@ -118,31 +118,29 @@ void updateViewEditor(sfRenderWindow* _window)
 
 
 	}
-
-
-
-void displayView(sfRenderWindow* _window)
+void displayViewEdit(sfRenderWindow* _window)
 {
-	switch (state)
-	{
-	case EDITOR:
-		sfRenderWindow_setView(_window, viewEdit);
-		displayMap(_window);
-		updateMap(_window);
-		displayPlayer(_window);
-		sfRenderWindow_setView(_window, viewEditUi);
-		updateTilesetPanel(_window);
+	sfRenderWindow_setView(_window, viewEdit);
+	
+}
+void displayViewEditUi(sfRenderWindow* _window)
+{
+	sfRenderWindow_setView(_window, viewEditUi);
+	updateTilesetPanel(_window, viewEditUi);
+}
+void displayViewTileSelection(sfRenderWindow* _window)
+{
 
-		sfRenderWindow_setView(_window, viewTileSelection);
-		updateTileSelectionPanel(_window, viewTileSelection);
-		break;
-	case GAME:
-		sfRenderWindow_setView(_window, viewPlayer);
-		break;
-	default:
-		sfRenderWindow_setView(_window, viewDefault);
-		break;
-	}
+	sfRenderWindow_setView(_window, viewTileSelection);
+	updateTileSelectionPanel(_window, viewTileSelection);
+}
+void displayViewPlayer(sfRenderWindow* _window)
+{
+	sfRenderWindow_setView(_window, viewPlayer);
+}
+void displayViewDefault(sfRenderWindow* _window)
+{
+	sfRenderWindow_setView(_window, viewDefault);
 }
 void displayMinimap(sfRenderWindow* _window)
 {
@@ -161,10 +159,18 @@ void displayMinimap(sfRenderWindow* _window)
 
 
 }
-sfVector2f updatePixelToWorld(sfRenderWindow* _window)
+sfVector2f updatePixelToWorld(sfRenderWindow* _window, sfView* _view)
 {
+	if (_view == NULL)
+	{
+		sfVector2i pixelPos = sfMouse_getPositionRenderWindow(_window);
+		return sfRenderWindow_mapPixelToCoords(_window, pixelPos, viewEdit);
+	}
+	else
+	{
 	sfVector2i pixelPos = sfMouse_getPositionRenderWindow(_window);
-	return sfRenderWindow_mapPixelToCoords(_window, pixelPos, viewEdit);
+	return sfRenderWindow_mapPixelToCoords(_window, pixelPos, _view);
+	}
 }
 sfView* getCurrentView(sfRenderWindow* _window)
 {

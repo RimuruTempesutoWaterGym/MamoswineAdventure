@@ -16,7 +16,7 @@ typedef enum {
 }tilesetType;
 typedef enum {
 	isNotWall = 0,
-	isWall 
+	isWall ,
 
 
 }selectionTileType;
@@ -24,9 +24,7 @@ typedef enum {
 	none = 0,
 	plant, // 32x32 size
 	boulder, // 24x24 size
-	electric_toggle
-
-
+	electric_toggle,
 }specialTileType;
 
 typedef struct {
@@ -46,7 +44,11 @@ typedef struct {
 
 
 typedef enum {
-	tiles = 1, specialTiles, sprite
+	tiles = 1,
+	specialTiles,
+	electric_toggle_link,
+	sprite,
+
 }Tilemode;
 
 void initmap();
@@ -59,8 +61,9 @@ void saveMap(const char* filename);
 void loadMap(const char* filename);
 void createMap();
 sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber);
-void updateTilesetPanel(sfRenderWindow* _window);
+void updateTilesetPanel(sfRenderWindow* _window, sfView* _view);
 void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection);
 tileSet* getCurrentTileset(tilesetType type);
 void changeSpecialTiles(specialTileType specialTile);
 void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction );
+
