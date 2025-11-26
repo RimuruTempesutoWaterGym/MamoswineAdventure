@@ -111,15 +111,31 @@ void updateAll(sfRenderWindow* _window)
 }
 void displayAll(sfRenderWindow* _window)
 {
-	displayMap(_window);
-	displayView(_window);
-	displayDoor(_window);
-	displayPlayer(_window);
-	displayElementalMammoswine(_window);
+	switch (state)
+	{
+	case EDITOR:
 
-	displayNPC(_window);
-	displaymenu(_window);
-
+		displayViewEdit(_window);
+		displayMap(_window);
+		updateMap(_window);
+		displayPlayer(_window);
+		displayDoor(_window);
+		displayElementalMammoswine(_window);
+		displayNPC(_window);
+		displayViewEditUi(_window);
+		displayViewTileSelection(_window);	
+		break;
+	case GAME:
+		displayViewPlayer(_window);
+		displayMap(_window);
+		displayPlayer(_window);
+		displayDoor(_window);
+		displayElementalMammoswine(_window);
+		displayNPC(_window);
+		break;
+	case MENU:
+		displaymenu(_window);
+	}
 
 	//displayTextBox(_window);
 }

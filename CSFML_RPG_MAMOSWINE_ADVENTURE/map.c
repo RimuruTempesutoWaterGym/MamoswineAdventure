@@ -3,6 +3,7 @@
 #include "door.h"
 sfRectangleShape* selectTileSetSquare;
 sfVector2f mousepos;
+sfVector2f mouseposViewUi;
 sfRectangleShape* RectangleTilesetPanel;
 sfRectangleShape* RectangleTileSelectionPanel;
 sfRectangleShape* RectangleButtonSwitchTileWall;
@@ -149,7 +150,7 @@ void updateMap(sfRenderWindow* _window)
 	if (state == EDITOR)
 	{
 		keyMapTimer += GetDeltaTime();
-		mousepos = updatePixelToWorld(_window);
+		mousepos = updatePixelToWorld(_window,NULL);
 
 
 
@@ -178,9 +179,8 @@ void updateMap(sfRenderWindow* _window)
 			sfSprite_setTextureRect(mapSprite, tile);
 			sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
 			sfRectangleShape_setPosition(mouseCornerIndicator, (sfVector2f) { mousepos.x, mousepos.y });
-			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
-
+			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			if (selectedTiles == 0)
 			{
 
@@ -479,12 +479,13 @@ sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber)
 			tile.left = (tileNumber - (tile.top - 8 *tile.top / tile.height) ) * tile.width;
 			return tile;
 }
-void updateTilesetPanel(sfRenderWindow* _window)
+void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 {
 	if (state == EDITOR)
 	{
+
 		switchTileTypeTimer += GetDeltaTime();
-		mousepos = updatePixelToWorld(_window);
+		mouseposViewUi = updatePixelToWorld(_window, _view);
 		sfVector2i screenMousePos = sfMouse_getPositionRenderWindow(_window);
 		sfVector2f screenMousePosF = { (float)screenMousePos.x, (float)screenMousePos.y };
 
@@ -498,7 +499,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 		sfRenderWindow_drawRectangleShape(_window, RectangleTilesetPanel, NULL);
 		sfRenderWindow_drawRectangleShape(_window, RectangleButtonSwitchTileMode, NULL);
 		sfFloatRect rectfrect = sfRectangleShape_getGlobalBounds(RectangleButtonSwitchTileMode);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(screenMousePosF, rectfrect) && switchTileTypeTimer >= 0.5f)
+		if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, rectfrect) && switchTileTypeTimer >= 0.5f)
 		{
 			if (selectedTileMode == 2)
 			{
@@ -526,7 +527,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 
 				sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
 				if (sfMouse_isButtonPressed(sfMouseLeft) &&
-					isInsideMouse(screenMousePosF, mapfrect))
+					isInsideMouse(mouseposViewUi, mapfrect))
 				{
 					selectedTexture = i;
 					selectedTiles = 1;
@@ -552,10 +553,10 @@ void updateTilesetPanel(sfRenderWindow* _window)
 			changeTileset(selectedTexture);
 
 			sfSprite_setTextureRect(mapSprite, tile);
-			sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
-			sfRectangleShape_setPosition(mouseCornerIndicator, (sfVector2f) { mousepos.x, mousepos.y });
-			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
+			sfSprite_setPosition(mapSprite, mouseposViewUi);
+			sfRectangleShape_setPosition(mouseCornerIndicator,  mouseposViewUi );
 			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			if (selectedTiles == 0)
 			{
 
@@ -567,6 +568,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 				sfRenderWindow_setMouseCursorVisible(_window, sfFalse);
 
 			}
+	
 		}
 		if (selectedTileMode == 2)
 		{
@@ -607,8 +609,8 @@ void updateTilesetPanel(sfRenderWindow* _window)
 			changeSpecialTiles(selectedTexture);
 
 			
-			sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
-			sfRectangleShape_setPosition(mouseCornerIndicator, (sfVector2f) { mousepos.x, mousepos.y });
+			sfSprite_setPosition(mapSprite, mouseposViewUi);
+			sfRectangleShape_setPosition(mouseCornerIndicator, mouseposViewUi);
 			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 			if (selectedTiles == 0)
@@ -722,7 +724,6 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 					tile = giveSpriteTextureDim(tile, tileNum);
 					sfSprite_setTextureRect(mapSprite, tile);
 					sfSprite_setPosition(mapSprite, tilepos_ui);
-					sfSprite_setPosition(mapSprite, tilepos_ui);
 
 
 					if (selectedTiles == tileNum)
@@ -736,6 +737,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 						sfRectangleShape_setOutlineThickness(highlight, 2.f);
 						sfRenderWindow_drawRectangleShape(_window, highlight, NULL);
 						sfRectangleShape_destroy(highlight);
+
 					}
 
 					sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
@@ -745,7 +747,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 					}
 
 					sfRenderWindow_drawSprite(_window, mapSprite, NULL);
-
+				
 					currentCol++;
 					if (currentCol >= tilesPerRow)
 					{
@@ -765,7 +767,9 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 				changeTileset(selectedTexture);
 				sfSprite_setTextureRect(mapSprite, tile);
 				sfSprite_setPosition(mapSprite, viewMousePos);
+				sfRectangleShape_setPosition(mouseCornerIndicator, viewMousePos);
 				sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+				sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			}
 		}
 	}
@@ -1061,7 +1065,7 @@ void initTileset()
 	 1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,
 	 1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,
 	 1,1,1,0,0,0,0,0,1,1,1,1,0,1,1,0,
-	 0,0,0,0,1,1,1,1,1,0,0,1,1,1,1,1,
+	 0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,
 	 1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,1,
 	 1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,
 	 0,0,0,0,0,0,0} };
