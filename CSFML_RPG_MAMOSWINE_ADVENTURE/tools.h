@@ -18,11 +18,10 @@
 #define LERP_F(a,b,t) ((b-a) * SATURATE(t) + a)
 
 typedef enum {
-	Down, DownRight, Left, RightTop, Top, TopLeft, Right, DownLeft
+    Down, DownRight, Left, RightTop, Top, TopLeft, Right, DownLeft
 }Direction;
-
 typedef enum {
-	MENU, GAME, EDITOR, LEAVE, PAUSE, SETTINGS, TUTORIAL, AUDIO
+    MENU, GAME, EDITOR, LEAVE, PAUSE, SETTINGS, SETTINGSMENU, TUTORIAL, AUDIO
 }State;
 State state;
 int pressed;
@@ -33,4 +32,4 @@ void displayAll(sfRenderWindow* _window);
 void restartClock();
 float GetDeltaTime();
 int isInsideMouse(sfVector2f item, sfFloatRect obstacle);
-
+int isInsideMousei(sfVector2i item, sfFloatRect obstacle);
