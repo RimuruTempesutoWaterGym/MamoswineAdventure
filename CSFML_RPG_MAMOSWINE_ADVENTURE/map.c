@@ -1,5 +1,6 @@
 
 #include "map.h"
+#include "door.h"
 sfRectangleShape* selectTileSetSquare;
 sfVector2f mousepos;
 sfRectangleShape* RectangleTilesetPanel;
@@ -888,10 +889,13 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 				}
 			
 			
-			if (tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0  
+			if (
+		tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0  
 				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType > 1 
 				|| (tileMap[isTreeInNextPosInTab.y][isTreeInNextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 1
+				
 				&& tileMap[isTreeInNextPosInTab.y][isTreeInNextPosInTab.x].selectedSpecialTiles.state < 15)
+			
 				||tilesetNearFront->isWall[tileMap[nextPosInTab2.y][nextPosInTab2.x].tileNumber] > 0
 				|| tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType > 1 
 				|| (tileMap[isTreeInNextPosInTab2.y][isTreeInNextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == 1

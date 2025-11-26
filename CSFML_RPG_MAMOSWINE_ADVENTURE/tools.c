@@ -25,10 +25,26 @@ int isInsideMouse(sfVector2f item, sfFloatRect obstacle)
 		item.x < (obstacle.width + obstacle.left) &&
 		item.y > obstacle.top &&
 		item.y < (obstacle.top + obstacle.height))
+	{
+	
+		return 1;
+
+	}
+	return 0;
+}
+	int isInsideMousei(sfVector2i item, sfFloatRect obstacle)
+	{
+
+		if (item.x > obstacle.left &&
+			item.x < (obstacle.width + obstacle.left) &&
+			item.y > obstacle.top &&
+			item.y < (obstacle.top + obstacle.height))
 		{
+			
 			return 1;
 
-}
+		}
+		printf("2");
 return 0;
 }
 int isInsidePlayer(sfFloatRect player, sfFloatRect obstacle)
@@ -91,14 +107,16 @@ void updateAll(sfRenderWindow* _window)
 	updateTextBox();
 	updateMap(_window);
 	updateElementalMammoswine();
+	updateDoor();
 }
 void displayAll(sfRenderWindow* _window)
 {
 	displayMap(_window);
 	displayView(_window);
+	displayDoor(_window);
 	displayPlayer(_window);
 	displayElementalMammoswine(_window);
-	displayDoor(_window);
+
 	displayNPC(_window);
 	displaymenu(_window);
 
