@@ -15,6 +15,7 @@ void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos);
 void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos);
 void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos);
 void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos);
+
 void saveMamowsineData(const char* filename);
 void loadMamowsineData(const char* filename);
 typedef enum {
