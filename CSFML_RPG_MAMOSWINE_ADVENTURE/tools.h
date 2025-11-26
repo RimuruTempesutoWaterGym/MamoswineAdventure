@@ -10,6 +10,7 @@
 #define TILE_WIDTH 24
 #define TILE_HEIGHT 24
 #define TEXTURE_PATH "../ressources/Textures/"
+#define MUSIC_PATH "../ressources/Musics/"
 #define MAX(a,b) (a >= b ? a : b)
 #define MIN(a,b) (a <= b ? a : b)
 #define CLAMP(a,b,value) (MAX(MIN(b,value), a))

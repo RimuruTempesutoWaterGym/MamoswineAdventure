@@ -15,7 +15,7 @@ sfVector2f PositionTilesetPanel = { 0.f,-100.f };
 sfVector2f PositionButtonSwitchTileWall = { 20.f,525.f };
 sfVector2f PositionButtonSwitchTileMode = { 5.f,525.f };
 sfSprite* mapSprite;
-sfTexture* peacefulTexture;
+ sfTexture* peacefulTexture;
 sfTexture* naturalTexture;
 sfTexture* swampTexture;
 sfTexture* waterTexture;

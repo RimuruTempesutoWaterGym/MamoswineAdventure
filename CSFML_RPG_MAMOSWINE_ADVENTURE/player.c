@@ -188,7 +188,7 @@ void updatePlayer(sfRenderWindow* _window)
 
 void displayPlayer(sfRenderWindow* _window)
 {
-    if (state == GAME)
+    if (state == GAME || state == EDITOR)
     {
         sfRenderWindow_drawSprite(_window, mamoswineSprite, NULL);
         if (collisionNPC(posMamoswine))

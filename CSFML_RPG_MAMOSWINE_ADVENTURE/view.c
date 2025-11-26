@@ -4,11 +4,14 @@
 sfView* viewEdit;
 sfView* viewPlayer;
 sfView* viewEditUi;
+sfView* viewDefault;
 sfView* viewTileSelection;
 sfVector2f posViewEdit = { 400.0f,300.0f };
+sfVector2f posViewDefault = { 400.0f,300.0f };
 sfVector2f posViewPlayer = { 400.0f,300.0f };
 sfVector2f viewEditSize = { 800,600 };
 sfVector2f viewPlayerSize = { 400,300.0f };
+sfVector2f viewDefaultSize = { 800.f,600.0f };
 sfVector2f viewEditUISize = { TILE_WIDTH + 10.f , 600.f };
 sfVector2f viewTileSelectionSize = { 110.f, 600.f };
 sfVector2f velocityViewEdit = { 300.f,300.f };
@@ -25,14 +28,17 @@ void initView()
 viewEdit = sfView_create();
 viewPlayer = sfView_create();
 viewEditUi = sfView_create();
+viewDefault = sfView_create();
 viewTileSelection = sfView_create();
 
  sfView_setSize(viewEdit, viewEditSize);
  sfView_setSize(viewPlayer, viewPlayerSize);
  sfView_setSize(viewEditUi, viewEditUISize);
+ sfView_setSize(viewDefault, viewDefaultSize);
  sfView_setSize(viewTileSelection, viewTileSelectionSize);
  sfView_setCenter(viewEditUi, posViewEditUi);
  sfView_setCenter(viewTileSelection, posViewTileSelection);
+ sfView_setCenter(viewDefault, posViewDefault);
  float viewportWidth = (TILE_WIDTH + 10.f) / 800.0f;  
  sfFloatRect uiViewport = { 0.0f, 0.0f, viewportWidth, 1.0f };  
  sfView_setViewport(viewEditUi, uiViewport);
@@ -117,30 +123,26 @@ void updateViewEditor(sfRenderWindow* _window)
 
 void displayView(sfRenderWindow* _window)
 {
-
-	
-	if (state == EDITOR)
+	switch (state)
 	{
-
+	case EDITOR:
 		sfRenderWindow_setView(_window, viewEdit);
 		displayMap(_window);
-		updateMap(_window);  
-
-		
+		updateMap(_window);
+		displayPlayer(_window);
 		sfRenderWindow_setView(_window, viewEditUi);
 		updateTilesetPanel(_window);
 
 		sfRenderWindow_setView(_window, viewTileSelection);
 		updateTileSelectionPanel(_window, viewTileSelection);
-	}
-
-	if (state == GAME)
-	{
+		break;
+	case GAME:
 		sfRenderWindow_setView(_window, viewPlayer);
-		displayMap(_window);
-		updateMap(_window);
+		break;
+	default:
+		sfRenderWindow_setView(_window, viewDefault);
+		break;
 	}
-	
 }
 void displayMinimap(sfRenderWindow* _window)
 {
