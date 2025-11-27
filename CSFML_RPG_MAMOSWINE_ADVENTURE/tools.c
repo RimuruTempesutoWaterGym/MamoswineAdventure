@@ -106,7 +106,7 @@ void updateAll(sfRenderWindow* _window)
 	updatePlayer(_window);
 	updateTextBox();
 	updateMap(_window);
-	updateElementalMammoswine();
+
 	updateDoor();
 }
 void displayAll(sfRenderWindow* _window)
