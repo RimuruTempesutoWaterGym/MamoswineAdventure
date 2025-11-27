@@ -190,7 +190,7 @@ sfTexture* barre2son;
 
 sfRectangleShape* NiveauVolume;
 sfVector2f positionvolume = { 550.0f, 420.0f };
-sfVector2f taillevolume = { 29.0f, 4.0f };
+sfVector2f taillevolume = { 0.0f, 4.0f };
 sfIntRect irectniveauvolume = { 0,0,30,5 };
 sfVector2f scaleniveauvolume = { 10.0f, 10.0f };
 // Boutons de volume
@@ -649,21 +649,26 @@ void updatemenu(sfRenderWindow* _window)
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle4 = sfRectangleShape_getGlobalBounds(BoutonPlus);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle4.left && mousepos.x < (Rectangle4.width + Rectangle4.left) && mousepos.y > Rectangle4.top && mousepos.y < (Rectangle4.top + Rectangle4.height))
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.3f && mousepos.x > Rectangle4.left && mousepos.x < (Rectangle4.width + Rectangle4.left) && mousepos.y > Rectangle4.top && mousepos.y < (Rectangle4.top + Rectangle4.height))
 		{
 			
-			
+			if (taillevolume.x > 1.0f)
+			{
 				taillevolume.x -= LERP_F(0, 29.0f, volumelerp);
 				sfRectangleShape_setSize(NiveauVolume, taillevolume);
+			}
 				keytimer = 0.0f;
 			
 			
 		}
 		sfFloatRect Rectangle5 = sfRectangleShape_getGlobalBounds(BoutonMoins);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle5.left && mousepos.x < (Rectangle5.width + Rectangle5.left) && mousepos.y > Rectangle5.top && mousepos.y < (Rectangle5.top + Rectangle5.height))
+		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.3f && mousepos.x > Rectangle5.left && mousepos.x < (Rectangle5.width + Rectangle5.left) && mousepos.y > Rectangle5.top && mousepos.y < (Rectangle5.top + Rectangle5.height))
 		{
-			taillevolume.x += LERP_F(0, 29.0f, volumelerp);
-			sfRectangleShape_setSize(NiveauVolume, taillevolume);
+			if (taillevolume.x < 28.0f)
+			{
+				taillevolume.x += LERP_F(0, 29.0f, volumelerp);
+				sfRectangleShape_setSize(NiveauVolume, taillevolume);
+			}
 			keytimer = 0.0f;
 		}
 		
