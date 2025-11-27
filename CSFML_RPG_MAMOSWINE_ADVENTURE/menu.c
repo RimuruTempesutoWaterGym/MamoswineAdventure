@@ -656,6 +656,7 @@ void updatemenu(sfRenderWindow* _window)
 			{
 				taillevolume.x -= LERP_F(0, 29.0f, volumelerp);
 				sfRectangleShape_setSize(NiveauVolume, taillevolume);
+				volumeMusic(volumelerp * 100);
 			}
 				keytimer = 0.0f;
 			
@@ -668,6 +669,7 @@ void updatemenu(sfRenderWindow* _window)
 			{
 				taillevolume.x += LERP_F(0, 29.0f, volumelerp);
 				sfRectangleShape_setSize(NiveauVolume, taillevolume);
+				volumeMusic(-volumelerp * 100);
 			}
 			keytimer = 0.0f;
 		}
@@ -706,6 +708,7 @@ void updatemenu(sfRenderWindow* _window)
 		sfFloatRect Rectangle3 = sfRectangleShape_getGlobalBounds(SauvegarderPause);
 		if (sfMouse_isButtonPressed(sfMouseLeft)  && keytimer > 0.5f && mousepos.x > Rectangle3.left && mousepos.x < (Rectangle3.width + Rectangle3.left) && mousepos.y > Rectangle3.top && mousepos.y < (Rectangle3.top + Rectangle3.height))
 		{
+			updateElementalMammoswine();
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle4 = sfRectangleShape_getGlobalBounds(RetourMenuPrincipalPause);

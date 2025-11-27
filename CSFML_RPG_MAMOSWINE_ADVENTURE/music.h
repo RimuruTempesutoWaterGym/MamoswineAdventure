@@ -9,4 +9,4 @@ Music music;
 
 void initMusic();
 void volumeMusic(float _volume);
-void setMusic();
+void setMusic(Music _music);
