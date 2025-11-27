@@ -12,7 +12,7 @@ sfTexture* FondSettings;
 sfTexture* casevide;
 sfTexture* casecoche;
 sfTexture* fondbarreson;
-float volumelerp;
+float volumelerp = 0.1f;
 
 // MENU PRINCIPAL:
 // GAME
@@ -189,7 +189,7 @@ sfVector2f scalebarreson = { 10.0f,10.0f };
 sfTexture* barre2son;
 
 sfRectangleShape* NiveauVolume;
-sfVector2f positionvolume = { 260.0f, 380.0f };
+sfVector2f positionvolume = { 550.0f, 420.0f };
 sfVector2f taillevolume = { 29.0f, 4.0f };
 sfIntRect irectniveauvolume = { 0,0,30,5 };
 sfVector2f scaleniveauvolume = { 10.0f, 10.0f };
@@ -516,6 +516,7 @@ void updatemenu(sfRenderWindow* _window)
 			typemenu = EDITING;
 		}
 		state = PAUSE;
+		sfRenderWindow_setMouseCursorVisible(_window, sfTrue);
 		keytimer = 0.0f;
 	}
 
@@ -615,6 +616,7 @@ void updatemenu(sfRenderWindow* _window)
 	}
 	if (state == AUDIO)
 	{
+		
 		sfFloatRect Rectangle = sfRectangleShape_getGlobalBounds(BoutonClose);
 		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle.left && mousepos.x < (Rectangle.width + Rectangle.left) && mousepos.y > Rectangle.top && mousepos.y < (Rectangle.top + Rectangle.height))
 		{
@@ -649,16 +651,19 @@ void updatemenu(sfRenderWindow* _window)
 		sfFloatRect Rectangle4 = sfRectangleShape_getGlobalBounds(BoutonPlus);
 		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle4.left && mousepos.x < (Rectangle4.width + Rectangle4.left) && mousepos.y > Rectangle4.top && mousepos.y < (Rectangle4.top + Rectangle4.height))
 		{
-		
-			taillevolume.x -= LERP_F(0, 29.0f, 0.1);
-			sfRectangleShape_setSize(NiveauVolume, taillevolume);
-			keytimer = 0.0f;
-		
+			
+			
+				taillevolume.x -= LERP_F(0, 29.0f, volumelerp);
+				sfRectangleShape_setSize(NiveauVolume, taillevolume);
+				keytimer = 0.0f;
+			
+			
 		}
 		sfFloatRect Rectangle5 = sfRectangleShape_getGlobalBounds(BoutonMoins);
 		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle5.left && mousepos.x < (Rectangle5.width + Rectangle5.left) && mousepos.y > Rectangle5.top && mousepos.y < (Rectangle5.top + Rectangle5.height))
 		{
-			
+			taillevolume.x += LERP_F(0, 29.0f, volumelerp);
+			sfRectangleShape_setSize(NiveauVolume, taillevolume);
 			keytimer = 0.0f;
 		}
 		
@@ -747,7 +752,6 @@ void displaymenu(sfRenderWindow* _window)
 		sfRenderWindow_drawText(_window, Game, NULL);
 		sfRenderWindow_drawText(_window, Edit, NULL);
 		sfRenderWindow_drawText(_window, Leave, NULL);
-
 	}
 	if (state == SETTINGSMENU)
 	{
@@ -778,6 +782,7 @@ void displaymenu(sfRenderWindow* _window)
 		sfRenderWindow_drawText(_window, ChangeSound, NULL);
 		sfRenderWindow_drawRectangleShape(_window, BoutonPlus, NULL);
 		sfRenderWindow_drawRectangleShape(_window, BoutonMoins, NULL);
+		
 	}
 	if (state == TUTORIAL)
 	{
@@ -829,14 +834,14 @@ void displaymenu(sfRenderWindow* _window)
 	}
 }
 sfRectangleShape* creationboutton(sfRectangleShape* _nombouton, sfVector2f _taille, sfVector2f _position, sfIntRect _irect, sfTexture * _texture)
-	{
-		_nombouton = sfRectangleShape_create();
-		sfRectangleShape_setSize(_nombouton, _taille);
-		sfRectangleShape_setPosition(_nombouton, _position);
-		sfRectangleShape_setTexture(_nombouton, _texture, sfTrue);
-		sfRectangleShape_setTextureRect(_nombouton, _irect);
-		return _nombouton;
-	}
+{
+	_nombouton = sfRectangleShape_create();
+	sfRectangleShape_setSize(_nombouton, _taille);
+	sfRectangleShape_setPosition(_nombouton, _position);
+	sfRectangleShape_setTexture(_nombouton, _texture, sfTrue);
+	sfRectangleShape_setTextureRect(_nombouton, _irect);
+	return _nombouton;
+}
 
 sfText* creationtexte(sfText* _text, const char* _string,sfVector2f _position, sfColor _couleur, unsigned int _size)
 {

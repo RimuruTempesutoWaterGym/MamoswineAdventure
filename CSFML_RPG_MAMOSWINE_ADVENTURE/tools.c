@@ -133,8 +133,10 @@ void displayAll(sfRenderWindow* _window)
 		displayElementalMammoswine(_window);
 		displayNPC(_window);
 		break;
-	case MENU:
+	default:
+		displayViewDefault(_window);
 		displaymenu(_window);
+		break;
 	}
 
 	//displayTextBox(_window);
