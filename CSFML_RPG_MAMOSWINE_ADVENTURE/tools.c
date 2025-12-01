@@ -128,8 +128,16 @@ void displayAll(sfRenderWindow* _window)
 	case GAME:
 		displayViewPlayer(_window);
 		displayMap(_window);
-		displayPlayer(_window);
-		displayDoor(_window);
+		if (isPlayerOverDoor())
+		{
+			displayPlayer(_window);
+			displayDoor(_window);
+		}
+		else
+		{
+			displayDoor(_window);
+			displayPlayer(_window);
+		}
 		displayElementalMammoswine(_window);
 		displayNPC(_window);
 		break;

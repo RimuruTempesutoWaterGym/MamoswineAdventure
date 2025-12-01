@@ -206,6 +206,10 @@ sfFloatRect getMamoswineHitboxByPos(sfFloatRect _mamoswinePos)
     _mamoswinePos.width /= 2;
     return _mamoswinePos;
 }
+sfBool isPlayerOverDoor()
+{
+
+}
 //sfFloatRect gethitboxMamoswine(sfFloatRect _sprite, Direction _direction, sfFloatRect spriteHitbox)
 //{
 //    switch (_direction)
