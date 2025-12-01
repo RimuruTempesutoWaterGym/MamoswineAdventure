@@ -10,3 +10,4 @@ Music music;
 void initMusic();
 void volumeMusic(float _volume);
 void setMusic(Music _music);
+sfMusic* getActualMusic();
