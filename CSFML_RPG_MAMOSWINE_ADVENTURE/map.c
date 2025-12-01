@@ -1,6 +1,9 @@
 
 #include "map.h"
 #include "door.h"
+#include "elemental_mammoswine.h"
+#include "player.h"
+#include "NPC.h"
 sfRectangleShape* selectTileSetSquare;
 sfVector2f mousepos;
 sfVector2f mouseposViewUi;
@@ -69,7 +72,9 @@ float keyMapTimer = 0.0f;
 int tileSelection;
 
 char pathFile[100];
+
 tileOf tileMap[MAP_HEIGHT][MAP_WIDTH];
+
 
 tilesetType tileType;
 specialTileType typeOfSpecialTile;
@@ -453,8 +458,8 @@ void loadMap(const char* filename)
 	{
 		for (int j = 0; j < MAP_WIDTH; j++)
 		{
-
 			tileMap[i][j].selectedSpecialTiles.state = 0;
+			tileMap[i][j].isActivable = 0;
 		}
 	}
 	printf("Map chargée depuis %s\n", filename);
@@ -793,22 +798,22 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			switch (_direction)
 			{
 			case Down:
-				nextPosInTab.y = (int)((_sprite.top + (_sprite.height/2) + _vitesse->y * delataTime) / TILE_WIDTH);
-				nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top + (_sprite.height/2) + _vitesse->y * delataTime) );
+				nextPosInTab.x = (int)(_sprite.left );
 				isTreeInNextPosInTab.y = (int)((_sprite.top + 16+ (_sprite.height / 2) + _vitesse->y * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
-				nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-				nextPosInTab2.y = (int)((_sprite.top + (_sprite.height / 2) + _vitesse->y * delataTime) / TILE_WIDTH);
+				nextPosInTab2.x = (_sprite.left + _sprite.width) ;
+				nextPosInTab2.y = (int)((_sprite.top + (_sprite.height / 2) + _vitesse->y * delataTime) );
 				isTreeInNextPosInTab2.y = (int)((_sprite.top + 16 +(_sprite.height / 2) + _vitesse->y * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
 				sideOfNewTileY = 1;
 				break;
 			case Top:
 				
-				nextPosInTab.y = (int)((_sprite.top  - _vitesse->y * delataTime )/ TILE_WIDTH);
-				nextPosInTab.x =(int)(_sprite.left / TILE_WIDTH);
-				nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-				nextPosInTab2.y = (int)((_sprite.top - _vitesse->y * delataTime) / TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top  - _vitesse->y * delataTime ));
+				nextPosInTab.x =(int)(_sprite.left );
+				nextPosInTab2.x = (_sprite.left + _sprite.width) ;
+				nextPosInTab2.y = (int)((_sprite.top - _vitesse->y * delataTime) );
 				isTreeInNextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
 				isTreeInNextPosInTab.y = (int)((_sprite.top + 6 - _vitesse->y * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab2.y = (int)((_sprite.top + 6 - _vitesse->y * delataTime) / TILE_WIDTH);
@@ -817,10 +822,10 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			
 				break;
 			case Right:
-				nextPosInTab.y = (int)((_sprite.top )   / TILE_WIDTH);
-				nextPosInTab.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
-				nextPosInTab2.y = (_sprite.top + _sprite.height / 2) / TILE_WIDTH;
-				nextPosInTab2.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top )   );
+				nextPosInTab.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) );
+				nextPosInTab2.y = (_sprite.top + _sprite.height / 2) ;
+				nextPosInTab2.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) );
 				isTreeInNextPosInTab.y = (int)((_sprite.top + 6) / TILE_WIDTH);
 				isTreeInNextPosInTab.x = (int)((_sprite.left +  _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab2.y = (_sprite.top+ 16 + _sprite.height / 2) / TILE_WIDTH;
@@ -828,10 +833,10 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 				sideOfNewTileX = 1;
 				break;
 			case Left:
-				nextPosInTab.y = (int)((_sprite.top ) / TILE_WIDTH);
-				nextPosInTab.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
-				nextPosInTab2.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
-				nextPosInTab2.y = (_sprite.top + _sprite.height/2) / TILE_WIDTH;
+				nextPosInTab.y = (int)((_sprite.top ) );
+				nextPosInTab.x = (int)((_sprite.left  - _vitesse->x * delataTime) );
+				nextPosInTab2.x = (int)((_sprite.left  - _vitesse->x * delataTime) );
+				nextPosInTab2.y = (_sprite.top + _sprite.height/2) ;
 				isTreeInNextPosInTab.y = (int)((_sprite.top + 6) / TILE_WIDTH);
 				isTreeInNextPosInTab.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab2.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
@@ -839,6 +844,22 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 				sideOfNewTileX = -1;
 				break;
 			}
+			
+	
+
+			if (isInsideMousei(nextPosInTab, GetCollisionOfDoor()) || isInsideMousei(nextPosInTab2, GetCollisionOfDoor()) || isInsideMousei(nextPosInTab, GetCollisionOfNPC()) || isInsideMousei(nextPosInTab2, GetCollisionOfNPC())
+				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineFire())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineFire()))
+				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineWater())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineWater()))
+				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineElectric()))
+				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineGrass())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineGrass()))
+				)
+			{
+				return sfTrue;
+			}
+			nextPosInTab.y /= (int)TILE_WIDTH;
+			nextPosInTab.x /= (int)TILE_WIDTH;
+			nextPosInTab2.y /= (int)TILE_WIDTH;
+			nextPosInTab2.x /=(int) TILE_WIDTH;
 			tileSet* tilesetInFront = getCurrentTileset(tileMap[nextPosInTab.y][nextPosInTab.x].texture);
 			tileSet* tilesetNearFront = getCurrentTileset(tileMap[nextPosInTab2.y][nextPosInTab2.x].texture);
 			tileSet* tilesetInFrontBehind = getCurrentTileset(tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].texture);
@@ -910,6 +931,7 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 				
 			return sfFalse;
 }
+
 void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction)
 {
 

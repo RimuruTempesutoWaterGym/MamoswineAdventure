@@ -50,45 +50,58 @@ void updateElementalMammoswine()
 {
 	saveMamowsineData("data/keydata.bin");
 }
+sfFloatRect GetCollisionMamoswineFire()
+{
+	return sfSprite_getGlobalBounds(mammoswineFire);
+}
+sfFloatRect GetCollisionMamoswineGrass()
+{
+	return sfSprite_getGlobalBounds(mammoswineGrass);
+}
+sfFloatRect GetCollisionMamoswineElectric()
+{
+	return sfSprite_getGlobalBounds(mammoswineElectric);
+}
+sfFloatRect GetCollisionMamoswineWater()
+{
+	return sfSprite_getGlobalBounds(mammoswineWater);
+}
 void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 {
-	sfFloatRect mammoswinefRectFire = sfSprite_getGlobalBounds(mammoswineFire);
-	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), getMamoswineHitboxByPos(mammoswinefRectFire)))
+	
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetCollisionMamoswineFire()))
 	{
 		mamoswineElementalCount |= mamoswineFire;
-		printf("%d", (mamoswineElementalCount & mamoswineFire) >> MAMOSWINE_FIRE);
+
 	}
 }
 void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos)
 {
-	sfFloatRect mammoswinefRectWater = sfSprite_getGlobalBounds(mammoswineWater);
-	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), getMamoswineHitboxByPos(mammoswinefRectWater)))
+	
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetCollisionMamoswineWater()))
 	{
 		mamoswineElementalCount |= mamoswineWater;
-		printf("%d", (mamoswineElementalCount & mamoswineWater) >> MAMOSWINE_WATER);
+	
 	}
 }
 void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 
-	sfFloatRect mammoswinefRectGrass = sfSprite_getGlobalBounds(mammoswineGrass);
-	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), getMamoswineHitboxByPos(mammoswinefRectGrass)))
+
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetCollisionMamoswineGrass()))
 	{
 		mamoswineElementalCount |= mamoswineGrass;
-		printf("%d", (mamoswineElementalCount & mamoswineGrass) >> MAMOSWINE_GRASS);
+
 	}
 }
 void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 
-	sfFloatRect mammoswinefRectElec = sfSprite_getGlobalBounds(mammoswineElectric);
 
-
-	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), getMamoswineHitboxByPos(mammoswinefRectElec)))
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetCollisionMamoswineElectric()))
 	{
 		mamoswineElementalCount |= mamoswineElectric;
-		printf("%d", (mamoswineElementalCount & mamoswineElectric) >> MAMOSWINE_ELECTRIC);
-		printf("%d", mamoswineElementalCount);
+
 
 	}
 }

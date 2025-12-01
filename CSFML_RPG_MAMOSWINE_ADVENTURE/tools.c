@@ -44,33 +44,35 @@ int isInsideMouse(sfVector2f item, sfFloatRect obstacle)
 			return 1;
 
 		}
-		printf("2");
+
 return 0;
 }
 int isInsidePlayer(sfFloatRect player, sfFloatRect obstacle)
 {
-	if (player.left > obstacle.left &&
-		player.left < (obstacle.width + obstacle.left) &&
-		player.top > obstacle.top &&
-		player.top < (obstacle.top + obstacle.height) ||
-		player.left + player.width > obstacle.left &&
-		player.left+player.width < (obstacle.width + obstacle.left) &&
-		player.top + player.height > obstacle.top &&
-		player.top + player.height < (obstacle.top + obstacle.height) ||
-		player.left  > obstacle.left &&
-		player.left < (obstacle.width + obstacle.left) &&
-		player.top + player.height > obstacle.top &&
-		player.top + player.height < (obstacle.top + obstacle.height)
-		||
-		player.left + player.width > obstacle.left &&
-		player.left + player.width< (obstacle.width + obstacle.left) &&
-		player.top  > obstacle.top &&
-		player.top  < (obstacle.top + obstacle.height)
-		)
-	{
-		return 1;
 
-	}
+		if (player.left > obstacle.left &&
+			player.left < (obstacle.width + obstacle.left) &&
+			player.top > obstacle.top &&
+			player.top < (obstacle.top + obstacle.height) ||
+			player.left + player.width > obstacle.left &&
+			player.left + player.width < (obstacle.width + obstacle.left) &&
+			player.top + player.height > obstacle.top &&
+			player.top + player.height < (obstacle.top + obstacle.height) ||
+			player.left  > obstacle.left &&
+			player.left < (obstacle.width + obstacle.left) &&
+			player.top + player.height > obstacle.top &&
+			player.top + player.height < (obstacle.top + obstacle.height) ||
+			player.left + player.width > obstacle.left &&
+			player.left + player.width< (obstacle.width + obstacle.left) &&
+			player.top  > obstacle.top &&
+			player.top < (obstacle.top + obstacle.height)
+			)
+		{
+			return 1;
+
+		}
+
+
 	return 0;
 }
 
@@ -106,7 +108,7 @@ void updateAll(sfRenderWindow* _window)
 	updatePlayer(_window);
 	updateTextBox();
 	updateMap(_window);
-
+	updateTextBox();
 	updateDoor();
 }
 void displayAll(sfRenderWindow* _window)
@@ -128,6 +130,8 @@ void displayAll(sfRenderWindow* _window)
 	case GAME:
 		displayViewPlayer(_window);
 		displayMap(_window);
+		displayNPC(_window);
+		displayElementalMammoswine(_window);
 		if (isPlayerOverDoor())
 		{
 			displayPlayer(_window);
@@ -138,8 +142,10 @@ void displayAll(sfRenderWindow* _window)
 			displayDoor(_window);
 			displayPlayer(_window);
 		}
-		displayElementalMammoswine(_window);
-		displayNPC(_window);
+
+
+		displayHUD(_window);
+		displayTextBox(_window);
 		break;
 	default:
 		displayViewDefault(_window);

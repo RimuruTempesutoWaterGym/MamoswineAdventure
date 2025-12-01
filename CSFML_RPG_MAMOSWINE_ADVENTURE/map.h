@@ -40,7 +40,11 @@ typedef struct {
 	int texture;
 	int tileNumber;
 	specialTile selectedSpecialTiles;
+	int isActivable;
+	int musicOfTile;
 } tileOf;
+
+
 
 
 typedef enum {

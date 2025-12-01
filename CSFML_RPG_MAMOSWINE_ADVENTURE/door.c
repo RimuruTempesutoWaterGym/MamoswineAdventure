@@ -1,4 +1,5 @@
 #include"door.h"
+#include"player.h"
 #include"elemental_mammoswine.h"
 
 
@@ -26,13 +27,16 @@ void initDoor()
 }
 sfFloatRect GetCollisionOfDoor()
 {
-		return  sfSprite_getGlobalBounds(door);
+	sfFloatRect doorHitbox = sfSprite_getGlobalBounds(door);
+	doorHitbox.top += (doorHitbox.height / 1.5);
+	doorHitbox.height /= 3;
+	return  doorHitbox;
+
 }
 void updateDoor()
 {
-
-
-		if (GetMamoswineElementalCount() == 15 && sfKeyboard_isKeyPressed(sfKeyE))
+	sfFloatRect doorHitbox = GetCollisionOfDoor();
+		if (GetMamoswineElementalCount() == 15 && sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getCollisionOfPlayer(),doorHitbox))
 		{
 			SetMamoswineElementalCountToPlusOne();
 		}
