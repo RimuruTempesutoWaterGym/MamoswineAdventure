@@ -22,6 +22,10 @@ void volumeMusic(float _volume)
 	sfMusic_setVolume(playedMusic, actualVolume);
 }
 
+sfMusic* getActualMusic()
+{
+	return playedMusic;
+}
 void setMusic(Music _music)
 {
 	music = _music;
