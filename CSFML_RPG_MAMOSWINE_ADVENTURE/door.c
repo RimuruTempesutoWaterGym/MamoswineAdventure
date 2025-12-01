@@ -30,11 +30,15 @@ sfFloatRect GetCollisionOfDoor()
 }
 void updateDoor()
 {
-	if (GetMamoswineElementalCount() < 16)
-	{
-		doorTextureRect.left = 118 * GetMamoswineElementalCount();
+
+
+		if (GetMamoswineElementalCount() == 15 && sfKeyboard_isKeyPressed(sfKeyE))
+		{
+			SetMamoswineElementalCountToPlusOne();
+		}
+			doorTextureRect.left = 118 * GetMamoswineElementalCount();
 		sfSprite_setTextureRect(door, doorTextureRect);
-	}
+	
 	}
 
 void displayDoor(sfVector2f* _window)

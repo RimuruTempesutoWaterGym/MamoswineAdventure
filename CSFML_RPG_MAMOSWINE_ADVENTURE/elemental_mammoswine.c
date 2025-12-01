@@ -12,9 +12,9 @@ sfTexture* textureMammoswineWater;
 sfTexture* textureMammoswinGrasse;
 sfTexture* textureMammoswineElec;
 sfIntRect mammoswineRect = {0,0,48,48};
-sfVector2f mammoswineFirePos = { 1000, 700 };
+sfVector2f mammoswineFirePos = { 1000, 900 };
 sfVector2f mammoswineWaterPos = { 1100, 700 };
-sfVector2f mammoswineGrassPos = { 900, 700 };
+sfVector2f mammoswineGrassPos = { 900, 900 };
 sfVector2f mammoswineElectricPos = { 1190,460 };
 char mamoswineElementalCount;
 
@@ -114,6 +114,11 @@ int GetMamoswineElementalCount()
 {
 
 	return mamoswineElementalCount ;
+}
+void SetMamoswineElementalCountToPlusOne()
+{
+
+	mamoswineElementalCount++;
 }
 void saveMamowsineData(const char* filename)
 {
