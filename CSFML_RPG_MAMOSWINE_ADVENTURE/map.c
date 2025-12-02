@@ -336,6 +336,8 @@ void updateMap(sfRenderWindow* _window)
 			// Save sprites with S key
 	
 		}
+		if (selectedTileMode == 5) {
+		}
 	}
 }
 void displayMap(sfRenderWindow* _window)
@@ -653,7 +655,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 		sfFloatRect rectfrect = sfRectangleShape_getGlobalBounds(RectangleButtonSwitchTileMode);
 		if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, rectfrect) && switchTileTypeTimer >= 0.5f)
 		{
-			if (selectedTileMode == 4)
+			if (selectedTileMode == 5)
 			{
 				selectedTileMode = 1;
 	}
@@ -790,53 +792,9 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 				
 			}
 		}
-		if (selectedTileMode == 4) {
-			sfVector2f tilepos_ui = { 5.0f, 10.0f };
-			const char* spriteNames[SPRITE_COUNT] = {
-				"Player", "NPC", "Door", "Mamo Fire",
-				"Mamo Water", "Mamo Grass", "Mamo Elec"
-			};
+		if (selectedTileMode == 5) {
 
-			for (int i = 0; i < SPRITE_COUNT; i++) {
-				// Draw sprite icon/preview
-				sfRectangleShape* spriteIcon = sfRectangleShape_create();
-				sfRectangleShape_setSize(spriteIcon, (sfVector2f) { 24.f, 24.f });
-				sfRectangleShape_setPosition(spriteIcon, tilepos_ui);
-
-				// Color code each sprite type
-				sfColor colors[SPRITE_COUNT] = {
-					{100, 100, 255, 255}, 
-					{255, 100, 255, 255},
-					{150, 75, 0, 255},    
-					{255, 0, 0, 255},    
-					{0, 100, 255, 255},   
-					{0, 255, 0, 255},     
-					{255, 255, 0, 255}    
-				};
-				sfRectangleShape_setFillColor(spriteIcon, colors[i]);
-
-				sfFloatRect iconRect = sfRectangleShape_getGlobalBounds(spriteIcon);
-				if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, iconRect)) {
-					selectedSprite = i;
-				}
-
-				sfRenderWindow_drawRectangleShape(_window, spriteIcon, NULL);
-
-				// Highlight selected sprite
-				if (selectedSprite == i) {
-					sfRectangleShape* highlight = sfRectangleShape_create();
-					sfRectangleShape_setSize(highlight, (sfVector2f) { 24.f, 24.f });
-					sfRectangleShape_setPosition(highlight, tilepos_ui);
-					sfRectangleShape_setFillColor(highlight, sfTransparent);
-					sfRectangleShape_setOutlineColor(highlight, sfYellow);
-					sfRectangleShape_setOutlineThickness(highlight, 2.f);
-					sfRenderWindow_drawRectangleShape(_window, highlight, NULL);
-					sfRectangleShape_destroy(highlight);
-				}
-
-				sfRectangleShape_destroy(spriteIcon);
-				tilepos_ui.y += 30.f;
-			}
+				
 		}
 	}
 }
