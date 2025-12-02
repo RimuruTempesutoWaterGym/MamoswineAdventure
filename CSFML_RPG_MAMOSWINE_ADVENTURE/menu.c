@@ -564,6 +564,7 @@ void updatemenu(sfRenderWindow* _window)
 		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle.left && mousepos.x < (Rectangle.width + Rectangle.left) && mousepos.y > Rectangle.top && mousepos.y < (Rectangle.top + Rectangle.height))
 		{
 			state = GAME;
+			setMusic(Overworld);
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle2 = sfRectangleShape_getGlobalBounds(ButtonEditor);
@@ -670,6 +671,7 @@ void updatemenu(sfRenderWindow* _window)
 		{
 			coche = NEUTRE;
 			sfMusic_pause(getActualMusic());
+			soundMute();
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle3 = sfRectangleShape_getGlobalBounds(CaseDemute);
@@ -677,6 +679,7 @@ void updatemenu(sfRenderWindow* _window)
 		{
 			coche = VALIDE;
 			sfMusic_play(getActualMusic());
+			soundUnmute();
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle4 = sfRectangleShape_getGlobalBounds(ButtonPlus);

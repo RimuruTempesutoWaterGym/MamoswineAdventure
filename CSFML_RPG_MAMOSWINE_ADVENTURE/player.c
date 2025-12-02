@@ -3,6 +3,7 @@
 #include "map.h"
 #include "NPC.h"
 #include "elemental_mammoswine.h"
+#include "music.h"
 
 //#include"camera.h"
 
@@ -142,6 +143,8 @@ void updatePlayer(sfRenderWindow* _window)
       
         if (sfKeyboard_isKeyPressed(sfKeyF) && timerCdAttack > 2.f || isAttacking == 1 )
         {
+           
+            //playSoundAttack();
             timerattack += GetDeltaTime();
             isAttacking = 1;
 

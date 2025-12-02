@@ -85,7 +85,7 @@ void initAll()
 
 	initMusic();
 
-
+	initSound();
 
 	initView();
 
@@ -112,6 +112,7 @@ void updateAll(sfRenderWindow* _window)
 	updateMap(_window);
 	updateTextBox();
 	updateDoor();
+	updateMusic();
 }
 void displayAll(sfRenderWindow* _window)
 {
