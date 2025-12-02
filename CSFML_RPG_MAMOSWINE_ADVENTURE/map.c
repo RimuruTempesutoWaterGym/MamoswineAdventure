@@ -1219,9 +1219,16 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 		
 			if (tileMap[nextPosInTab.y][nextPosInTab.x].musicOfTile > 0)
 			{
+				printf("%d", tileMap[nextPosInTab2.y][nextPosInTab2.x].musicOfTile);
 				setMusic(tileMap[nextPosInTab.y][nextPosInTab.x].musicOfTile);
 				
 			}
+			if (tileMap[nextPosInTab2.y][nextPosInTab2.x].musicOfTile > 0)
+			{
+				printf("%d", tileMap[nextPosInTab2.y][nextPosInTab2.x].musicOfTile);
+				setMusic(tileMap[nextPosInTab2.y][nextPosInTab2.x].musicOfTile);
+
+			} 
 			return sfFalse;
 }
 void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
