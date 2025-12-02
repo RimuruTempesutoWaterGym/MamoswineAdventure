@@ -70,7 +70,7 @@ void setVolumeSFXIfNotMuted(sfSound* _sfx, float _volume)
 void volumeMusic(float _volume)
 {
 	maxVolume += _volume;
-	
+	actualVolume = maxVolume
 	setVolumeMusicIfNotMuted(playedMusic, maxVolume);
 	setVolumeSFXIfNotMuted(attackMamo, maxVolume);
 	setVolumeSFXIfNotMuted(boulderPush, maxVolume);
@@ -166,7 +166,7 @@ void setMusic(MusicChoice _music)
 				}
 			}
 		}
-		if (actualVolume == 100)
+		if (actualVolume == maxVolume)
 		{
 			hasChanged = 0;
 			BackSound = 0;
