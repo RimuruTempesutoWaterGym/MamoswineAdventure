@@ -146,9 +146,10 @@ void displayAll(sfRenderWindow* _window)
 			displayPlayer(_window);
 		}
 
-
+		displayMinimap(_window);
 		displayHUD(_window);
 		displayTextBox(_window);
+
 		break;
 	default:
 		displayViewDefault(_window);

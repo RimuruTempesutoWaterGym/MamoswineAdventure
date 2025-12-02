@@ -1,6 +1,6 @@
 #include "view.h"
 
-
+sfView* minimap;
 sfView* viewEdit;
 sfView* viewPlayer;
 sfView* viewEditUi;
@@ -14,14 +14,27 @@ sfVector2f viewEditSize = { 800,600 };
 sfVector2f viewPlayerSize = { 400,300.0f };
 sfVector2f viewHUDSize = { 250.0f,200.0f };
 sfVector2f viewDefaultSize = { 800.f,600.0f };
+sfVector2f viewMinimap = { MAP_WIDTH * TILE_WIDTH+800, MAP_HEIGHT * TILE_HEIGHT + 200 };
 sfVector2f viewEditUISize = { TILE_WIDTH + 10.f , 600.f };
 sfVector2f viewTileSelectionSize = { 110.f, 600.f };
 sfVector2f velocityViewEdit = { 300.f,300.f };
 sfVector2f posViewEditUi;
 sfVector2f posViewTileSelection;
 sfVector2f posViewHUD;
+sfFloatRect minimapSpot = {
+0.77f,0.05f,0.25f,0.30f };
+sfFloatRect visibleArea = {
+	0.f,0.f,MAP_WIDTH* TILE_WIDTH ,MAP_HEIGHT* TILE_HEIGHT 
+};
 void initView()
 {
+	 minimap = sfView_create();
+
+ sfView_setSize(minimap, viewMinimap);
+ sfView_setCenter(minimap, (sfVector2f) {
+	 viewMinimap.y / 2, viewMinimap.x / 2
+ });
+
 	posViewEditUi.x = viewEditUISize.x / 2;
 	posViewEditUi.y = viewEditUISize.y / 2;
 	posViewHUD.x = viewHUDSize.x / 2;
@@ -159,15 +172,15 @@ void displayHUD(sfRenderWindow* _window)
 void displayMinimap(sfRenderWindow* _window)
 {
 
-	//if (state == GAME)
-	//{
+	if (state == GAME)
+	{
 
-	//	sfView_reset(minimap, visibleArea);
-	//	sfView_setViewport(minimap, minimapSpot);
-	//	sfRenderWindow_setView(_window, minimap);
-	//	displayMap(_window);
-	//	updateMap(_window);
-	//}
+
+		sfView_setViewport(minimap, minimapSpot);
+		sfRenderWindow_setView(_window, minimap);
+		displayMap(_window);
+		updateMap(_window);
+	}
 	
 
 
@@ -190,3 +203,4 @@ sfView* getCurrentView(sfRenderWindow* _window)
 {
 	return sfRenderWindow_getView(_window);
 }
+
