@@ -144,7 +144,7 @@ void updatePlayer(sfRenderWindow* _window)
         if (sfKeyboard_isKeyPressed(sfKeyF) && timerCdAttack > 2.f || isAttacking == 1 )
         {
            
-            //playSoundAttack();
+            playSoundAttack();
             timerattack += GetDeltaTime();
             isAttacking = 1;
 

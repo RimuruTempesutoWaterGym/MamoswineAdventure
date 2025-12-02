@@ -1154,6 +1154,7 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 					&& tilesetInFrontBehind->isWall[tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].tileNumber] <= 0
 					&& tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].selectedSpecialTiles.SpecialTilesType == none)
 				{
+					playSoundBoulder();
 					rockStrengthTimer += GetDeltaTime();
 					if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state == 0)
 					{
@@ -1341,7 +1342,7 @@ void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
 }
 void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction)
 {
-
+	playSoundTree();
 	_sprite.left += _sprite.width / 4;
 	
 	_sprite.top += _sprite.height / 2;
