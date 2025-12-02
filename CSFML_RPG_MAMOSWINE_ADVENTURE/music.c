@@ -37,9 +37,9 @@ void initSound()
 	attackMamo = sfSound_create();
 	boulderPush = sfSound_create();
 	treeCut = sfSound_create();
-	attackMamoBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\Alerte Chemin Ouvert.ogg");
-	boulderPushBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\bad_end.ogg");
-	treeCutBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\Décompte 2.ogg");
+	attackMamoBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\attack.mp3");
+	boulderPushBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\boulderPush.mp3");
+	treeCutBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\treeCut.mp3");
 	sfSound_setBuffer(attackMamo, attackMamoBuffer);
 	sfSound_setBuffer(boulderPush, boulderPushBuffer);
 	sfSound_setBuffer(treeCut, treeCutBuffer);
@@ -187,17 +187,26 @@ MusicChoice getOldMusic()
 
 void playSoundAttack()
 {
-	sfSound_play(attackMamo);
+	if (!sfSound_getStatus(attackMamo))
+	{
+		sfSound_play(attackMamo);
+	}
 }
 
 void playSoundBoulder()
 {
-	sfSound_play(boulderPush);
+	if (!sfSound_getStatus(boulderPush))
+	{
+		sfSound_play(boulderPush);
+	}
 }
 
 void playSoundTree()
 {
-	sfSound_play(treeCut);
+	if (!sfSound_getStatus(treeCut))
+	{
+		sfSound_play(treeCut);
+	}
 }
 
 void soundMute()
