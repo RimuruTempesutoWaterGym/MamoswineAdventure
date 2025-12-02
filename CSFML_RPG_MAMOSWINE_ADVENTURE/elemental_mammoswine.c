@@ -7,20 +7,24 @@ sfSprite* mammoswineFire;
 sfSprite* mammoswineWater;
 sfSprite* mammoswineGrass;
 sfSprite* mammoswineElectric;
+sfSprite* mamoDialga;
 sfTexture* textureMammoswineFire;
 sfTexture* textureMammoswineWater;
 sfTexture* textureMammoswinGrasse;
 sfTexture* textureMammoswineElec;
+sfTexture* textureMamoDialga;
 sfIntRect mammoswineRect = {49,0,48,48};
+sfIntRect mammoswineRectDialga = {60,0,60,86};
 sfVector2f mammoswineFirePos = { 1000, 900 };
 sfVector2f mammoswineWaterPos = { 1100, 700 };
 sfVector2f mammoswineGrassPos = { 900, 900 };
 sfVector2f mammoswineElectricPos = { 1190,460 };
+sfVector2f mamoDialgaPos = { 1180, 100 };
 char mamoswineElementalCount;
 
 
 
-void initElementalMammoswine()
+void initElementalMamoswine()
 {
 	
 	loadMamowsineData("data/keydata.bin");
@@ -28,27 +32,36 @@ void initElementalMammoswine()
 	mammoswineWater = sfSprite_create();
 	mammoswineGrass = sfSprite_create();
 	mammoswineElectric = sfSprite_create();
+	mamoDialga = sfSprite_create();
 	textureMammoswineFire = sfTexture_createFromFile(TEXTURE_PATH"mamofeu.png", NULL);
 	textureMammoswineWater = sfTexture_createFromFile(TEXTURE_PATH"mamoeau.png", NULL);
 	textureMammoswinGrasse = sfTexture_createFromFile(TEXTURE_PATH"mamoplante.png", NULL);
 	textureMammoswineElec = sfTexture_createFromFile(TEXTURE_PATH"mamoelec.png", NULL);
+	textureMamoDialga = sfTexture_createFromFile(TEXTURE_PATH"mamoDialga.png", NULL);
 	sfSprite_setTexture(mammoswineFire, textureMammoswineFire, sfTrue);
 	sfSprite_setTexture(mammoswineWater, textureMammoswineWater, sfTrue);
 	sfSprite_setTexture(mammoswineGrass, textureMammoswinGrasse, sfTrue);
 	sfSprite_setTexture(mammoswineElectric, textureMammoswineElec, sfTrue);
+	sfSprite_setTexture(mamoDialga, textureMamoDialga, sfTrue);
 	sfSprite_setTextureRect(mammoswineFire, mammoswineRect);
 	sfSprite_setTextureRect(mammoswineWater, mammoswineRect);
 	sfSprite_setTextureRect(mammoswineGrass, mammoswineRect);
 	sfSprite_setTextureRect(mammoswineElectric, mammoswineRect);
+	sfSprite_setTextureRect(mamoDialga, mammoswineRectDialga);
 	sfSprite_setPosition(mammoswineFire, mammoswineFirePos);
 	sfSprite_setPosition(mammoswineWater, mammoswineWaterPos);
 	sfSprite_setPosition(mammoswineGrass, mammoswineGrassPos);
 	sfSprite_setPosition(mammoswineElectric, mammoswineElectricPos);
+	sfSprite_setPosition(mamoDialga, mamoDialgaPos);
 }
 
-void updateElementalMammoswine()
+void updateElementalMamoswine()
 {
 	saveMamowsineData("data/keydata.bin");
+}
+void updateMamoDialga()
+{
+
 }
 sfFloatRect GetCollisionMamoswineFire()
 {
@@ -113,16 +126,21 @@ void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)
 	SetMamoswineElectric(_window, playerPos);
 
 }
-void displayElementalMammoswine(sfRenderWindow* _window)
+void displayElementalMamoswine(sfRenderWindow* _window)
 {
 	if (state == GAME || state == EDITOR)
 	{
+
 		sfRenderWindow_drawSprite(_window, mammoswineFire, NULL);
 		sfRenderWindow_drawSprite(_window, mammoswineGrass, NULL);
 		sfRenderWindow_drawSprite(_window, mammoswineWater, NULL);
 		sfRenderWindow_drawSprite(_window, mammoswineElectric, NULL);
 	}
 	}
+void displayMamoDialga(sfRenderWindow* _window)
+{
+	sfRenderWindow_drawSprite(_window, mamoDialga, NULL);
+}
 int GetMamoswineElementalCount()
 {
 
