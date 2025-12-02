@@ -58,6 +58,7 @@ typedef enum {
 	specialTiles,
 	electric_toggle_link,
 	sprite,
+    music,
 
 }Tilemode;
 typedef enum {
