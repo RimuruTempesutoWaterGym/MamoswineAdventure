@@ -5,6 +5,7 @@
 #include "SFML/Graphics.h"
 #include "SFML/audio.h"
 #include "view.h"
+
 #define MAP_HEIGHT 120
 #define MAP_WIDTH 100
 #define TILE_WIDTH 24

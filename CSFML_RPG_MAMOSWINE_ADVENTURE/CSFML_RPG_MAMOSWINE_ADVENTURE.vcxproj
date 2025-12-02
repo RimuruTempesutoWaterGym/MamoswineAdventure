@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="battle.c" />
     <ClCompile Include="door.c" />
     <ClCompile Include="elemental_mammoswine.c" />
     <ClCompile Include="main.c" />
@@ -31,6 +32,7 @@
     <ClCompile Include="view.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="battle.h" />
     <ClInclude Include="door.h" />
     <ClInclude Include="elemental_mammoswine.h" />
     <ClInclude Include="map.h" />

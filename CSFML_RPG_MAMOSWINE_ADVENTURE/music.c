@@ -1,3 +1,4 @@
+#include"tools.h"
 #include "music.h"
 
 
@@ -13,12 +14,12 @@ float timerLerp = 0;
 int getBackSound = 0;
 int hasChanged= 0;
 int musicUp = 0;
-
+MusicChoice oldMusic = 0;
 
 
 void initMusic()
 {
-	music = 0;
+	
 	if(state == MENU)
 	{ 
 	playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-feu-CombatcontreNoctunoir.ogg");
@@ -64,9 +65,9 @@ void updateMusic()
 {
 	setMusic(0);
 }
-void setMusic(Music _music)
+void setMusic(MusicChoice _music)
 {
-	if (music != _music || hasChanged == 1)
+	if (oldMusic != _music || hasChanged == 1)
 	{
 		if (getBackSound == 0  && actualVolume >= 10)
 		{
@@ -75,10 +76,11 @@ void setMusic(Music _music)
 			printf("%f|||", sfMusic_getVolume(playedMusic));
 		}
 		hasChanged = 1;
-		if ((sfMusic_getVolume(playedMusic) <= 10 || getBackSound == 1) &&actualVolume < 100)
+		if ((sfMusic_getVolume(playedMusic) <= 10 || getBackSound == 1) && actualVolume < 100)
 		{
-
-			actualVolume += LERP_F(actualVolume, 1, GetDeltaTime()*50);
+			printf("%fnew", sfMusic_getVolume(playedMusic));
+			actualVolume += LERP_F(100, actualVolume, GetDeltaTime());
+	
 			sfMusic_setVolume(playedMusic, actualVolume);
 			if (sfMusic_getVolume(playedMusic) > 100)
 			{
@@ -146,7 +148,7 @@ void setMusic(Music _music)
 	
 	}
 	
-	music = _music;
+	oldMusic = _music;
 
 	
 }

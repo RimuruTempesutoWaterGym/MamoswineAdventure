@@ -862,10 +862,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 			{
 			
 				sfVector2f tilepos_ui = { 5.0f, 10.0f };
-				const char* musicnames[6] = {
-					"Menu", "Overworld", "Fire", "Water",
-					"Grass", "Electik"
-				};
+		
 
 				for (int i = 0; i < 6; i++) {
 					// Draw sprite icon/preview
