@@ -1127,7 +1127,10 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			
 	
 
-			if (isInsideMousei(nextPosInTab, GetCollisionOfDoor()) || isInsideMousei(nextPosInTab2, GetCollisionOfDoor()) || isInsideMousei(nextPosInTab, GetCollisionOfNPC()) || isInsideMousei(nextPosInTab2, GetCollisionOfNPC())
+
+			if (isInsideMousei(nextPosInTab, GetCollisionOfDoor()) || isInsideMousei(nextPosInTab2, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 17
+
+				|| isInsideMousei(nextPosInTab, GetCollisionOfNPC()) || isInsideMousei(nextPosInTab2, GetCollisionOfNPC())
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineFire())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineFire()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineWater())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineWater()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineElectric()))

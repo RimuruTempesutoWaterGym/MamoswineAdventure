@@ -52,7 +52,7 @@ void updateTextBox()
 
 void displayNPC(sfRenderWindow* _window)
 {
-    if (state == GAME)
+    if (state == GAME || state == EDITOR)
     {
         sfRenderWindow_drawSprite(_window, spCynthia, NULL);
     }
