@@ -70,6 +70,7 @@ sfVector2f tilepos = { 0.0f,0.0f };
 int selectedTiles = 1;
 int selectedTexture = 1;
 int selectedSpecialTiles = 1;
+int selectedMusic = 0;
 
 Tilemode selectedTileMode = 1;
 
@@ -337,6 +338,23 @@ void updateMap(sfRenderWindow* _window)
 	
 		}
 		if (selectedTileMode == 5) {
+			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
+			{
+				if (keyMapTimer > 0.02f) {
+					posNewTile.x = (int)(mousepos.x / TILE_WIDTH);
+					posNewTile.y = (int)(mousepos.y / TILE_WIDTH);
+					if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT)
+					{
+						tileSet* tilesetTile = getCurrentTileset(tileMap[posNewTile.y][posNewTile.x].texture);
+						if (tilesetTile->isWall[tileMap[posNewTile.y][posNewTile.x].tileNumber] < 1)
+						{
+							tileMap[posNewTile.y][posNewTile.x].musicOfTile = selectedMusic;
+						}
+
+					}
+					keyMapTimer = 0.0f;
+				}
+			}
 		}
 	}
 }
@@ -646,7 +664,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 		sfVector2f tilepos_ui = { 5.0f, 10.0f };
 
 
-	
+
 		tile.left = 0;
 		tile.top = 0;
 		tile.left += 48;
@@ -658,18 +676,18 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 			if (selectedTileMode == 5)
 			{
 				selectedTileMode = 1;
-	}
+			}
 			else
 			{
 				selectedTileMode++;
 			}
-			switchTileTypeTimer =0;
+			switchTileTypeTimer = 0;
 			selectedTexture = 1;
 			selectedTiles = 1;
 		}
 		if (selectedTileMode == 1)
 		{
-			
+
 			for (int i = 1; i < 9; i++)
 			{
 
@@ -708,7 +726,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 
 			sfSprite_setTextureRect(mapSprite, tile);
 			sfSprite_setPosition(mapSprite, mouseposViewUi);
-			sfRectangleShape_setPosition(mouseCornerIndicator,  mouseposViewUi );
+			sfRectangleShape_setPosition(mouseCornerIndicator, mouseposViewUi);
 			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			if (selectedTiles == 0)
@@ -722,17 +740,17 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 				sfRenderWindow_setMouseCursorVisible(_window, sfFalse);
 
 			}
-	
+
 		}
 		if (selectedTileMode == 2)
 		{
-		
+
 			for (int i = 0; i < 5; i++)
 			{
 				sfSprite_setTextureRect(mapSprite, tile);
 				changeSpecialTiles(i);
 
-			
+
 				sfSprite_setPosition(mapSprite, tilepos_ui);
 
 
@@ -762,7 +780,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 			sfSprite_setTextureRect(mapSprite, tile);
 			changeSpecialTiles(selectedTexture);
 
-			
+
 			sfSprite_setPosition(mapSprite, mouseposViewUi);
 			sfRectangleShape_setPosition(mouseCornerIndicator, mouseposViewUi);
 			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
@@ -782,20 +800,116 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 			{
 
 				tile = giveSpriteTextureDim(tile, 0);
-	
+
 				changeSpecialTiles(selectedTexture);
 
 				sfRectangleShape_setPosition(mouseCornerIndicator, mouseposViewUi);
 				sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
-					sfRenderWindow_setMouseCursorVisible(_window, sfTrue);
+				sfRenderWindow_setMouseCursorVisible(_window, sfTrue);
 
-				
+
 			}
 		}
-		if (selectedTileMode == 5) {
+		if (selectedTileMode == 4) {
+			sfVector2f tilepos_ui = { 5.0f, 10.0f };
+			const char* spriteNames[SPRITE_COUNT] = {
+				"Player", "NPC", "Door", "Mamo Fire",
+				"Mamo Water", "Mamo Grass", "Mamo Elec"
+			};
 
-				
+			for (int i = 0; i < SPRITE_COUNT; i++) {
+				// Draw sprite icon/preview
+				sfRectangleShape* spriteIcon = sfRectangleShape_create();
+				sfRectangleShape_setSize(spriteIcon, (sfVector2f) { 24.f, 24.f });
+				sfRectangleShape_setPosition(spriteIcon, tilepos_ui);
+
+				// Color code each sprite type
+				sfColor colors[SPRITE_COUNT] = {
+					{100, 100, 255, 255},
+					{255, 100, 255, 255},
+					{150, 75, 0, 255},
+					{255, 0, 0, 255},
+					{0, 100, 255, 255},
+					{0, 255, 0, 255},
+					{255, 255, 0, 255}
+				};
+				sfRectangleShape_setFillColor(spriteIcon, colors[i]);
+
+				sfFloatRect iconRect = sfRectangleShape_getGlobalBounds(spriteIcon);
+				if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, iconRect)) {
+					selectedSprite = i;
+				}
+
+				sfRenderWindow_drawRectangleShape(_window, spriteIcon, NULL);
+
+				// Highlight selected sprite
+				if (selectedSprite == i) {
+					sfRectangleShape* highlight = sfRectangleShape_create();
+					sfRectangleShape_setSize(highlight, (sfVector2f) { 24.f, 24.f });
+					sfRectangleShape_setPosition(highlight, tilepos_ui);
+					sfRectangleShape_setFillColor(highlight, sfTransparent);
+					sfRectangleShape_setOutlineColor(highlight, sfYellow);
+					sfRectangleShape_setOutlineThickness(highlight, 2.f);
+					sfRenderWindow_drawRectangleShape(_window, highlight, NULL);
+					sfRectangleShape_destroy(highlight);
+				}
+
+				sfRectangleShape_destroy(spriteIcon);
+				tilepos_ui.y += 30.f;
+			}
 		}
+			if (selectedTileMode == 5)
+			{
+			
+				sfVector2f tilepos_ui = { 5.0f, 10.0f };
+				const char* musicnames[6] = {
+					"Menu", "Overworld", "Fire", "Water",
+					"Grass", "Electik"
+				};
+
+				for (int i = 0; i < 6; i++) {
+					// Draw sprite icon/preview
+					sfRectangleShape* musicIcon = sfRectangleShape_create();
+					sfRectangleShape_setSize(musicIcon, (sfVector2f) { 24.f, 24.f });
+					sfRectangleShape_setPosition(musicIcon, tilepos_ui);
+
+					// Color code each sprite type
+					sfColor colors[6] = {
+						{100, 100, 255, 255},
+						{255, 100, 255, 255},
+						{255, 0, 0, 255},
+						{0, 100, 255, 255},
+						{0, 255, 0, 255},
+						{255, 255, 0, 255}
+					};
+					sfRectangleShape_setFillColor(musicIcon, colors[i]);
+
+					sfFloatRect iconRect = sfRectangleShape_getGlobalBounds(musicIcon);
+					if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, iconRect)) {
+						selectedMusic = i;
+					}
+
+					sfRenderWindow_drawRectangleShape(_window, musicIcon, NULL);
+
+					//Highlight selected sprite
+					if (selectedMusic == i) {
+						sfRectangleShape* highlight = sfRectangleShape_create();
+						sfRectangleShape_setSize(highlight, (sfVector2f) { 24.f, 24.f });
+						sfRectangleShape_setPosition(highlight, tilepos_ui);
+						sfRectangleShape_setFillColor(highlight, sfTransparent);
+						sfRectangleShape_setOutlineColor(highlight, sfYellow);
+						sfRectangleShape_setOutlineThickness(highlight, 2.f);
+						sfRenderWindow_drawRectangleShape(_window, highlight, NULL);
+						sfRectangleShape_destroy(highlight);
+					}
+
+					sfRectangleShape_destroy(musicIcon);
+					tilepos_ui.y += 30.f;
+				}
+				 
+			
+		}
+
 	}
 }
 
