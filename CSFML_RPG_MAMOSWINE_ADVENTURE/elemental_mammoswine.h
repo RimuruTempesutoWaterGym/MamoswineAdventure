@@ -8,7 +8,9 @@
 
 void initElementalMamoswine();
 void updateElementalMamoswine();
+void updateMamoDialga();
 void displayElementalMamoswine(sfRenderWindow* _window);
+void displayMamoDialga(sfRenderWindow* _window);
 int GetMamoswineElementalCount();
 void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos);
 void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos);

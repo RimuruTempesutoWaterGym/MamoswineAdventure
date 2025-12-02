@@ -97,7 +97,7 @@ void initAll()
 	
 	initmenu();
 	
-	initElementalMammoswine();
+	initElementalMamoswine();
 	initmap();
 	updateSpritePositionsFromData();
 }
@@ -119,13 +119,12 @@ void displayAll(sfRenderWindow* _window)
 	switch (state)
 	{
 	case EDITOR:
-
 		displayViewEdit(_window);
 		displayMap(_window);
 		updateMap(_window);
 		displayPlayer(_window);
 		displayDoor(_window);
-		displayElementalMammoswine(_window);
+		displayElementalMamoswine(_window);
 		displayNPC(_window);
 		displayViewEditUi(_window);
 		displayViewTileSelection(_window);	
@@ -134,7 +133,8 @@ void displayAll(sfRenderWindow* _window)
 		displayViewPlayer(_window);
 		displayMap(_window);
 		displayNPC(_window);
-		displayElementalMammoswine(_window);
+		displayElementalMamoswine(_window);		displayMamoDialga(_window);
+
 		if (isPlayerOverDoor())
 		{
 			displayPlayer(_window);
