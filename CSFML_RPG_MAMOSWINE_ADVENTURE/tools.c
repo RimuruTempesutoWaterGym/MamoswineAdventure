@@ -81,7 +81,7 @@ void initAll()
 {
 	initTools();
 
-	initDoor();
+	
 
 	initMusic();
 
@@ -92,7 +92,7 @@ void initAll()
 	initplayer();
 
 	initNPC();
-
+	initDoor();
 	initTextBox();
 	
 	initmenu();

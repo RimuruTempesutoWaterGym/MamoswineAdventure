@@ -404,9 +404,13 @@ void displayMap(sfRenderWindow* _window)
 							sfSprite_setColor(mapSprite, (sfColor) { 255, 255, 255, 100 }); 
 						}
 						else {
-							sfSprite_setColor(mapSprite, sfWhite); 
+							sfSprite_setColor(mapSprite, sfWhite);
 						}
+					
 						sfSprite_setPosition(mapSprite, tilepos);
+					}
+					else {
+						sfSprite_setColor(mapSprite, sfWhite);
 					}
 					if (typeOfSpecialTile == plant)
 					{
@@ -1462,12 +1466,20 @@ void updateSpritePlacementMode(sfRenderWindow* _window) {
 	mousepos = updatePixelToWorld(_window, NULL);
 
 	sfVector2f snappedPos = mousepos;
+
 	snappedPos.x = ((int)(mousepos.x / TILE_WIDTH)) * TILE_WIDTH;
 	snappedPos.y = ((int)(mousepos.y / TILE_HEIGHT)) * TILE_HEIGHT;
 
 
 	if (pressed == 1 && sfMouse_isButtonPressed(sfMouseLeft) && spriteInteractionTimer > 0.2f) {
 		if (canPlaceSpriteAt(snappedPos, sprites[selectedSprite].bounds)) {
+			if (sprites[selectedSprite].type == SPRITE_DOOR)
+			{
+				snappedPos.y -= sprites[selectedSprite].bounds.height *3 ;
+			}
+			else {
+				snappedPos.y -= sprites[selectedSprite].bounds.height;
+			}
 			sprites[selectedSprite].position = snappedPos;
 			printf("Placed sprite %d at (%.0f, %.0f)\n", selectedSprite, snappedPos.x, snappedPos.y);
 
@@ -1508,31 +1520,31 @@ void initSpriteData() {
 
 	sprites[SPRITE_PLAYER].type = SPRITE_PLAYER;
 	sprites[SPRITE_PLAYER].position = (sfVector2f){ 1200.0f, 300.0f };
-	sprites[SPRITE_PLAYER].bounds = (sfIntRect){ 0, 0, 48, 48 };
+	sprites[SPRITE_PLAYER].bounds = (sfIntRect){ 0, 0, 48, 24 };
 
 	sprites[SPRITE_NPC].type = SPRITE_NPC;
 	sprites[SPRITE_NPC].position = (sfVector2f){ 1200.0f, 900.0f };
-	sprites[SPRITE_NPC].bounds = (sfIntRect){ 0, 0, 26, 38 };
+	sprites[SPRITE_NPC].bounds = (sfIntRect){ 0, 0, 26, 19 };
 
 	sprites[SPRITE_DOOR].type = SPRITE_DOOR;
 	sprites[SPRITE_DOOR].position = (sfVector2f){ 1201.0f, 600.0f };
-	sprites[SPRITE_DOOR].bounds = (sfIntRect){ 0, 0, 118, 126 };
+	sprites[SPRITE_DOOR].bounds = (sfIntRect){ 0, 0, 118, 42 };
 
 	sprites[SPRITE_MAMOSWINE_FIRE].type = SPRITE_MAMOSWINE_FIRE;
 	sprites[SPRITE_MAMOSWINE_FIRE].position = (sfVector2f){ 1000.0f, 900.0f };
-	sprites[SPRITE_MAMOSWINE_FIRE].bounds = (sfIntRect){ 0, 0, 48, 48 };
+	sprites[SPRITE_MAMOSWINE_FIRE].bounds = (sfIntRect){ 0, 0, 48, 24 };
 
 	sprites[SPRITE_MAMOSWINE_WATER].type = SPRITE_MAMOSWINE_WATER;
 	sprites[SPRITE_MAMOSWINE_WATER].position = (sfVector2f){ 1100.0f, 700.0f };
-	sprites[SPRITE_MAMOSWINE_WATER].bounds = (sfIntRect){ 0, 0, 48, 48 };
+	sprites[SPRITE_MAMOSWINE_WATER].bounds = (sfIntRect){ 0, 0, 48, 24 };
 
 	sprites[SPRITE_MAMOSWINE_GRASS].type = SPRITE_MAMOSWINE_GRASS;
 	sprites[SPRITE_MAMOSWINE_GRASS].position = (sfVector2f){ 900.0f, 900.0f };
-	sprites[SPRITE_MAMOSWINE_GRASS].bounds = (sfIntRect){ 0, 0, 48, 48 };
+	sprites[SPRITE_MAMOSWINE_GRASS].bounds = (sfIntRect){ 0, 0, 48, 24 };
 
 	sprites[SPRITE_MAMOSWINE_ELECTRIC].type = SPRITE_MAMOSWINE_ELECTRIC;
 	sprites[SPRITE_MAMOSWINE_ELECTRIC].position = (sfVector2f){ 1190.0f, 460.0f };
-	sprites[SPRITE_MAMOSWINE_ELECTRIC].bounds = (sfIntRect){ 0, 0, 48, 48 };
+	sprites[SPRITE_MAMOSWINE_ELECTRIC].bounds = (sfIntRect){ 0, 0, 48, 24 };
 }
 void saveSpritesData(const char* filename) {
 	FILE* file = fopen(filename, "wb");
