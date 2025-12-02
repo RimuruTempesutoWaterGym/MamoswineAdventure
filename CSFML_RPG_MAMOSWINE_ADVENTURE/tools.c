@@ -85,7 +85,7 @@ void initAll()
 
 	initMusic();
 
-	initmap();
+
 
 	initView();
 
@@ -98,6 +98,8 @@ void initAll()
 	initmenu();
 	
 	initElementalMammoswine();
+	initmap();
+	updateSpritePositionsFromData();
 }
 
 void updateAll(sfRenderWindow* _window)

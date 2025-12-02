@@ -54,3 +54,7 @@ void displayDoor(sfVector2f* _window)
 		
 	}
 }
+void setDoorPosition(sfVector2f newPos) {
+	doorPos = newPos;
+	sfSprite_setPosition(door, doorPos);
+}

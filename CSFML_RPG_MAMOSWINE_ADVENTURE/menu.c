@@ -248,7 +248,7 @@ float keytimer = 0.0f;
 
 void initmenu()
 {
-	// liste des textures utilisées
+	// liste des textures utilisï¿½es
 	wallpaper = sfTexture_createFromFile(TEXTURE_PATH"wallpaper.jpg", NULL);
 	rpgbutton = sfTexture_createFromFile(TEXTURE_PATH"Touche.png", NULL);
 	settingsbutton = sfTexture_createFromFile(TEXTURE_PATH"ToucheSettings.png", NULL);
@@ -442,9 +442,9 @@ void initmenu()
 	//FIN MENU TUTO
 
 	// MENU AUDIO
-	//Application du bouton close utilisé dans tuto 
+	//Application du bouton close utilisï¿½ dans tuto 
 	
-	// Touche pour mute le son général
+	// Touche pour mute le son gï¿½nï¿½ral
 	coche = VALIDE;
 	CaseMute = creationbutton(CaseMute, Sizecasemute, positioncasemute, irectcasemute, casevide);
 	sfRectangleShape_setScale(CaseMute, scalecasemute);
@@ -527,7 +527,7 @@ void initmenu()
 
 void updatemenu(sfRenderWindow* _window)
 {
-	// Bind la touche échape pour avoir le menu de Pause en mode éditor ou en jeu
+	// Bind la touche ï¿½chape pour avoir le menu de Pause en mode ï¿½ditor ou en jeu
 	keytimer += GetDeltaTime();
 	if ((state == GAME || state == EDITOR) && sfKeyboard_isKeyPressed(sfKeyEscape) && keytimer > 0.5f)
 	{
@@ -766,7 +766,7 @@ void updatemenu(sfRenderWindow* _window)
 		}
 	}
 
-	// Hitbox du menu Option quand on est en jeu ou éditeur
+	// Hitbox du menu Option quand on est en jeu ou ï¿½diteur
 	if (state == SETTINGS)
 	{
 		typemenu = INGAME;
@@ -891,7 +891,7 @@ void displaymenu(sfRenderWindow* _window)
 	}
 }
 
-// fonction de création pour les touches du menu
+// fonction de crï¿½ation pour les touches du menu
 sfRectangleShape* creationbutton(sfRectangleShape* _nomButton, sfVector2f _Size, sfVector2f _position, sfIntRect _irect, sfTexture * _texture)
 {
 	_nomButton = sfRectangleShape_create();
@@ -902,7 +902,7 @@ sfRectangleShape* creationbutton(sfRectangleShape* _nomButton, sfVector2f _Size,
 	return _nomButton;
 }
 
-// fonction de création de texte
+// fonction de crï¿½ation de texte
 sfText* creationtexte(sfText* _text, const char* _string,sfVector2f _position, sfColor _couleur, unsigned int _size)
 {
 	_text = sfText_create();
