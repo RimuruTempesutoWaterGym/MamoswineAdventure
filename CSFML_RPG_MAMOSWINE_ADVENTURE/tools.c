@@ -25,36 +25,54 @@ int isInsideMouse(sfVector2f item, sfFloatRect obstacle)
 		item.x < (obstacle.width + obstacle.left) &&
 		item.y > obstacle.top &&
 		item.y < (obstacle.top + obstacle.height))
+	{
+	
+		return 1;
+
+	}
+	return 0;
+}
+	int isInsideMousei(sfVector2i item, sfFloatRect obstacle)
+	{
+
+		if (item.x > obstacle.left &&
+			item.x < (obstacle.width + obstacle.left) &&
+			item.y > obstacle.top &&
+			item.y < (obstacle.top + obstacle.height))
 		{
+			
 			return 1;
 
-}
+		}
+
 return 0;
 }
 int isInsidePlayer(sfFloatRect player, sfFloatRect obstacle)
 {
-	if (player.left > obstacle.left &&
-		player.left < (obstacle.width + obstacle.left) &&
-		player.top > obstacle.top &&
-		player.top < (obstacle.top + obstacle.height) ||
-		player.left + player.width > obstacle.left &&
-		player.left+player.width < (obstacle.width + obstacle.left) &&
-		player.top + player.height > obstacle.top &&
-		player.top + player.height < (obstacle.top + obstacle.height) ||
-		player.left  > obstacle.left &&
-		player.left < (obstacle.width + obstacle.left) &&
-		player.top + player.height > obstacle.top &&
-		player.top + player.height < (obstacle.top + obstacle.height)
-		||
-		player.left + player.width > obstacle.left &&
-		player.left + player.width< (obstacle.width + obstacle.left) &&
-		player.top  > obstacle.top &&
-		player.top  < (obstacle.top + obstacle.height)
-		)
-	{
-		return 1;
 
-	}
+		if (player.left > obstacle.left &&
+			player.left < (obstacle.width + obstacle.left) &&
+			player.top > obstacle.top &&
+			player.top < (obstacle.top + obstacle.height) ||
+			player.left + player.width > obstacle.left &&
+			player.left + player.width < (obstacle.width + obstacle.left) &&
+			player.top + player.height > obstacle.top &&
+			player.top + player.height < (obstacle.top + obstacle.height) ||
+			player.left  > obstacle.left &&
+			player.left < (obstacle.width + obstacle.left) &&
+			player.top + player.height > obstacle.top &&
+			player.top + player.height < (obstacle.top + obstacle.height) ||
+			player.left + player.width > obstacle.left &&
+			player.left + player.width< (obstacle.width + obstacle.left) &&
+			player.top  > obstacle.top &&
+			player.top < (obstacle.top + obstacle.height)
+			)
+		{
+			return 1;
+
+		}
+
+
 	return 0;
 }
 
@@ -63,23 +81,25 @@ void initAll()
 {
 	initTools();
 
-	initDoor();
+	
 
 	initMusic();
 
-	initmap();
+	initSound();
 
 	initView();
 
 	initplayer();
 
 	initNPC();
-
+	initDoor();
 	initTextBox();
 	
 	initmenu();
 	
 	initElementalMammoswine();
+	initmap();
+	updateSpritePositionsFromData();
 }
 
 void updateAll(sfRenderWindow* _window)
@@ -90,16 +110,51 @@ void updateAll(sfRenderWindow* _window)
 	updatePlayer(_window);
 	updateTextBox();
 	updateMap(_window);
-	updateElementalMammoswine();
+	updateTextBox();
+	updateDoor();
+	updateMusic();
 }
 void displayAll(sfRenderWindow* _window)
 {
-	displayMap(_window);
-	displayView(_window);
-	displayPlayer(_window);
-	displayNPC(_window);
-	displaymenu(_window);
-	displayElementalMammoswine(_window);
-	displayDoor(_window);
+	switch (state)
+	{
+	case EDITOR:
+
+		displayViewEdit(_window);
+		displayMap(_window);
+		updateMap(_window);
+		displayPlayer(_window);
+		displayDoor(_window);
+		displayElementalMammoswine(_window);
+		displayNPC(_window);
+		displayViewEditUi(_window);
+		displayViewTileSelection(_window);	
+		break;
+	case GAME:
+		displayViewPlayer(_window);
+		displayMap(_window);
+		displayNPC(_window);
+		displayElementalMammoswine(_window);
+		if (isPlayerOverDoor())
+		{
+			displayPlayer(_window);
+			displayDoor(_window);
+		}
+		else
+		{
+			displayDoor(_window);
+			displayPlayer(_window);
+		}
+
+
+		displayHUD(_window);
+		displayTextBox(_window);
+		break;
+	default:
+		displayViewDefault(_window);
+		displaymenu(_window);
+		break;
+	}
+
 	//displayTextBox(_window);
 }

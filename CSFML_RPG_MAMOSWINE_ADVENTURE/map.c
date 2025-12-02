@@ -1,7 +1,12 @@
 
 #include "map.h"
+#include "door.h"
+#include "elemental_mammoswine.h"
+#include "player.h"
+#include "NPC.h"
 sfRectangleShape* selectTileSetSquare;
 sfVector2f mousepos;
+sfVector2f mouseposViewUi;
 sfRectangleShape* RectangleTilesetPanel;
 sfRectangleShape* RectangleTileSelectionPanel;
 sfRectangleShape* RectangleButtonSwitchTileWall;
@@ -15,7 +20,7 @@ sfVector2f PositionTilesetPanel = { 0.f,-100.f };
 sfVector2f PositionButtonSwitchTileWall = { 20.f,525.f };
 sfVector2f PositionButtonSwitchTileMode = { 5.f,525.f };
 sfSprite* mapSprite;
-sfTexture* peacefulTexture;
+ sfTexture* peacefulTexture;
 sfTexture* naturalTexture;
 sfTexture* swampTexture;
 sfTexture* waterTexture;
@@ -25,7 +30,8 @@ sfTexture* plantTexture;
 sfTexture* boulderTexture;
 sfTexture* voidTilesetTexture;
 sfTexture* voidTexture;
-sfTexture* electricToggleTexture;
+sfTexture* electricCircuitTexture;
+sfTexture* electricMushroomTexture;
 sfTexture* switchRectangleTexture;
 sfTexture* thunderedTexture;
 sfTexture* tilesetBarTexture;
@@ -55,11 +61,17 @@ tileSet thunderedTileset;
 int bushFrameX = 0;
 int bushFrameY = 0;
 
+int selectedSprite = 0;
+SpriteData sprites[SPRITE_COUNT];
+float spriteInteractionTimer = 0.0f;
+
 sfIntRect tile = { 0, 0, TILE_WIDTH, TILE_HEIGHT };
 sfVector2f tilepos = { 0.0f,0.0f };
 int selectedTiles = 1;
 int selectedTexture = 1;
 int selectedSpecialTiles = 1;
+int selectedMusic = 0;
+
 Tilemode selectedTileMode = 1;
 
 
@@ -67,19 +79,23 @@ float keyMapTimer = 0.0f;
 int tileSelection;
 
 char pathFile[100];
+
 tileOf tileMap[MAP_HEIGHT][MAP_WIDTH];
+
 
 tilesetType tileType;
 specialTileType typeOfSpecialTile;
 
  
-
+sfFont* font;
+sfText* idText;
 
 
 
 void initmap()
 {
-
+	initSpriteData();
+	loadSpritesData("maps/sprites.dat");
 	initTileset();
 loadMap("maps/mymap.dat");
 peacefulTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-grassy-peaceful.png", NULL);
@@ -93,6 +109,9 @@ deepWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-deep-water.png", N
 fireTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-fire.png", NULL);
 thunderedTexture = sfTexture_createFromFile(TEXTURE_PATH"tile-thundered.png", NULL);
 plantTexture = sfTexture_createFromFile(TEXTURE_PATH"treeDestruction.png", NULL);
+boulderTexture = sfTexture_createFromFile(TEXTURE_PATH"boulder.png", NULL);
+electricCircuitTexture = sfTexture_createFromFile(TEXTURE_PATH"arcelectrique.png", NULL);
+electricMushroomTexture = sfTexture_createFromFile(TEXTURE_PATH"champignon.png", NULL);
 boulderTexture = sfTexture_createFromFile(TEXTURE_PATH"boulder.png", NULL);
 voidTexture = sfTexture_createFromFile(TEXTURE_PATH"voidTile.png", NULL);
 voidTilesetTexture = sfTexture_createFromFile(TEXTURE_PATH"voidTileset.png", NULL);
@@ -137,7 +156,13 @@ sfRectangleShape_setFillColor(mouseCornerIndicator, sfBlack);
 	sfRectangleShape_setTexture(RectangleButtonSwitchTileMode, switchRectangleTexture, sfTrue);
 	mapSprite = sfSprite_create();
 
-
+	font = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
+	idText = sfText_create();
+	sfText_setFont(idText, font);
+	sfText_setCharacterSize(idText, 12);
+	sfText_setFillColor(idText, sfWhite);
+	sfText_setOutlineColor(idText, sfBlack);
+	sfText_setOutlineThickness(idText, 1.f);
 }
 
 void updateMap(sfRenderWindow* _window)
@@ -148,7 +173,7 @@ void updateMap(sfRenderWindow* _window)
 	if (state == EDITOR)
 	{
 		keyMapTimer += GetDeltaTime();
-		mousepos = updatePixelToWorld(_window);
+		mousepos = updatePixelToWorld(_window,NULL);
 
 
 
@@ -163,6 +188,7 @@ void updateMap(sfRenderWindow* _window)
 
 			keyMapTimer = 0.0f;
 			saveMap("maps/mymap.dat");
+			saveSpritesData("maps/sprites.dat");
 
 		}
 
@@ -177,9 +203,8 @@ void updateMap(sfRenderWindow* _window)
 			sfSprite_setTextureRect(mapSprite, tile);
 			sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
 			sfRectangleShape_setPosition(mouseCornerIndicator, (sfVector2f) { mousepos.x, mousepos.y });
-			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
-
+			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			if (selectedTiles == 0)
 			{
 
@@ -253,6 +278,84 @@ void updateMap(sfRenderWindow* _window)
 				}
 			
 		}
+		if (selectedTileMode == 3){
+			tile = giveSpriteTextureDim(tile, selectedTiles);
+
+	
+			sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
+			sfRectangleShape_setPosition(mouseCornerIndicator, (sfVector2f) { mousepos.x, mousepos.y });
+			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
+			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+
+				sfRenderWindow_setMouseCursorVisible(_window, sfTrue);
+			
+			
+
+			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
+			{
+
+				if (keyMapTimer > 1.0f) {
+					posNewTile.x = (int)(mousepos.x / TILE_WIDTH);
+					posNewTile.y = (int)(mousepos.y / TILE_WIDTH);
+					if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT)
+					{
+						tileSet* tilesetTile = getCurrentTileset(tileMap[posNewTile.y][posNewTile.x].texture);
+						if (tileMap[posNewTile.y][posNewTile.x].selectedSpecialTiles.SpecialTilesType == 3 || tileMap[posNewTile.y][posNewTile.x].selectedSpecialTiles.SpecialTilesType == 4)
+						{
+							tileMap[posNewTile.y][posNewTile.x].isActivable.idActivable++;
+					
+						}
+
+					}
+					keyMapTimer = 0.0f;
+				}
+			
+			}
+			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseLeft))
+			{
+
+				if (keyMapTimer > 1.0f) {
+					posNewTile.x = (int)(mousepos.x / TILE_WIDTH);
+					posNewTile.y = (int)(mousepos.y / TILE_WIDTH);
+					if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT)
+					{
+						tileSet* tilesetTile = getCurrentTileset(tileMap[posNewTile.y][posNewTile.x].texture);
+						if (tileMap[posNewTile.y][posNewTile.x].selectedSpecialTiles.SpecialTilesType == 3 || tileMap[posNewTile.y][posNewTile.x].selectedSpecialTiles.SpecialTilesType == 4)
+						{
+							tileMap[posNewTile.y][posNewTile.x].isActivable.idActivable--;
+
+						}
+
+					}
+					keyMapTimer = 0.0f;
+				}
+			}
+		}
+		if (selectedTileMode == 4) {
+			updateSpritePlacementMode(_window);
+
+			// Save sprites with S key
+	
+		}
+		if (selectedTileMode == 5) {
+			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
+			{
+				if (keyMapTimer > 0.02f) {
+					posNewTile.x = (int)(mousepos.x / TILE_WIDTH);
+					posNewTile.y = (int)(mousepos.y / TILE_WIDTH);
+					if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT)
+					{
+						tileSet* tilesetTile = getCurrentTileset(tileMap[posNewTile.y][posNewTile.x].texture);
+						if (tilesetTile->isWall[tileMap[posNewTile.y][posNewTile.x].tileNumber] < 1)
+						{
+							tileMap[posNewTile.y][posNewTile.x].musicOfTile = selectedMusic;
+						}
+
+					}
+					keyMapTimer = 0.0f;
+				}
+			}
+		}
 	}
 }
 void displayMap(sfRenderWindow* _window)
@@ -292,6 +395,7 @@ void displayMap(sfRenderWindow* _window)
 				if (typeOfSpecialTile != none)
 				{
 					changeSpecialTiles(typeOfSpecialTile);
+			
 					if (typeOfSpecialTile == plant)
 					{
 						if (tileMap[x][y].selectedSpecialTiles.state > 0)
@@ -305,6 +409,42 @@ void displayMap(sfRenderWindow* _window)
 
 
 					
+						tilepos.x -= 4;
+						tilepos.y -= 16;
+						sfSprite_setPosition(mapSprite, tilepos);
+						tilepos.x += 4;
+						tilepos.y += 16;
+						tile.height = 24;
+						tile.width = 24;
+					}
+					if (typeOfSpecialTile == electric_wall) {
+					
+						if (tileMap[x][y].selectedSpecialTiles.state == 1 ) {
+						
+							sfSprite_setColor(mapSprite, (sfColor) { 255, 255, 255, 100 }); 
+						}
+						else {
+							sfSprite_setColor(mapSprite, sfWhite);
+						}
+					
+						sfSprite_setPosition(mapSprite, tilepos);
+					}
+					else {
+						sfSprite_setColor(mapSprite, sfWhite);
+					}
+					if (typeOfSpecialTile == plant)
+					{
+						if (tileMap[x][y].selectedSpecialTiles.state > 0)
+						{
+							tile.top = 32 * ((tileMap[x][y].selectedSpecialTiles.state) / 4);
+							tile.width = 32;
+							tile.left = 32 * ((tileMap[x][y].selectedSpecialTiles.state) % 4);
+							tile.height = 32;
+							sfSprite_setTextureRect(mapSprite, tile);
+						}
+
+
+
 						tilepos.x -= 4;
 						tilepos.y -= 16;
 						sfSprite_setPosition(mapSprite, tilepos);
@@ -338,10 +478,29 @@ void displayMap(sfRenderWindow* _window)
 						sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 					
 					}
+					if (selectedTileMode == 3 && state == EDITOR)
+					{
+						if (tileMap[x][y].selectedSpecialTiles.SpecialTilesType == 3 || tileMap[x][y].selectedSpecialTiles.SpecialTilesType == 4)
+						{
+							char idStr[16];
+							sprintf(idStr, "%d", tileMap[x][y].isActivable.idActivable);
 
+
+							sfText_setString(idText, idStr);
+
+
+							sfFloatRect textBounds = sfText_getLocalBounds(idText);
+							sfVector2f textPos;
+							textPos.x = tilepos.x + (TILE_WIDTH - textBounds.width) / 2.0f;
+							textPos.y = tilepos.y + (TILE_HEIGHT - textBounds.height) / 2.0f - 4.0f;
+							sfText_setPosition(idText, textPos);
+							sfRenderWindow_drawText(_window, idText, NULL);
+							
+						}
+					}
 				
 				}
-
+			
 				tilepos.x += tile.width;
 
 
@@ -350,7 +509,10 @@ void displayMap(sfRenderWindow* _window)
 			tilepos.y += tile.height;
 			tilepos.x = 0;
 		}
+
 		tilepos.y = 0;
+
+
 	}
 
 }
@@ -399,6 +561,12 @@ void changeSpecialTiles(specialTileType specialTile)
 		break;
 	case boulder:
 		sfSprite_setTexture(mapSprite, boulderTexture, sfTrue);
+		break;
+	case electric_toggle:
+		sfSprite_setTexture(mapSprite, electricMushroomTexture, sfTrue);
+		break;
+	case electric_wall:
+		sfSprite_setTexture(mapSprite, electricCircuitTexture, sfTrue);
 		break;
 	}
 }
@@ -452,8 +620,13 @@ void loadMap(const char* filename)
 	{
 		for (int j = 0; j < MAP_WIDTH; j++)
 		{
-
 			tileMap[i][j].selectedSpecialTiles.state = 0;
+			if (tileMap[i][j].selectedSpecialTiles.SpecialTilesType != 3 && tileMap[i][j].selectedSpecialTiles.SpecialTilesType != 4)
+			{
+				tileMap[i][j].isActivable.idActivable = 0;
+			}
+			tileMap[i][j].selectedSpecialTiles.state = 0;
+
 		}
 	}
 	printf("Map chargée depuis %s\n", filename);
@@ -478,42 +651,43 @@ sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber)
 			tile.left = (tileNumber - (tile.top - 8 *tile.top / tile.height) ) * tile.width;
 			return tile;
 }
-void updateTilesetPanel(sfRenderWindow* _window)
+void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 {
 	if (state == EDITOR)
 	{
+
 		switchTileTypeTimer += GetDeltaTime();
-		mousepos = updatePixelToWorld(_window);
+		mouseposViewUi = updatePixelToWorld(_window, _view);
 		sfVector2i screenMousePos = sfMouse_getPositionRenderWindow(_window);
 		sfVector2f screenMousePosF = { (float)screenMousePos.x, (float)screenMousePos.y };
 
 		sfVector2f tilepos_ui = { 5.0f, 10.0f };
 
 
-	
+
 		tile.left = 0;
 		tile.top = 0;
 		tile.left += 48;
 		sfRenderWindow_drawRectangleShape(_window, RectangleTilesetPanel, NULL);
 		sfRenderWindow_drawRectangleShape(_window, RectangleButtonSwitchTileMode, NULL);
 		sfFloatRect rectfrect = sfRectangleShape_getGlobalBounds(RectangleButtonSwitchTileMode);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(screenMousePosF, rectfrect) && switchTileTypeTimer >= 0.5f)
+		if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, rectfrect) && switchTileTypeTimer >= 0.5f)
 		{
-			if (selectedTileMode == 2)
+			if (selectedTileMode == 5)
 			{
 				selectedTileMode = 1;
-	}
+			}
 			else
 			{
 				selectedTileMode++;
 			}
-			switchTileTypeTimer =0;
+			switchTileTypeTimer = 0;
 			selectedTexture = 1;
 			selectedTiles = 1;
 		}
 		if (selectedTileMode == 1)
 		{
-			
+
 			for (int i = 1; i < 9; i++)
 			{
 
@@ -525,7 +699,7 @@ void updateTilesetPanel(sfRenderWindow* _window)
 
 				sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
 				if (sfMouse_isButtonPressed(sfMouseLeft) &&
-					isInsideMouse(screenMousePosF, mapfrect))
+					isInsideMouse(mouseposViewUi, mapfrect))
 				{
 					selectedTexture = i;
 					selectedTiles = 1;
@@ -551,10 +725,10 @@ void updateTilesetPanel(sfRenderWindow* _window)
 			changeTileset(selectedTexture);
 
 			sfSprite_setTextureRect(mapSprite, tile);
-			sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
-			sfRectangleShape_setPosition(mouseCornerIndicator, (sfVector2f) { mousepos.x, mousepos.y });
-			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
+			sfSprite_setPosition(mapSprite, mouseposViewUi);
+			sfRectangleShape_setPosition(mouseCornerIndicator, mouseposViewUi);
 			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			if (selectedTiles == 0)
 			{
 
@@ -566,16 +740,17 @@ void updateTilesetPanel(sfRenderWindow* _window)
 				sfRenderWindow_setMouseCursorVisible(_window, sfFalse);
 
 			}
+
 		}
 		if (selectedTileMode == 2)
 		{
-		
-			for (int i = 0; i < 3; i++)
+
+			for (int i = 0; i < 5; i++)
 			{
 				sfSprite_setTextureRect(mapSprite, tile);
 				changeSpecialTiles(i);
 
-			
+
 				sfSprite_setPosition(mapSprite, tilepos_ui);
 
 
@@ -605,9 +780,9 @@ void updateTilesetPanel(sfRenderWindow* _window)
 			sfSprite_setTextureRect(mapSprite, tile);
 			changeSpecialTiles(selectedTexture);
 
-			
-			sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
-			sfRectangleShape_setPosition(mouseCornerIndicator, (sfVector2f) { mousepos.x, mousepos.y });
+
+			sfSprite_setPosition(mapSprite, mouseposViewUi);
+			sfRectangleShape_setPosition(mouseCornerIndicator, mouseposViewUi);
 			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 			if (selectedTiles == 0)
@@ -621,7 +796,120 @@ void updateTilesetPanel(sfRenderWindow* _window)
 				sfRenderWindow_setMouseCursorVisible(_window, sfFalse);
 
 			}
+			if (selectedTileMode == 3)
+			{
+
+				tile = giveSpriteTextureDim(tile, 0);
+
+				changeSpecialTiles(selectedTexture);
+
+				sfRectangleShape_setPosition(mouseCornerIndicator, mouseposViewUi);
+				sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
+				sfRenderWindow_setMouseCursorVisible(_window, sfTrue);
+
+
+			}
 		}
+		if (selectedTileMode == 4) {
+			sfVector2f tilepos_ui = { 5.0f, 10.0f };
+			const char* spriteNames[SPRITE_COUNT] = {
+				"Player", "NPC", "Door", "Mamo Fire",
+				"Mamo Water", "Mamo Grass", "Mamo Elec"
+			};
+
+			for (int i = 0; i < SPRITE_COUNT; i++) {
+				// Draw sprite icon/preview
+				sfRectangleShape* spriteIcon = sfRectangleShape_create();
+				sfRectangleShape_setSize(spriteIcon, (sfVector2f) { 24.f, 24.f });
+				sfRectangleShape_setPosition(spriteIcon, tilepos_ui);
+
+				// Color code each sprite type
+				sfColor colors[SPRITE_COUNT] = {
+					{100, 100, 255, 255},
+					{255, 100, 255, 255},
+					{150, 75, 0, 255},
+					{255, 0, 0, 255},
+					{0, 100, 255, 255},
+					{0, 255, 0, 255},
+					{255, 255, 0, 255}
+				};
+				sfRectangleShape_setFillColor(spriteIcon, colors[i]);
+
+				sfFloatRect iconRect = sfRectangleShape_getGlobalBounds(spriteIcon);
+				if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, iconRect)) {
+					selectedSprite = i;
+				}
+
+				sfRenderWindow_drawRectangleShape(_window, spriteIcon, NULL);
+
+				// Highlight selected sprite
+				if (selectedSprite == i) {
+					sfRectangleShape* highlight = sfRectangleShape_create();
+					sfRectangleShape_setSize(highlight, (sfVector2f) { 24.f, 24.f });
+					sfRectangleShape_setPosition(highlight, tilepos_ui);
+					sfRectangleShape_setFillColor(highlight, sfTransparent);
+					sfRectangleShape_setOutlineColor(highlight, sfYellow);
+					sfRectangleShape_setOutlineThickness(highlight, 2.f);
+					sfRenderWindow_drawRectangleShape(_window, highlight, NULL);
+					sfRectangleShape_destroy(highlight);
+				}
+
+				sfRectangleShape_destroy(spriteIcon);
+				tilepos_ui.y += 30.f;
+			}
+		}
+			if (selectedTileMode == 5)
+			{
+			
+				sfVector2f tilepos_ui = { 5.0f, 10.0f };
+				const char* musicnames[6] = {
+					"Menu", "Overworld", "Fire", "Water",
+					"Grass", "Electik"
+				};
+
+				for (int i = 0; i < 6; i++) {
+					// Draw sprite icon/preview
+					sfRectangleShape* musicIcon = sfRectangleShape_create();
+					sfRectangleShape_setSize(musicIcon, (sfVector2f) { 24.f, 24.f });
+					sfRectangleShape_setPosition(musicIcon, tilepos_ui);
+
+					// Color code each sprite type
+					sfColor colors[6] = {
+						{100, 100, 255, 255},
+						{255, 100, 255, 255},
+						{255, 0, 0, 255},
+						{0, 100, 255, 255},
+						{0, 255, 0, 255},
+						{255, 255, 0, 255}
+					};
+					sfRectangleShape_setFillColor(musicIcon, colors[i]);
+
+					sfFloatRect iconRect = sfRectangleShape_getGlobalBounds(musicIcon);
+					if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, iconRect)) {
+						selectedMusic = i;
+					}
+
+					sfRenderWindow_drawRectangleShape(_window, musicIcon, NULL);
+
+					//Highlight selected sprite
+					if (selectedMusic == i) {
+						sfRectangleShape* highlight = sfRectangleShape_create();
+						sfRectangleShape_setSize(highlight, (sfVector2f) { 24.f, 24.f });
+						sfRectangleShape_setPosition(highlight, tilepos_ui);
+						sfRectangleShape_setFillColor(highlight, sfTransparent);
+						sfRectangleShape_setOutlineColor(highlight, sfYellow);
+						sfRectangleShape_setOutlineThickness(highlight, 2.f);
+						sfRenderWindow_drawRectangleShape(_window, highlight, NULL);
+						sfRectangleShape_destroy(highlight);
+					}
+
+					sfRectangleShape_destroy(musicIcon);
+					tilepos_ui.y += 30.f;
+				}
+				 
+			
+		}
+
 	}
 }
 
@@ -721,7 +1009,6 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 					tile = giveSpriteTextureDim(tile, tileNum);
 					sfSprite_setTextureRect(mapSprite, tile);
 					sfSprite_setPosition(mapSprite, tilepos_ui);
-					sfSprite_setPosition(mapSprite, tilepos_ui);
 
 
 					if (selectedTiles == tileNum)
@@ -735,6 +1022,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 						sfRectangleShape_setOutlineThickness(highlight, 2.f);
 						sfRenderWindow_drawRectangleShape(_window, highlight, NULL);
 						sfRectangleShape_destroy(highlight);
+
 					}
 
 					sfFloatRect mapfrect = sfSprite_getGlobalBounds(mapSprite);
@@ -744,7 +1032,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 					}
 
 					sfRenderWindow_drawSprite(_window, mapSprite, NULL);
-
+				
 					currentCol++;
 					if (currentCol >= tilesPerRow)
 					{
@@ -764,7 +1052,9 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 				changeTileset(selectedTexture);
 				sfSprite_setTextureRect(mapSprite, tile);
 				sfSprite_setPosition(mapSprite, viewMousePos);
+				sfRectangleShape_setPosition(mouseCornerIndicator, viewMousePos);
 				sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+				sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
 			}
 		}
 	}
@@ -788,22 +1078,22 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			switch (_direction)
 			{
 			case Down:
-				nextPosInTab.y = (int)((_sprite.top + (_sprite.height/2) + _vitesse->y * delataTime) / TILE_WIDTH);
-				nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top + (_sprite.height/2) + _vitesse->y * delataTime) );
+				nextPosInTab.x = (int)(_sprite.left );
 				isTreeInNextPosInTab.y = (int)((_sprite.top + 16+ (_sprite.height / 2) + _vitesse->y * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
-				nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-				nextPosInTab2.y = (int)((_sprite.top + (_sprite.height / 2) + _vitesse->y * delataTime) / TILE_WIDTH);
+				nextPosInTab2.x = (_sprite.left + _sprite.width) ;
+				nextPosInTab2.y = (int)((_sprite.top + (_sprite.height / 2) + _vitesse->y * delataTime) );
 				isTreeInNextPosInTab2.y = (int)((_sprite.top + 16 +(_sprite.height / 2) + _vitesse->y * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
 				sideOfNewTileY = 1;
 				break;
 			case Top:
 				
-				nextPosInTab.y = (int)((_sprite.top  - _vitesse->y * delataTime )/ TILE_WIDTH);
-				nextPosInTab.x =(int)(_sprite.left / TILE_WIDTH);
-				nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-				nextPosInTab2.y = (int)((_sprite.top - _vitesse->y * delataTime) / TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top  - _vitesse->y * delataTime ));
+				nextPosInTab.x =(int)(_sprite.left );
+				nextPosInTab2.x = (_sprite.left + _sprite.width) ;
+				nextPosInTab2.y = (int)((_sprite.top - _vitesse->y * delataTime) );
 				isTreeInNextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
 				isTreeInNextPosInTab.y = (int)((_sprite.top + 6 - _vitesse->y * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab2.y = (int)((_sprite.top + 6 - _vitesse->y * delataTime) / TILE_WIDTH);
@@ -812,10 +1102,10 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			
 				break;
 			case Right:
-				nextPosInTab.y = (int)((_sprite.top )   / TILE_WIDTH);
-				nextPosInTab.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
-				nextPosInTab2.y = (_sprite.top + _sprite.height / 2) / TILE_WIDTH;
-				nextPosInTab2.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
+				nextPosInTab.y = (int)((_sprite.top )   );
+				nextPosInTab.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) );
+				nextPosInTab2.y = (_sprite.top + _sprite.height / 2) ;
+				nextPosInTab2.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) );
 				isTreeInNextPosInTab.y = (int)((_sprite.top + 6) / TILE_WIDTH);
 				isTreeInNextPosInTab.x = (int)((_sprite.left +  _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab2.y = (_sprite.top+ 16 + _sprite.height / 2) / TILE_WIDTH;
@@ -823,10 +1113,10 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 				sideOfNewTileX = 1;
 				break;
 			case Left:
-				nextPosInTab.y = (int)((_sprite.top ) / TILE_WIDTH);
-				nextPosInTab.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
-				nextPosInTab2.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
-				nextPosInTab2.y = (_sprite.top + _sprite.height/2) / TILE_WIDTH;
+				nextPosInTab.y = (int)((_sprite.top ) );
+				nextPosInTab.x = (int)((_sprite.left  - _vitesse->x * delataTime) );
+				nextPosInTab2.x = (int)((_sprite.left  - _vitesse->x * delataTime) );
+				nextPosInTab2.y = (_sprite.top + _sprite.height/2) ;
 				isTreeInNextPosInTab.y = (int)((_sprite.top + 6) / TILE_WIDTH);
 				isTreeInNextPosInTab.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
 				isTreeInNextPosInTab2.x = (int)((_sprite.left  - _vitesse->x * delataTime) / TILE_WIDTH);
@@ -834,6 +1124,26 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 				sideOfNewTileX = -1;
 				break;
 			}
+			
+	
+
+			
+			if (isInsideMousei(nextPosInTab, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16 || isInsideMousei(nextPosInTab2, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16
+				|| isInsideOpenDoor(nextPosInTab,GetCollisionOfDoor())  || isInsideOpenDoor(nextPosInTab2,GetCollisionOfDoor())
+				|| isInsideMousei(nextPosInTab, GetCollisionOfNPC()) || isInsideMousei(nextPosInTab2, GetCollisionOfNPC())
+			
+				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineFire())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineFire()))
+				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineWater())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineWater()))
+				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineElectric()))
+				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineGrass())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineGrass()))
+				)
+			{
+				return sfTrue;
+			}
+			nextPosInTab.y /= (int)TILE_WIDTH;
+			nextPosInTab.x /= (int)TILE_WIDTH;
+			nextPosInTab2.y /= (int)TILE_WIDTH;
+			nextPosInTab2.x /=(int) TILE_WIDTH;
 			tileSet* tilesetInFront = getCurrentTileset(tileMap[nextPosInTab.y][nextPosInTab.x].texture);
 			tileSet* tilesetNearFront = getCurrentTileset(tileMap[nextPosInTab2.y][nextPosInTab2.x].texture);
 			tileSet* tilesetInFrontBehind = getCurrentTileset(tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].texture);
@@ -888,19 +1198,146 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 				}
 			
 			
-			if (tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0  
-				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType > 1 
+			if (
+		tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0  
+				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 2
+				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 4
+				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 3 &&
+				tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state == 0
 				|| (tileMap[isTreeInNextPosInTab.y][isTreeInNextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 1
+				
 				&& tileMap[isTreeInNextPosInTab.y][isTreeInNextPosInTab.x].selectedSpecialTiles.state < 15)
+			
 				||tilesetNearFront->isWall[tileMap[nextPosInTab2.y][nextPosInTab2.x].tileNumber] > 0
-				|| tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType > 1 
+				|| tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == 2
+				|| tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == 4
+				|| tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == 3 &&
+				tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state == 0
 				|| (tileMap[isTreeInNextPosInTab2.y][isTreeInNextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == 1
 				&& tileMap[isTreeInNextPosInTab2.y][isTreeInNextPosInTab2.x].selectedSpecialTiles.state < 15))
 			{
 							return sfTrue;
 			}
+		
 				
 			return sfFalse;
+}
+void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
+
+	_sprite.left += _sprite.width / 4;
+
+	_sprite.top += _sprite.height / 2;
+	_sprite.height /= 2;
+	_sprite.width /= 2;
+
+	sfVector2i nextPosInTab = { 0, 0 };
+	sfVector2i nextPosInTab2 = { 0, 0 };
+
+
+	switch (_direction)
+	{
+	case Down:
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH - 1) / TILE_WIDTH);
+		nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
+		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
+		nextPosInTab2.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH - 1) / TILE_WIDTH);
+
+
+		break;
+	case Top:
+
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
+		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
+		nextPosInTab2.y = (int)((_sprite.top + _sprite.height - TILE_WIDTH + 1) / TILE_WIDTH);
+
+
+		break;
+	case Right:
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
+		nextPosInTab2.y = (_sprite.top) / TILE_WIDTH;
+		nextPosInTab2.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
+
+		break;
+	case RightTop:
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
+		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
+		nextPosInTab2.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
+
+
+		break;
+	case  DownRight:
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
+		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
+		nextPosInTab2.x = (int)((_sprite.left + _sprite.width + TILE_WIDTH - 1) / TILE_WIDTH);
+
+		break;
+	case Left:
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.y = (_sprite.top) / TILE_WIDTH;
+
+
+		break;
+	case DownLeft:
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
+
+
+		break;
+	case  TopLeft:
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height) / TILE_WIDTH);
+		nextPosInTab.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.x = (int)((_sprite.left - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
+
+
+
+		break;
+	}
+		
+	if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == electric_toggle) {
+		int currentState = tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state;
+		int idActivable = tileMap[nextPosInTab.y][nextPosInTab.x].isActivable.idActivable;
+
+
+		tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state = (currentState == 0) ? 1 : 0;
+
+	
+		if (checkAllTogglesActivated(idActivable)) {
+
+			updateElectricWalls(idActivable, 1);
+	
+		}
+		else {
+			updateElectricWalls(idActivable, 0);
+		}
+	}
+	if (tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.SpecialTilesType == electric_toggle) {
+		int currentState = tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state;
+		int idActivable = tileMap[nextPosInTab2.y][nextPosInTab2.x].isActivable.idActivable;
+
+
+		tileMap[nextPosInTab2.y][nextPosInTab2.x].selectedSpecialTiles.state = (currentState == 0) ? 1 : 0;
+
+
+		if (checkAllTogglesActivated(idActivable)) {
+
+			updateElectricWalls(idActivable, 1);
+			printf("All toggles with ID %d activated! Electric walls deactivated.\n", idActivable);
+		}
+		else {
+		
+			updateElectricWalls(idActivable, 0);
+			printf("Not all toggles with ID %d are activated.\n", idActivable);
+		}
+	}
 }
 void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction)
 {
@@ -981,9 +1418,7 @@ void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction)
 		break;
 	}
 
-	tileSet* tilesetInFront = getCurrentTileset(tileMap[nextPosInTab.y][nextPosInTab.x].texture);
-	tileSet* tilesetNearFront = getCurrentTileset(tileMap[nextPosInTab2.y][nextPosInTab2.x].texture);
-
+	
 	if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 1 && tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state < 15)
 	{
 		bushCutTimer += GetDeltaTime();
@@ -1038,6 +1473,197 @@ tileSet* getCurrentTileset(tilesetType type)
 	default: return &peacefulTileset;
 	}
 }
+int checkAllTogglesActivated(int idActivable) {
+	int totalToggles = 0;
+	int activatedToggles = 0;
+
+	
+	for (int x = 0; x < MAP_HEIGHT; x++) {
+		for (int y = 0; y < MAP_WIDTH; y++) {
+			if (tileMap[x][y].selectedSpecialTiles.SpecialTilesType == electric_toggle &&
+				tileMap[x][y].isActivable.idActivable == idActivable) {
+				totalToggles++;
+				if (tileMap[x][y].selectedSpecialTiles.state == 1) { 
+					activatedToggles++;
+				}
+			}
+		}
+	}
+
+
+	if (totalToggles > 0 && activatedToggles == totalToggles) {
+		return 1;
+	}
+	return 0;
+}
+void updateElectricWalls(int idActivable, int state) {
+    for (int x = 0; x < MAP_HEIGHT; x++) {
+        for (int y = 0; y < MAP_WIDTH; y++) {
+            if (tileMap[x][y].selectedSpecialTiles.SpecialTilesType == electric_wall && 
+                tileMap[x][y].isActivable.idActivable == idActivable) {
+                tileMap[x][y].selectedSpecialTiles.state = state; 
+            }
+        }
+    }
+}
+sfBool canPlaceSpriteAt(sfVector2f position, sfIntRect spriteBounds) {
+
+	int tileMinX = (int)(position.x / TILE_WIDTH);
+	int tileMinY = (int)(position.y / TILE_HEIGHT);
+	int tileMaxX = (int)((position.x + spriteBounds.width) / TILE_WIDTH);
+	int tileMaxY = (int)((position.y + spriteBounds.height) / TILE_HEIGHT);
+
+
+	for (int y = tileMinY; y <= tileMaxY; y++) {
+		for (int x = tileMinX; x <= tileMaxX; x++) {
+	
+			if (x < 0 || x >= MAP_WIDTH || y < 0 || y >= MAP_HEIGHT) {
+				return sfFalse;
+			}
+
+	
+			tileSet* tileset = getCurrentTileset(tileMap[y][x].texture);
+			if (tileset->isWall[tileMap[y][x].tileNumber] > 0) {
+				return sfFalse;
+			}
+
+			if (tileMap[y][x].selectedSpecialTiles.SpecialTilesType == boulder ||
+				(tileMap[y][x].selectedSpecialTiles.SpecialTilesType == electric_wall &&
+					tileMap[y][x].selectedSpecialTiles.state == 0)) {
+				return sfFalse;
+			}
+		}
+	}
+
+	return sfTrue;
+}
+void updateSpritePlacementMode(sfRenderWindow* _window) {
+	spriteInteractionTimer += GetDeltaTime();
+	mousepos = updatePixelToWorld(_window, NULL);
+
+	sfVector2f snappedPos = mousepos;
+
+	snappedPos.x = ((int)(mousepos.x / TILE_WIDTH)) * TILE_WIDTH;
+	snappedPos.y = ((int)(mousepos.y / TILE_HEIGHT)) * TILE_HEIGHT;
+
+
+	if (pressed == 1 && sfMouse_isButtonPressed(sfMouseLeft) && spriteInteractionTimer > 0.2f) {
+		if (canPlaceSpriteAt(snappedPos, sprites[selectedSprite].bounds)) {
+			if (sprites[selectedSprite].type == SPRITE_DOOR)
+			{
+				snappedPos.y -= sprites[selectedSprite].bounds.height *3 ;
+			}
+			else {
+				snappedPos.y -= sprites[selectedSprite].bounds.height;
+			}
+			sprites[selectedSprite].position = snappedPos;
+			printf("Placed sprite %d at (%.0f, %.0f)\n", selectedSprite, snappedPos.x, snappedPos.y);
+
+	
+			updateSpritePositionsFromData();
+		}
+		else {
+			printf("Cannot place sprite on wall!\n");
+		}
+		spriteInteractionTimer = 0.0f;
+	}
+
+
+	sfRectangleShape* preview = sfRectangleShape_create();
+	sfRectangleShape_setSize(preview, (sfVector2f) {
+		sprites[selectedSprite].bounds.width,
+			sprites[selectedSprite].bounds.height
+	});
+	sfRectangleShape_setPosition(preview, snappedPos);
+
+
+	if (canPlaceSpriteAt(snappedPos, sprites[selectedSprite].bounds)) {
+		sfRectangleShape_setFillColor(preview, (sfColor) { 0, 255, 0, 100 }); 
+	}
+	else {
+		sfRectangleShape_setFillColor(preview, (sfColor) { 255, 0, 0, 100 }); 
+	}
+	sfRectangleShape_setOutlineColor(preview, sfYellow);
+	sfRectangleShape_setOutlineThickness(preview, 2.f);
+
+	sfRenderWindow_drawRectangleShape(_window, preview, NULL);
+	sfRectangleShape_destroy(preview);
+
+
+	sfRenderWindow_setMouseCursorVisible(_window, sfTrue);
+}
+void initSpriteData() {
+
+	sprites[SPRITE_PLAYER].type = SPRITE_PLAYER;
+	sprites[SPRITE_PLAYER].position = (sfVector2f){ 1200.0f, 300.0f };
+	sprites[SPRITE_PLAYER].bounds = (sfIntRect){ 0, 0, 48, 24 };
+
+	sprites[SPRITE_NPC].type = SPRITE_NPC;
+	sprites[SPRITE_NPC].position = (sfVector2f){ 1200.0f, 900.0f };
+	sprites[SPRITE_NPC].bounds = (sfIntRect){ 0, 0, 26, 19 };
+
+	sprites[SPRITE_DOOR].type = SPRITE_DOOR;
+	sprites[SPRITE_DOOR].position = (sfVector2f){ 1201.0f, 600.0f };
+	sprites[SPRITE_DOOR].bounds = (sfIntRect){ 0, 0, 118, 42 };
+
+	sprites[SPRITE_MAMOSWINE_FIRE].type = SPRITE_MAMOSWINE_FIRE;
+	sprites[SPRITE_MAMOSWINE_FIRE].position = (sfVector2f){ 1000.0f, 900.0f };
+	sprites[SPRITE_MAMOSWINE_FIRE].bounds = (sfIntRect){ 0, 0, 48, 24 };
+
+	sprites[SPRITE_MAMOSWINE_WATER].type = SPRITE_MAMOSWINE_WATER;
+	sprites[SPRITE_MAMOSWINE_WATER].position = (sfVector2f){ 1100.0f, 700.0f };
+	sprites[SPRITE_MAMOSWINE_WATER].bounds = (sfIntRect){ 0, 0, 48, 24 };
+
+	sprites[SPRITE_MAMOSWINE_GRASS].type = SPRITE_MAMOSWINE_GRASS;
+	sprites[SPRITE_MAMOSWINE_GRASS].position = (sfVector2f){ 900.0f, 900.0f };
+	sprites[SPRITE_MAMOSWINE_GRASS].bounds = (sfIntRect){ 0, 0, 48, 24 };
+
+	sprites[SPRITE_MAMOSWINE_ELECTRIC].type = SPRITE_MAMOSWINE_ELECTRIC;
+	sprites[SPRITE_MAMOSWINE_ELECTRIC].position = (sfVector2f){ 1190.0f, 460.0f };
+	sprites[SPRITE_MAMOSWINE_ELECTRIC].bounds = (sfIntRect){ 0, 0, 48, 24 };
+}
+void saveSpritesData(const char* filename) {
+	FILE* file = fopen(filename, "wb");
+	if (file == NULL) {
+		printf("Error: Cannot create file %s\n", filename);
+		return;
+	}
+
+	fwrite(sprites, sizeof(SpriteData), SPRITE_COUNT, file);
+	fclose(file);
+	printf("Sprites saved to %s\n", filename);
+
+}
+void updateSpritePositionsFromData() {
+
+	setPlayerPosition(sprites[SPRITE_PLAYER].position);
+	setNPCPosition(sprites[SPRITE_NPC].position);
+	setDoorPosition(sprites[SPRITE_DOOR].position);
+	setMamoswineFirePosition(sprites[SPRITE_MAMOSWINE_FIRE].position);
+	setMamoswineWaterPosition(sprites[SPRITE_MAMOSWINE_WATER].position);
+	setMamoswineGrassPosition(sprites[SPRITE_MAMOSWINE_GRASS].position);
+	setMamoswineElectricPosition(sprites[SPRITE_MAMOSWINE_ELECTRIC].position);
+}
+
+
+
+void loadSpritesData(const char* filename) {
+	FILE* file = fopen(filename, "rb");
+	if (file == NULL) {
+		printf("No sprite data found. Using defaults...\n");
+		initSpriteData();
+		saveSpritesData(filename);
+		return;
+	}
+
+	fread(sprites, sizeof(SpriteData), SPRITE_COUNT, file);
+	fclose(file);
+	printf("Sprites loaded from %s\n", filename);
+
+
+	updateSpritePositionsFromData();
+}
+
 void initTileset()
 {
 	//Equivalent des tilesets en binaire 1 /si c'est un wall 0 sinon
@@ -1057,7 +1683,7 @@ void initTileset()
 	 1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,
 	 1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,
 	 1,1,1,0,0,0,0,0,1,1,1,1,0,1,1,0,
-	 0,0,0,0,1,1,1,1,1,0,0,1,1,1,1,1,
+	 0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,
 	 1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,1,
 	 1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,
 	 0,0,0,0,0,0,0} };

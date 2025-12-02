@@ -4,20 +4,28 @@
 sfView* viewEdit;
 sfView* viewPlayer;
 sfView* viewEditUi;
+sfView* viewDefault;
 sfView* viewTileSelection;
+sfView* viewHUD;
 sfVector2f posViewEdit = { 400.0f,300.0f };
+sfVector2f posViewDefault = { 400.0f,300.0f };
 sfVector2f posViewPlayer = { 400.0f,300.0f };
 sfVector2f viewEditSize = { 800,600 };
 sfVector2f viewPlayerSize = { 400,300.0f };
+sfVector2f viewHUDSize = { 250.0f,200.0f };
+sfVector2f viewDefaultSize = { 800.f,600.0f };
 sfVector2f viewEditUISize = { TILE_WIDTH + 10.f , 600.f };
 sfVector2f viewTileSelectionSize = { 110.f, 600.f };
 sfVector2f velocityViewEdit = { 300.f,300.f };
 sfVector2f posViewEditUi;
 sfVector2f posViewTileSelection;
+sfVector2f posViewHUD;
 void initView()
 {
 	posViewEditUi.x = viewEditUISize.x / 2;
 	posViewEditUi.y = viewEditUISize.y / 2;
+	posViewHUD.x = viewHUDSize.x / 2;
+	posViewHUD.y = viewHUDSize.y / 2;
 		
 	posViewTileSelection.x = viewTileSelectionSize.x / 2; 
 	posViewTileSelection.y = viewTileSelectionSize.y / 2;
@@ -25,20 +33,28 @@ void initView()
 viewEdit = sfView_create();
 viewPlayer = sfView_create();
 viewEditUi = sfView_create();
+viewDefault = sfView_create();
 viewTileSelection = sfView_create();
+viewHUD = sfView_create();
 
  sfView_setSize(viewEdit, viewEditSize);
  sfView_setSize(viewPlayer, viewPlayerSize);
  sfView_setSize(viewEditUi, viewEditUISize);
+ sfView_setSize(viewDefault, viewDefaultSize);
  sfView_setSize(viewTileSelection, viewTileSelectionSize);
+ sfView_setSize(viewHUD, viewHUDSize);
  sfView_setCenter(viewEditUi, posViewEditUi);
- sfView_setCenter(viewTileSelection, posViewTileSelection);
- float viewportWidth = (TILE_WIDTH + 10.f) / 800.0f;  
- sfFloatRect uiViewport = { 0.0f, 0.0f, viewportWidth, 1.0f };  
+ sfView_setCenter(viewHUD, posViewHUD);
+ sfView_setCenter(viewDefault, posViewDefault);
+ float EditUiviewportWidth = (TILE_WIDTH + 10.f) / 800.0f;  
+ sfFloatRect uiViewport = { 0.0f, 0.0f, EditUiviewportWidth, 1.0f };
  sfView_setViewport(viewEditUi, uiViewport);
- float rightViewportWidth = viewTileSelectionSize.x / 800.0f;
- sfFloatRect tileSelectionViewport = { 1.0f - rightViewportWidth, 0.0f, rightViewportWidth, 1.0f };
+ float tileSelectionViewportWidth = viewTileSelectionSize.x / 800.0f;
+ sfFloatRect tileSelectionViewport = { 1.0f - tileSelectionViewportWidth, 0.0f, tileSelectionViewportWidth, 1.0f };
+ float HUDViewportHeight = viewHUDSize.y / 800.0f;
+ sfFloatRect HUDViewport = { 0.f , 1.0f - HUDViewportHeight,1.f , HUDViewportHeight };
  sfView_setViewport(viewTileSelection, tileSelectionViewport);
+ sfView_setViewport(viewHUD, HUDViewport);
 
 }
 
@@ -112,35 +128,33 @@ void updateViewEditor(sfRenderWindow* _window)
 
 
 	}
-
-
-
-void displayView(sfRenderWindow* _window)
+void displayViewEdit(sfRenderWindow* _window)
+{
+	sfRenderWindow_setView(_window, viewEdit);
+	
+}
+void displayViewEditUi(sfRenderWindow* _window)
+{
+	sfRenderWindow_setView(_window, viewEditUi);
+	updateTilesetPanel(_window, viewEditUi);
+}
+void displayViewTileSelection(sfRenderWindow* _window)
 {
 
-	
-	if (state == EDITOR)
-	{
-
-		sfRenderWindow_setView(_window, viewEdit);
-		displayMap(_window);
-		updateMap(_window);  
-
-		
-		sfRenderWindow_setView(_window, viewEditUi);
-		updateTilesetPanel(_window);
-
-		sfRenderWindow_setView(_window, viewTileSelection);
-		updateTileSelectionPanel(_window, viewTileSelection);
-	}
-
-	if (state == GAME)
-	{
-		sfRenderWindow_setView(_window, viewPlayer);
-		displayMap(_window);
-		updateMap(_window);
-	}
-	
+	sfRenderWindow_setView(_window, viewTileSelection);
+	updateTileSelectionPanel(_window, viewTileSelection);
+}
+void displayViewPlayer(sfRenderWindow* _window)
+{
+	sfRenderWindow_setView(_window, viewPlayer);
+}
+void displayViewDefault(sfRenderWindow* _window)
+{
+	sfRenderWindow_setView(_window, viewDefault);
+}
+void displayHUD(sfRenderWindow* _window)
+{
+	sfRenderWindow_setView(_window, viewHUD);
 }
 void displayMinimap(sfRenderWindow* _window)
 {
@@ -159,10 +173,18 @@ void displayMinimap(sfRenderWindow* _window)
 
 
 }
-sfVector2f updatePixelToWorld(sfRenderWindow* _window)
+sfVector2f updatePixelToWorld(sfRenderWindow* _window, sfView* _view)
 {
+	if (_view == NULL)
+	{
+		sfVector2i pixelPos = sfMouse_getPositionRenderWindow(_window);
+		return sfRenderWindow_mapPixelToCoords(_window, pixelPos, viewEdit);
+	}
+	else
+	{
 	sfVector2i pixelPos = sfMouse_getPositionRenderWindow(_window);
-	return sfRenderWindow_mapPixelToCoords(_window, pixelPos, viewEdit);
+	return sfRenderWindow_mapPixelToCoords(_window, pixelPos, _view);
+	}
 }
 sfView* getCurrentView(sfRenderWindow* _window)
 {

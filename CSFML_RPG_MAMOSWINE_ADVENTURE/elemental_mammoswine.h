@@ -15,6 +15,15 @@ void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos);
 void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos);
 void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos);
 void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos);
+void SetMamoswineElementalCountToPlusOne();
+sfFloatRect GetCollisionMamoswineWater();
+sfFloatRect GetCollisionMamoswineGrass();
+sfFloatRect GetCollisionMamoswineFire();
+sfFloatRect GetCollisionMamoswineElectric();
+void setMamoswineFirePosition(sfVector2f newPos);
+void setMamoswineWaterPosition(sfVector2f newPos);
+void setMamoswineGrassPosition(sfVector2f newPos);
+void setMamoswineElectricPosition(sfVector2f newPos);
 void saveMamowsineData(const char* filename);
 void loadMamowsineData(const char* filename);
 typedef enum {

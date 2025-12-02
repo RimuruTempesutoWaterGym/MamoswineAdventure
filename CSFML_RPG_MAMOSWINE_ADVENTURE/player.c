@@ -1,7 +1,9 @@
 #include "player.h"
+#include "door.h"
 #include "map.h"
 #include "NPC.h"
 #include "elemental_mammoswine.h"
+#include "music.h"
 
 //#include"camera.h"
 
@@ -36,6 +38,10 @@ void initplayer()
     sfSprite_setPosition(mamoswineSprite, posMamoswine);
 
 }
+sfFloatRect getCollisionOfPlayer()
+{
+  return sfSprite_getGlobalBounds(mamoswineSprite);
+}
 void updatePlayer(sfRenderWindow* _window)
 {
     
@@ -46,7 +52,7 @@ void updatePlayer(sfRenderWindow* _window)
     if (state == GAME)
     {
         timerCdAttack += GetDeltaTime();
-        sfFloatRect playerfrect = sfSprite_getGlobalBounds(mamoswineSprite);
+      
 
         //if (sfKeyboard_isKeyPressed(sfKeySpace) && posMamoswine.x > 0)
         //{
@@ -64,7 +70,7 @@ void updatePlayer(sfRenderWindow* _window)
             hasMoved = sfFalse;
             if (sfKeyboard_isKeyPressed(sfKeyS) && posMamoswine.y < (MAP_HEIGHT * TILE_HEIGHT) - 23) {
                 frameY = Down;
-                if (!collisionMapPlayer(playerfrect, Down, &speed))
+                if (!collisionMapPlayer(getCollisionOfPlayer(), Down, &speed))
                 {
                     posMamoswine.y += speed.y * GetDeltaTime();
                 }
@@ -75,7 +81,7 @@ void updatePlayer(sfRenderWindow* _window)
 
                 frameY = Top;
 
-                if (!collisionMapPlayer(playerfrect, Top, &speed))
+                if (!collisionMapPlayer(getCollisionOfPlayer(), Top, &speed))
                 {
                     posMamoswine.y -= speed.y * GetDeltaTime();
                 }
@@ -85,7 +91,7 @@ void updatePlayer(sfRenderWindow* _window)
             if (sfKeyboard_isKeyPressed(sfKeyD) && posMamoswine.x < (MAP_WIDTH * TILE_WIDTH) - 17)
             {
                 frameY = Right;
-                if (!collisionMapPlayer(playerfrect, Right, &speed))
+                if (!collisionMapPlayer(getCollisionOfPlayer(), Right, &speed))
                 {
                     posMamoswine.x += speed.x * GetDeltaTime();
                 }
@@ -95,7 +101,7 @@ void updatePlayer(sfRenderWindow* _window)
             if (sfKeyboard_isKeyPressed(sfKeyQ) && posMamoswine.x > 0)
             {
                 frameY = Left;
-                if (!collisionMapPlayer(playerfrect, Left, &speed))
+                if (!collisionMapPlayer(getCollisionOfPlayer(), Left, &speed))
                 {
                     posMamoswine.x -= speed.x * GetDeltaTime();
                 }
@@ -129,13 +135,20 @@ void updatePlayer(sfRenderWindow* _window)
 
                 mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
             }
+            if (sfKeyboard_isKeyPressed(sfKeyE) && timerCdAttack > 1.f) {
+                ElectricTogglePlayerMap(getCollisionOfPlayer(), frameY);
+                timerCdAttack = 0.f;
+            }
         }
+      
         if (sfKeyboard_isKeyPressed(sfKeyF) && timerCdAttack > 2.f || isAttacking == 1 )
         {
+           
+            //playSoundAttack();
             timerattack += GetDeltaTime();
             isAttacking = 1;
 
-            bushCutPlayerMap(playerfrect, frameY);
+            bushCutPlayerMap(getCollisionOfPlayer(), frameY);
             if (timerattack <= 0.25f)
             {
 
@@ -155,7 +168,7 @@ void updatePlayer(sfRenderWindow* _window)
                 mamoswineAnimation.left = 0;
             }
         } 
-        SetAllMamoswine(_window, playerfrect);
+        SetAllMamoswine(_window, getCollisionOfPlayer());
        
         if (PlayerTimer > 0.3f)
         {
@@ -188,13 +201,34 @@ void updatePlayer(sfRenderWindow* _window)
 
 void displayPlayer(sfRenderWindow* _window)
 {
-    if (state == GAME)
+    if (state == GAME || state == EDITOR)
     {
         sfRenderWindow_drawSprite(_window, mamoswineSprite, NULL);
-        if (collisionNPC(posMamoswine))
-        {
-            displayTextBox(_window, posMamoswine, mamoswineAnimation);
-        }
+            updateTextBox();  
+    }
+}
+sfFloatRect getMamoswineHitboxByPos(sfFloatRect _mamoswinePos)
+{
+    _mamoswinePos.left += _mamoswinePos.width / 4;
+
+    _mamoswinePos.top += _mamoswinePos.height / 4;
+    _mamoswinePos.height /= 2;
+    _mamoswinePos.width /= 2;
+    return _mamoswinePos;
+}
+sfBool isPlayerOverDoor()
+{
+ 
+    if (GetCollisionOfDoor().height+ GetCollisionOfDoor().top < getCollisionOfPlayer().height + getCollisionOfPlayer().top )
+    {
+        return sfFalse;
+    }
+        return sfTrue;
+}
+void setPlayerPosition(sfVector2f newPos) {
+    posMamoswine = newPos;
+    if (mamoswineSprite != NULL) {
+        sfSprite_setPosition(mamoswineSprite, posMamoswine);
     }
 }
 //sfFloatRect gethitboxMamoswine(sfFloatRect _sprite, Direction _direction, sfFloatRect spriteHitbox)

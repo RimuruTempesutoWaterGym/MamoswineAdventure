@@ -1,8 +1,9 @@
 #include"NPC.h"
+#include"player.h"
 
 
 sfRectangleShape* rectangleDialog;
-sfVector2f rectangleDialogSize = { 250.0f,46.0f };
+sfVector2f rectangleDialogSize = { 250.0f,200.0f };
 sfTexture* textureTextBox;
 sfFont* font;
 sfText* dialogNPC;
@@ -10,11 +11,12 @@ sfSprite* spCynthia;
 sfTexture* textureCynthia;
 sfIntRect irecttextureTextBox = { 0,0,252,46 };
 sfIntRect irectCynthia = { 0,0,26,38 };
-sfVector2f cynthiaPos = { 20.0f,30.0f };
-sfVector2f textBoxPos = { 20.0f,20.0f };
-sfVector2f dialogPos = { 28.0f,20.0f };
-sfVector2f dialogSize = { 0.7f,0.7f };
-
+sfVector2f cynthiaPos = { 1200.0f,900.0f };
+sfVector2f textBoxPos = { 0.f,0.f };
+sfVector2f dialogPos = { 20.0f,20.0f };
+sfVector2f dialogSize = { 1.0f,3.0f };
+float NpcTextTimer;
+int isShown = 0;
 void initNPC()
 {
     dialogNPC = sfText_create();
@@ -31,48 +33,77 @@ void initTextBox()
     textureTextBox = sfTexture_createFromFile(TEXTURE_PATH"text_box.png", NULL);
     sfRectangleShape_setTexture(rectangleDialog, textureTextBox, sfTrue);
     sfRectangleShape_setTextureRect(rectangleDialog, irecttextureTextBox);
-    font = sfFont_createFromFile("..\\Ressources\\Font\\PKMN-Mystery-Dungeon.ttf");
-    sfText_setColor(dialogNPC, sfBlack);
-    sfText_setString(dialogNPC, "working\nyes it is");
+    dialogNPC = creationtexte(dialogNPC, "Afin d'ouvrir les portes du temps,\ntu dois rassembler les 4 clefs elementaires.\nTu devras te confronter a plusieurs enigmes !", dialogPos, sfBlack, 16);
     sfText_setScale(dialogNPC, dialogSize);
+    font = sfFont_createFromFile("..\\Ressources\\Font\\PKMN-Mystery-Dungeon.ttf");
     sfText_setFont(dialogNPC, font);
-
 }
 
 void updateTextBox()
 {
     if (state == GAME)
     {
+        NpcTextTimer += GetDeltaTime();
+        collisionNPC();
+        sfRectangleShape_setPosition(rectangleDialog, textBoxPos);
+        sfText_setPosition(dialogNPC, dialogPos);
     }
 }
 
 void displayNPC(sfRenderWindow* _window)
 {
-    if (state == GAME)
+    if (state == GAME || state == EDITOR)
     {
         sfRenderWindow_drawSprite(_window, spCynthia, NULL);
     }
 }
+sfFloatRect GetCollisionOfNPC()
+{
+    sfFloatRect cynthiafrect = sfSprite_getGlobalBounds(spCynthia);
 
-void displayTextBox(sfRenderWindow* _window, sfVector2f playerPos, sfIntRect playerHitbox)
+    return  cynthiafrect;
+
+}
+void displayTextBox(sfRenderWindow* _window)
 {
     if (state == GAME)
     {
-        sfRectangleShape_setPosition(rectangleDialog, textBoxPos);
-        sfText_setPosition(dialogNPC, dialogPos);
-        sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
-        sfRenderWindow_drawText(_window, dialogNPC, NULL);
+   
+        if (isShown)
+        {
+            sfRenderWindow_drawRectangleShape(_window, rectangleDialog, NULL);
+            sfRenderWindow_drawText(_window, dialogNPC, NULL);
+        }
     }
 }
 
-sfBool collisionNPC(sfVector2f _playerPos)
+void collisionNPC()
 {
-    sfBool collision = sfFalse;
-    sfFloatRect cynthiafrect = sfSprite_getGlobalBounds(spCynthia);
-    if (isInsideMouse(_playerPos, cynthiafrect))
+    sfFloatRect playerHitbox = getCollisionOfPlayer();
+    playerHitbox.top += playerHitbox.height / 3;
+    playerHitbox.height /= 1.3;
+    playerHitbox.width /= 1.;
+    
+    sfFloatRect npcHitbox = GetCollisionOfNPC();
+    npcHitbox.top += npcHitbox.height / 6;
+    npcHitbox.height /= 1.2;
+    if (isInsidePlayer(npcHitbox, playerHitbox) && sfKeyboard_isKeyPressed(sfKeyE) && NpcTextTimer >= 0.5f && isShown == 0)
     {
-        collision = sfTrue;
-        return collision;
+
+        if (isShown == 0)
+        {
+            isShown = 1;
+        }
+        NpcTextTimer = 0;
+     }
+    else if (sfKeyboard_isKeyPressed(sfKeyE) && NpcTextTimer >= 0.5f && isShown == 1)
+    {
+        isShown = 0;
+
+        NpcTextTimer = 0;
     }
-    return collision;
+}
+void setNPCPosition(sfVector2f newPos) {
+    cynthiaPos = newPos;
+    sfSprite_setPosition(spCynthia, cynthiaPos);
 }
