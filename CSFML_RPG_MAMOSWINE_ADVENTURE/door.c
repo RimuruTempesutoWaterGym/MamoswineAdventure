@@ -46,21 +46,20 @@ void updateDoor()
 }
 int isInsideOpenDoor(sfVector2i item, sfFloatRect obstacle)
 {
-
+	
 	if (item.x > obstacle.left &&
 		item.x < (46 + obstacle.left) &&
 		item.y > obstacle.top &&
 		item.y < (obstacle.top + obstacle.height)
 		|| item.x < obstacle.left + obstacle.width &&
-		item.x < (+obstacle.width + obstacle.left - 46) &&
+		item.x > (obstacle.width + obstacle.left - 46) &&
 		item.y > obstacle.top &&
 		item.y < (obstacle.top + obstacle.height)
 		)
 
 	{
-
+		
 		return 1;
-
 	}
 
 	return 0;
