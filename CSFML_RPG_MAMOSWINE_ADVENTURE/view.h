@@ -7,5 +7,6 @@ void displayViewEditUi(sfRenderWindow* _window);
 void displayViewTileSelection(sfRenderWindow* _window);
 void displayViewPlayer(sfRenderWindow* _window);
 void displayViewDefault(sfRenderWindow* _window) ;
+void displayMinimap(sfRenderWindow* _window);
 sfVector2f updatePixelToWorld(sfRenderWindow* _window, sfView* _view);
 sfView* getCurrentView(sfRenderWindow* _window);
