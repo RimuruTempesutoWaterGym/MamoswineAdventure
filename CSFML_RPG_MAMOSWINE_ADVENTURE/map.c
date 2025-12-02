@@ -1128,7 +1128,7 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			if (isInsideMousei(nextPosInTab, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16 || isInsideMousei(nextPosInTab2, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16
 				|| isInsideOpenDoor(nextPosInTab,GetCollisionOfDoor())  || isInsideOpenDoor(nextPosInTab2,GetCollisionOfDoor())
 				|| isInsideMousei(nextPosInTab, GetCollisionOfNPC()) || isInsideMousei(nextPosInTab2, GetCollisionOfNPC())
-			
+				
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineFire())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineFire()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineWater())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineWater()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineElectric()))
@@ -1197,7 +1197,7 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			
 			
 			if (
-		tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0  
+				tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0  
 				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 2
 				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 4
 				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 3 &&
@@ -1217,7 +1217,11 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 							return sfTrue;
 			}
 		
+			if (tileMap[nextPosInTab.y][nextPosInTab.x].musicOfTile > 0)
+			{
+				setMusic(tileMap[nextPosInTab.y][nextPosInTab.x].musicOfTile);
 				
+			}
 			return sfFalse;
 }
 void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
