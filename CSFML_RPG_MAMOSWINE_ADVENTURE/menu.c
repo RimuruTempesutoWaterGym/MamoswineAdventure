@@ -669,16 +669,16 @@ void updatemenu(sfRenderWindow* _window)
 		sfFloatRect Rectangle2 = sfRectangleShape_getGlobalBounds(CaseMute);
 		if (sfMouse_isButtonPressed(sfMouseLeft)&& coche == VALIDE && keytimer > 0.5f && mousepos.x > Rectangle2.left && mousepos.x < (Rectangle2.width + Rectangle2.left) && mousepos.y > Rectangle2.top && mousepos.y < (Rectangle2.top + Rectangle2.height))
 		{
+		
 			coche = NEUTRE;
-			sfMusic_pause(getActualMusic());
 			soundMute();
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle3 = sfRectangleShape_getGlobalBounds(CaseDemute);
 		if (sfMouse_isButtonPressed(sfMouseLeft) && coche == NEUTRE && keytimer > 0.5f && mousepos.x > Rectangle3.left && mousepos.x < (Rectangle3.width + Rectangle3.left) && mousepos.y > Rectangle3.top && mousepos.y < (Rectangle3.top + Rectangle3.height))
 		{
+
 			coche = VALIDE;
-			sfMusic_play(getActualMusic());
 			soundUnmute();
 			keytimer = 0.0f;
 		}
@@ -689,9 +689,11 @@ void updatemenu(sfRenderWindow* _window)
 			if (Sizesound.x > 1.0f)
 			{
 				Sizesound.x -= LERP_F(0, 29.0f, volumelerp);
-				sfRectangleShape_setSize(SoundLevel, Sizesound);
+				
 				volumeMusic(volumelerp * 100);
+				sfRectangleShape_setSize(SoundLevel, Sizesound);
 			}
+			
 				keytimer = 0.0f;
 			
 			

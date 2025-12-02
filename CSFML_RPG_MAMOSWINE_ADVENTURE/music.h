@@ -23,3 +23,6 @@ void soundUnmute();
 void changeMusic();
 void updateMusic();
 sfMusic* getActualMusic();
+MusicChoice getOldMusic();
+void setVolumeIfNotMuted(sfMusic* _music, float _volume);
+void setVolumeSFXIfNotMuted(sfSound* _sfx, float _volume);
