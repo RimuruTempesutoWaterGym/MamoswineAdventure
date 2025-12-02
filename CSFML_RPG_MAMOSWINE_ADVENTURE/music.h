@@ -8,6 +8,14 @@ Music music;
 
 
 void initMusic();
+void initSound();
 void volumeMusic(float _volume);
-void setMusic(Music _music);
+void setMusic(int* _music);
+void playSoundAttack();
+void playSoundBoulder();
+void playSoundTree();
+void soundMute();
+void soundUnmute();
+void changeMusic();
+void updateMusic(int* chosedMusic);
 sfMusic* getActualMusic();
