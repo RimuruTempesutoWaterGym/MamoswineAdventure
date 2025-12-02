@@ -13,8 +13,8 @@ sfIntRect irecttextureTextBox = { 0,0,252,46 };
 sfIntRect irectCynthia = { 0,0,26,38 };
 sfVector2f cynthiaPos = { 1200.0f,900.0f };
 sfVector2f textBoxPos = { 0.f,0.f };
-sfVector2f dialogPos = { 28.0f,20.0f };
-sfVector2f dialogSize = { 0.7f,0.7f };
+sfVector2f dialogPos = { 20.0f,20.0f };
+sfVector2f dialogSize = { 1.0f,3.0f };
 float NpcTextTimer;
 int isShown = 0;
 void initNPC()
@@ -33,12 +33,10 @@ void initTextBox()
     textureTextBox = sfTexture_createFromFile(TEXTURE_PATH"text_box.png", NULL);
     sfRectangleShape_setTexture(rectangleDialog, textureTextBox, sfTrue);
     sfRectangleShape_setTextureRect(rectangleDialog, irecttextureTextBox);
-    font = sfFont_createFromFile("..\\Ressources\\Font\\PKMN-Mystery-Dungeon.ttf");
-    sfText_setColor(dialogNPC, sfBlack);
-    sfText_setString(dialogNPC, "working\nyes it is");
+    dialogNPC = creationtexte(dialogNPC, "Afin d'ouvrir les portes du temps,\ntu dois rassembler les 4 clefs elementaires.\nTu devras te confronter a plusieurs enigmes !", dialogPos, sfBlack, 16);
     sfText_setScale(dialogNPC, dialogSize);
+    font = sfFont_createFromFile("..\\Ressources\\Font\\PKMN-Mystery-Dungeon.ttf");
     sfText_setFont(dialogNPC, font);
-
 }
 
 void updateTextBox()

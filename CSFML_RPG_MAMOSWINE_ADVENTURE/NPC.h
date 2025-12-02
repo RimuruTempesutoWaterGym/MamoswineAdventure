@@ -1,5 +1,5 @@
 #include"tools.h"
-
+#include "menu.h"
 
 void initNPC();
 void initTextBox();
