@@ -134,7 +134,12 @@ void updatePlayer(sfRenderWindow* _window)
 
                 mamoswineAnimation.top = frameY * mamoswineAnimation.height + frameY;
             }
+            if (sfKeyboard_isKeyPressed(sfKeyE) && timerCdAttack > 1.f) {
+                ElectricTogglePlayerMap(getCollisionOfPlayer(), frameY);
+                timerCdAttack = 0.f;
+            }
         }
+      
         if (sfKeyboard_isKeyPressed(sfKeyF) && timerCdAttack > 2.f || isAttacking == 1 )
         {
             timerattack += GetDeltaTime();
@@ -216,6 +221,12 @@ sfBool isPlayerOverDoor()
         return sfFalse;
     }
         return sfTrue;
+}
+void setPlayerPosition(sfVector2f newPos) {
+    posMamoswine = newPos;
+    if (mamoswineSprite != NULL) {
+        sfSprite_setPosition(mamoswineSprite, posMamoswine);
+    }
 }
 //sfFloatRect gethitboxMamoswine(sfFloatRect _sprite, Direction _direction, sfFloatRect spriteHitbox)
 //{

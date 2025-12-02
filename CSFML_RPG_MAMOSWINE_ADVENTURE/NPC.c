@@ -105,3 +105,7 @@ void collisionNPC()
         NpcTextTimer = 0;
     }
 }
+void setNPCPosition(sfVector2f newPos) {
+    cynthiaPos = newPos;
+    sfSprite_setPosition(spCynthia, cynthiaPos);
+}

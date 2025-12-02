@@ -46,17 +46,17 @@ void setMusic(Music _music)
 		playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
 		break;
 		//"area-eau -Grotte Cascade [TubeRipper.cc].mp3"
-		//"area-eau -Grotte et Chemin Lisière [TubeRipper.cc].mp3"
+		//"area-eau -Grotte et Chemin Lisiï¿½re [TubeRipper.cc].mp3"
 		//"area-eau -Lake HD [TubeRipper.cc].mp3"
 	case Grass:
 		playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
 		break;
-		//"area-plante -Grotte Abîme [TubeRipper.cc].mp3"
+		//"area-plante -Grotte Abï¿½me [TubeRipper.cc].mp3"
 	case Elec:
 		playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
 		break;
 		//"area-elek -Grotte Sables Mouvants [TubeRipper.cc].mp3"
-		//"area-elek -Mt Hérissé [TubeRipper.cc].mp3"
+		//"area-elek -Mt Hï¿½rissï¿½ [TubeRipper.cc].mp3"
 		//"area-elek -Plaines Elek [TubeRipper.cc].mp3"
 	}
 }

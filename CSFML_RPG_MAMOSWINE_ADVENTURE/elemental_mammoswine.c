@@ -139,7 +139,7 @@ void saveMamowsineData(const char* filename)
 	FILE* file = fopen(filename, "wb");
 	if (file == NULL)
 	{
-		printf("Erreur: Impossible de créer le fichier %s\n", filename);
+		printf("Erreur: Impossible de crï¿½er le fichier %s\n", filename);
 		return;
 	}
 
@@ -154,7 +154,7 @@ void loadMamowsineData(const char* filename)
 
 	if (file == NULL)
 	{
-		printf("Aucune sauvegarde trouvée. Création de %s...\n", filename);
+		printf("Aucune sauvegarde trouvï¿½e. Crï¿½ation de %s...\n", filename);
 		saveMamowsineData(filename);
 		return;
 	}
@@ -162,5 +162,24 @@ void loadMamowsineData(const char* filename)
 
 	fclose(file);
 
-	printf("Map chargée depuis %s\n", filename);
+	printf("Map chargï¿½e depuis %s\n", filename);
+}
+void setMamoswineFirePosition(sfVector2f newPos) {
+	mammoswineFirePos = newPos;
+	sfSprite_setPosition(mammoswineFire, mammoswineFirePos);
+}
+
+void setMamoswineWaterPosition(sfVector2f newPos) {
+	mammoswineWaterPos = newPos;
+	sfSprite_setPosition(mammoswineWater, mammoswineWaterPos);
+}
+
+void setMamoswineGrassPosition(sfVector2f newPos) {
+	mammoswineGrassPos = newPos;
+	sfSprite_setPosition(mammoswineGrass, mammoswineGrassPos);
+}
+
+void setMamoswineElectricPosition(sfVector2f newPos) {
+	mammoswineElectricPos = newPos;
+	sfSprite_setPosition(mammoswineElectric, mammoswineElectricPos);
 }
