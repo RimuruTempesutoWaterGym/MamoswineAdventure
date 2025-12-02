@@ -59,6 +59,7 @@ viewHUD = sfView_create();
  sfView_setCenter(viewEditUi, posViewEditUi);
  sfView_setCenter(viewHUD, posViewHUD);
  sfView_setCenter(viewDefault, posViewDefault);
+ sfView_setCenter(viewTileSelection, posViewTileSelection);
  float EditUiviewportWidth = (TILE_WIDTH + 10.f) / 800.0f;  
  sfFloatRect uiViewport = { 0.0f, 0.0f, EditUiviewportWidth, 1.0f };
  sfView_setViewport(viewEditUi, uiViewport);
@@ -153,7 +154,6 @@ void displayViewEditUi(sfRenderWindow* _window)
 }
 void displayViewTileSelection(sfRenderWindow* _window)
 {
-
 	sfRenderWindow_setView(_window, viewTileSelection);
 	updateTileSelectionPanel(_window, viewTileSelection);
 }
