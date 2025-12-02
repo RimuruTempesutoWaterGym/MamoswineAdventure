@@ -179,8 +179,3 @@ void soundUnmute()
 	sfSound_setVolume(boulderPush, actualVolume);
 	sfSound_setVolume(treeCut, actualVolume);
 }
-
-void volumMusic(float _volume)
-{
-	sfMusic_setVolume(music, _volume);
-}

@@ -1,10 +1,7 @@
 #include "tools.h"
+#pragma once
 
 
-<<<<<<< HEAD
-void initMusic();
-void volumMusic(float _volume);
-=======
 typedef enum {
 	Menu, Overworld, Fire, Water, Grass, Elec
 }Music;
@@ -23,4 +20,3 @@ void soundUnmute();
 void changeMusic();
 void updateMusic(int* chosedMusic);
 sfMusic* getActualMusic();
->>>>>>> main
