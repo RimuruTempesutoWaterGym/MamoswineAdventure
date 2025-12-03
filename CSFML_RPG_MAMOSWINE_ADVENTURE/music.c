@@ -87,7 +87,13 @@ sfMusic* getActualMusic()
 }
 void updateMusic()
 {
-	setMusic(getOldMusic());
+    setMusic(getOldMusic());
+}
+void setHasChangedTo1()
+{
+    hasChanged = 1;
+  
+    BackSound = 0;
 }
 //lower the volume with a lerp then change music and but it back to original volume
 void setMusic(MusicChoice _music)
@@ -177,7 +183,7 @@ void ChangeMusic(MusicChoice _music)
 
                 case MUSIC_Water:
                     sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-eau -Lake HD.mp3");
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"LAC SINNOH Musique Pokemon Diamant, Perle & Platine.mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
@@ -209,6 +215,53 @@ void ChangeMusic(MusicChoice _music)
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
                     actualMusic = MUSIC_Void;
                     break;
+<<<<<<< HEAD
+=======
+                case MUSIC_BattleFire:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Omega Ruby & Alpha Sapphire - Ho-oh Battle Music (HQ).mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_BattleFire;
+                    break;
+
+                case MUSIC_BattleWater:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Omega Ruby Alpha Sapphire - Uxie Mesprit Azelf Battle Music (HQ).mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_BattleWater;
+                    break;
+
+                case MUSIC_BattleGrass:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Sun & Moon - Guardian Deities Battle Music (HQ).mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_BattleGrass;
+                    break;
+
+                case MUSIC_BattleElec:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Sun & Moon - Solgaleo & Lunala Battle Music (HQ).mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_BattleElec;
+                    break;
+                case MUSIC_BattleVoid:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Legends_ Arceus - Palkia Dialga Battle Music (HQ).mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_BattleVoid;
+                    break;
+  }
+>>>>>>> main
                 } 
 }
 void playSoundAttack()
