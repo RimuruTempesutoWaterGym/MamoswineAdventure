@@ -1281,13 +1281,13 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 		
 			if (tileMap[nextPosInTab.y][nextPosInTab.x].musicOfTile > 0)
 			{
-				printf("%d", tileMap[nextPosInTab2.y][nextPosInTab2.x].musicOfTile);
+		
 				setMusic(tileMap[nextPosInTab.y][nextPosInTab.x].musicOfTile);
 				
 			}
 			if (tileMap[nextPosInTab2.y][nextPosInTab2.x].musicOfTile > 0)
 			{
-				printf("%d", tileMap[nextPosInTab2.y][nextPosInTab2.x].musicOfTile);
+			
 				setMusic(tileMap[nextPosInTab2.y][nextPosInTab2.x].musicOfTile);
 
 			} 
@@ -1402,12 +1402,12 @@ void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
 		if (checkAllTogglesActivated(idActivable)) {
 
 			updateElectricWalls(idActivable, 1);
-			printf("All toggles with ID %d activated! Electric walls deactivated.\n", idActivable);
+
 		}
 		else {
 		
 			updateElectricWalls(idActivable, 0);
-			printf("Not all toggles with ID %d are activated.\n", idActivable);
+			
 		}
 	}
 }
@@ -1620,7 +1620,7 @@ void updateSpritePlacementMode(sfRenderWindow* _window) {
 
 	if (sfKeyboard_isKeyPressed(sfKeyE) && selectedSprite >= 3 && selectedSprite <= 6&&spriteInteractionTimer > 0.5f)
 	{
-		printf("%d", sprites[selectedSprite].FrameY);
+
 		if (sprites[selectedSprite].FrameY < 6)
 			sprites[selectedSprite].FrameY += 2;
 		else
@@ -1637,13 +1637,13 @@ void updateSpritePlacementMode(sfRenderWindow* _window) {
 				snappedPos.y -= sprites[selectedSprite].bounds.height;
 			}
 			sprites[selectedSprite].position = snappedPos;
-			printf("Placed sprite %d at (%.0f, %.0f)\n", selectedSprite, snappedPos.x, snappedPos.y);
+		
 
 	
 			updateSpritePositionsFromData();
 		}
 		else {
-			printf("Cannot place sprite on wall!\n");
+	
 		}
 		spriteInteractionTimer = 0.0f;
 	}
