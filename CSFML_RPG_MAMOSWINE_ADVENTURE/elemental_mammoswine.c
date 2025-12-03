@@ -72,15 +72,18 @@ sfFloatRect GetCollisionMamoswineFire()
 }
 sfFloatRect GetCollisionMamoswineDialga()
 {
+
+
 	return sfSprite_getGlobalBounds(mamoDialga);
 }
 sfFloatRect GetRangeMamoswineDialga()
 {
-	sfFloatRect rangeMamoswineDialga = sfSprite_getGlobalBounds(mamoDialga);
-	rangeMamoswineDialga.left -= 10;
-		rangeMamoswineDialga.top -= 10;
-		rangeMamoswineDialga.height+= 10;
-		rangeMamoswineDialga.width += 10;
+	sfFloatRect rangeMamoswineDialga = GetCollisionMamoswineDialga(mamoDialga);
+
+	rangeMamoswineDialga.left -= 20;
+	rangeMamoswineDialga.top -= 30;
+	rangeMamoswineDialga.height += 60;
+	rangeMamoswineDialga.width += 40;
 	return rangeMamoswineDialga;
 }
 sfFloatRect GetCollisionMamoswineGrass()
@@ -116,11 +119,12 @@ void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 void SetMamoswineDialga(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 
-	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetRangeMamoswineDialga()))
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(playerPos, GetCollisionMamoswineDialga()))
 	{
+		printf("win");
 		if (startBattle(&mamoswineBat, &mamoswineDialgaBat))
 		{
-
+	
 
 		}
 		else
@@ -197,7 +201,7 @@ void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)
 	SetMamoswineWater(_window, playerPos);
 	SetMamoswineGrass(_window, playerPos);
 	SetMamoswineElectric(_window, playerPos);
-
+	SetMamoswineDialga(_window, playerPos);
 }
 void displayElementalMamoswine(sfRenderWindow* _window)
 {
@@ -212,8 +216,12 @@ void displayElementalMamoswine(sfRenderWindow* _window)
 	}
 void displayMamoDialga(sfRenderWindow* _window)
 {
-	sfRenderWindow_drawSprite(_window, mamoDialga, NULL);
-}
+	if (state == GAME || state == EDITOR)
+	{
+
+		sfRenderWindow_drawSprite(_window, mamoDialga, NULL);
+	}
+	}
 int GetMamoswineElementalCount()
 {
 
@@ -277,28 +285,33 @@ void loadMamowsineData(const char* filename)
 }
 void setMamoswineFirePosition(sfVector2f newPos,int frame) {
 	mammoswineFirePos = newPos;
-	mammoswineFireRect.top = frame * mammoswineFireRect.height;
+	mammoswineFireRect.top = frame * (mammoswineFireRect.height+1);
 	sfSprite_setPosition(mammoswineFire, mammoswineFirePos);
 	sfSprite_setTextureRect(mammoswineFire, mammoswineFireRect);
 }
 
 void setMamoswineWaterPosition(sfVector2f newPos, int frame) {
 	mammoswineWaterPos = newPos;
-	mammoswineWaterRect.top = (frame * mammoswineWaterRect.height) +1;
+	mammoswineWaterRect.top = frame * (mammoswineWaterRect.height +1);
 	sfSprite_setPosition(mammoswineWater, mammoswineWaterPos);
 	sfSprite_setTextureRect(mammoswineWater, mammoswineWaterRect);
+}
+void setMamoswineDialgaPosition(sfVector2f newPos) {
+	mamoDialgaPos = newPos;
+	sfSprite_setPosition(mamoDialga, mamoDialgaPos);
+
 }
 
 void setMamoswineGrassPosition(sfVector2f newPos, int frame) {
 	mammoswineGrassPos = newPos;
-	mammoswineGrassRect.top = frame  * (mammoswineGrassRect.height) ;
+	mammoswineGrassRect.top = frame  * (mammoswineGrassRect.height+1) ;
 	sfSprite_setPosition(mammoswineGrass, mammoswineGrassPos);
 	sfSprite_setTextureRect(mammoswineGrass, mammoswineGrassRect);
 }
 
 void setMamoswineElectricPosition(sfVector2f newPos, int frame) {
 	mammoswineElectricPos = newPos;
-	mammoswineElectricRect.top = frame * mammoswineElectricRect.height;
+	mammoswineElectricRect.top = frame * (mammoswineElectricRect.height+1);
 	sfSprite_setPosition(mammoswineElectric, mammoswineElectricPos);
 	sfSprite_setTextureRect(mammoswineElectric, mammoswineElectricRect);
 

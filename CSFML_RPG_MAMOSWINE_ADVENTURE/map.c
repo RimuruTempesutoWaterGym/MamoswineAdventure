@@ -66,7 +66,8 @@ sfColor spriteColors[SPRITE_COUNT] = {
 	{255, 0, 0, 255},
 	{0, 100, 255, 255},
 	{0, 255, 0, 255},
-	{255, 255, 0, 255}
+	{255, 255, 0, 255},
+	{0, 0, 0, 255}
 };
 tileSet swampTileset;
 tileSet waterTileset;
@@ -1191,6 +1192,7 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineWater())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineWater()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineElectric()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineGrass())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineGrass()))
+				|| isInsideMousei(nextPosInTab, GetCollisionMamoswineDialga()) || isInsideMousei(nextPosInTab2, GetCollisionMamoswineDialga())
 				)
 			{
 				return sfTrue;
@@ -1309,8 +1311,7 @@ void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
 		nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
 		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
 		nextPosInTab2.y = (int)((_sprite.top + _sprite.height  - 1) / TILE_WIDTH);
-		printf("%d", nextPosInTab.y);
-		printf("%d", nextPosInTab.x);
+
 		break;
 	case Top:
 
@@ -1319,8 +1320,7 @@ void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
 		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
 		nextPosInTab2.y = (int)((_sprite.top - _sprite.height) / TILE_WIDTH);
 
-		printf("%d", nextPosInTab.y);
-		printf("%d", nextPosInTab.x);
+	
 
 		break;
 	case Right:
@@ -1699,6 +1699,10 @@ void initSpriteData() {
 	sprites[SPRITE_MAMOSWINE_ELECTRIC].type = SPRITE_MAMOSWINE_ELECTRIC;
 	sprites[SPRITE_MAMOSWINE_ELECTRIC].position = (sfVector2f){ 1190.0f, 460.0f };
 	sprites[SPRITE_MAMOSWINE_ELECTRIC].bounds = (sfIntRect){ 0, 0, 48, 24 };
+
+	sprites[SPRITE_MAMOSWINE_DIALGA].type = SPRITE_MAMOSWINE_DIALGA;
+	sprites[SPRITE_MAMOSWINE_DIALGA].position = (sfVector2f){ 1180.0f, 100.0f };
+	sprites[SPRITE_MAMOSWINE_DIALGA].bounds = (sfIntRect){ 0, 0, 57, 33 };
 }
 void saveSpritesData(const char* filename) {
 	FILE* file = fopen(filename, "wb");
@@ -1721,6 +1725,7 @@ void updateSpritePositionsFromData() {
 	setMamoswineWaterPosition(sprites[SPRITE_MAMOSWINE_WATER].position, sprites[SPRITE_MAMOSWINE_WATER].FrameY);
 	setMamoswineGrassPosition(sprites[SPRITE_MAMOSWINE_GRASS].position, sprites[SPRITE_MAMOSWINE_GRASS].FrameY);
 	setMamoswineElectricPosition(sprites[SPRITE_MAMOSWINE_ELECTRIC].position, sprites[SPRITE_MAMOSWINE_ELECTRIC].FrameY);
+	setMamoswineDialgaPosition(sprites[SPRITE_MAMOSWINE_DIALGA].position);
 }
 sfVector2f getPlayerSpawnPoint()
 {

@@ -33,6 +33,7 @@ void setMamoswineFirePosition(sfVector2f newPos, int frame);
 void setMamoswineWaterPosition(sfVector2f newPos, int frame);
 void setMamoswineGrassPosition(sfVector2f newPos, int frame);
 void setMamoswineElectricPosition(sfVector2f newPos,int frame);
+void setMamoswineDialgaPosition(sfVector2f newPos);
 void saveMamowsineData(const char* filename);
 void loadMamowsineData(const char* filename);
 typedef enum {
