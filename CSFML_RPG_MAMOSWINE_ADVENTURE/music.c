@@ -248,19 +248,17 @@ void musicUnmute()
 	setVolumeMusicIfNotMuted(getActualMusic(), maxVolume);
 
 }
-void soundMute()
+void soundUnmute()
 {
-    isMutedSfx = 1;
+    isMutedSfx = 0;
     setVolumeSFXIfNotMuted(attackMamo, maxVolume);
     setVolumeSFXIfNotMuted(boulderPush, maxVolume);
     setVolumeSFXIfNotMuted(treeCut, maxVolume);
 }
 
-void soundUnmute()
+void soundMute()
 {
-
-    isMutedSfx = 0;
-
+    isMutedSfx = 1;
     setVolumeSFXIfNotMuted(attackMamo, 0);
     setVolumeSFXIfNotMuted(boulderPush, 0);
     setVolumeSFXIfNotMuted(treeCut, 0);
