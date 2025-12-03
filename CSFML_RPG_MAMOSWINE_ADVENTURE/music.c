@@ -87,7 +87,13 @@ sfMusic* getActualMusic()
 }
 void updateMusic()
 {
-	setMusic(getOldMusic());
+    setMusic(getOldMusic());
+}
+void setHasChangedTo1()
+{
+    hasChanged = 1;
+  
+    BackSound = 0;
 }
 void setMusic(MusicChoice _music)
 {

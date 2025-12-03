@@ -952,7 +952,7 @@ int startBattle(Pokemon* player, Pokemon* opponent,int _music) {
 
 
 
-    return hasWon; 
+    return 1; 
 }
 int getBattleResult(Pokemon* _opponent) {
     

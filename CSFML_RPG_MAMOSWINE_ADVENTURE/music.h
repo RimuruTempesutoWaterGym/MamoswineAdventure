@@ -32,7 +32,7 @@ void playSoundBoulder();
 void playSoundTree();
 void soundMute();
 void soundUnmute();
-
+void setHasChangedTo0();
 void updateMusic();
 sfMusic* getActualMusic();
 MusicChoice getOldMusic();
