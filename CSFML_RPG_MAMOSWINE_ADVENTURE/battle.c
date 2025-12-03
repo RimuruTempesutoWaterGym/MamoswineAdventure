@@ -126,11 +126,11 @@ void initBattle() {
     battleBgTimeTexture = sfTexture_createFromFile(TEXTURE_PATH"grassy_bg.png", NULL);
 
     battleMamoswineTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinebattleBack.png", NULL);
-    battleMamoswineFireTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinebattleFront.png", NULL);
-    battleMamoswineWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinebattleFront.png", NULL);
-    battleMamoswineElectricTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinebattleFront.png", NULL);
-    battleMamoswineGrassTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinebattleFront.png", NULL);
-    battleMamoswineDialgaTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinebattleFront.png", NULL);
+    battleMamoswineFireTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinefirecombat.png", NULL);
+    battleMamoswineWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinewatercombat.png", NULL);
+    battleMamoswineElectricTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswineeleccombat.png", NULL);
+    battleMamoswineGrassTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinegrasscombat.png", NULL);
+    battleMamoswineDialgaTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinegrasscombat.png", NULL);
     
     sfSprite_setTexture(battleMamoswine, battleMamoswineTexture, sfTrue);
     sfSprite_setTexture(battleMamoswineFire, battleMamoswineFireTexture, sfTrue);
@@ -614,14 +614,7 @@ void displayBattleUI(sfRenderWindow* _window) {
     sfRenderWindow_drawText(_window, battleText, NULL);
 }
 void displayMoveButtons(sfRenderWindow* _window) {
-    printf("Affichage des moves, battleState = %d\n", battleState);
 
-    for (int i = 0; i < 4; i++) {
-        printf("Attaque %d: id=%d, nom=%s\n",
-            i,
-            currentPlayer->attacks[i].id,
-            currentPlayer->attacks[i].name);
-    }
     sfSprite* moves[4] = { battleUiMove1, battleUiMove2, battleUiMove3, battleUiMove4 };
     sfVector2f positions[4] = {
         {20.0f, 450.0f},
@@ -756,79 +749,81 @@ void displayHealthBars(sfRenderWindow* _window) {
     sfRectangleShape_destroy(enemyHpBg);
 }
 void updateBattle(sfRenderWindow* _window) {
-    battleTimer += GetDeltaTime();
+    if (state == BATTLE)
+    {
+        battleTimer += GetDeltaTime();
 
-    switch (battleState) {
-    case BATTLE_INTRO:
-        sprintf(battleMessage, "Vous Défiez le %s!!!", currentOpponent->name);
-        if (battleTimer > 2.0f) {
-            battleState = BATTLE_PLAYER_TURN;
-            sprintf(battleMessage, "Que doit faire %s?", currentPlayer->name);
-            battleTimer = 0.0f;
-        }
-        break;
-
-    case BATTLE_PLAYER_TURN:
-        if (battleTimer > 1.0f) {
-            sprintf(battleMessage, "Que doit faire %s?", currentPlayer->name);
-            battleTimer = 0;
-        }
-            handlePlayerInput(_window);
-      
-       
-        break;
-
-    case BATTLE_ENEMY_TURN:
-        if (battleTimer > 2.0f) {
-            performEnemyAttack();
-           battleTimer = 0.0f;
-            if (currentPlayer->currentHp <= 0) {
-                battleState = BATTLE_END;
-                sprintf(battleMessage, "%s est K.O.!", currentPlayer->name);
-            }
-            else {
-              
+        switch (battleState) {
+        case BATTLE_INTRO:
+            sprintf(battleMessage, "Vous Défiez le %s!!!", currentOpponent->name);
+            if (battleTimer > 2.0f) {
                 battleState = BATTLE_PLAYER_TURN;
-          
-     
+                sprintf(battleMessage, "Que doit faire %s?", currentPlayer->name);
+                battleTimer = 0.0f;
+            }
+            break;
+
+        case BATTLE_PLAYER_TURN:
+            if (battleTimer > 1.0f) {
+                sprintf(battleMessage, "Que doit faire %s?", currentPlayer->name);
+                battleTimer = 0;
+            }
+            handlePlayerInput(_window);
+
+
+            break;
+
+        case BATTLE_ENEMY_TURN:
+            if (battleTimer > 2.0f) {
+                performEnemyAttack();
+                battleTimer = 0.0f;
+                if (currentPlayer->currentHp <= 0) {
+                    battleState = BATTLE_END;
+                    sprintf(battleMessage, "%s est K.O.!", currentPlayer->name);
                 }
-            
-            }
-        
-        break;
+                else {
 
-    case BATTLE_ANIMATION:
-        if (battleTimer > 2.0f) {
-            if (currentOpponent->currentHp <= 0) {
-                battleState = BATTLE_END;
-                sprintf(battleMessage, "%s ennemi est K.O.!", currentOpponent->name);
-            }
-            else {
-                battleState = BATTLE_ENEMY_TURN;
-                sprintf(battleMessage, "%s ennemi attaque!", currentOpponent->name);
-            }
-            battleTimer = 0.0f;
-        }
-        break;
+                    battleState = BATTLE_PLAYER_TURN;
 
-    case BATTLE_END:
-        if (battleTimer > 2.0f) {
-            if (currentPlayer->currentHp > 0) {
-         
-                state = GAME;
-                currentPlayer->currentHp = currentPlayer->maxHp;
-                currentOpponent->currentHp = currentOpponent->maxHp;
-                battleState = BATTLE_INTRO;
+
+                }
+
             }
-            else {
-      
-                state = GAME;
+
+            break;
+
+        case BATTLE_ANIMATION:
+            if (battleTimer > 2.0f) {
+                if (currentOpponent->currentHp <= 0) {
+                    battleState = BATTLE_END;
+                    sprintf(battleMessage, "%s ennemi est K.O.!", currentOpponent->name);
+                }
+                else {
+                    battleState = BATTLE_ENEMY_TURN;
+                    sprintf(battleMessage, "%s ennemi attaque!", currentOpponent->name);
+                }
+                battleTimer = 0.0f;
             }
+            break;
+
+        case BATTLE_END:
+            if (battleTimer > 2.0f) {
+                if (currentPlayer->currentHp > 0) {
+
+                    state = GAME;
+                    currentPlayer->currentHp = currentPlayer->maxHp;
+                    currentOpponent->currentHp = currentOpponent->maxHp;
+                    battleState = BATTLE_INTRO;
+                }
+                else {
+
+                    state = GAME;
+                }
+            }
+            break;
         }
-        break;
     }
 }
-
 void handlePlayerInput(sfRenderWindow* _window) {
     static float inputTimer = 0.0f;
     inputTimer += GetDeltaTime();
@@ -1018,7 +1013,9 @@ int calculateDamage(Pokemon* attacker, Pokemon* defender, Attack* attack) {
         stab = 1.5f;
     }
 
-
+    printf("%d",defender->type[0]);
+    printf("%d", defender->type[1]);
+    printf("%d", attack->type);
     float effectiveness = getTypeEffectiveness(attack->type, defender->type[0], defender->type[1]);
 
     damage *= stab * effectiveness;

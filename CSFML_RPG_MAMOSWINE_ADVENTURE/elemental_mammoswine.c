@@ -258,7 +258,7 @@ void saveMamowsineData(const char* filename)
 	FILE* file = fopen(filename, "wb");
 	if (file == NULL)
 	{
-		printf("Erreur: Impossible de cr�er le fichier %s\n", filename);
+		printf("Erreur: Impossible de creer le fichier %s\n", filename);
 		return;
 	}
 
@@ -273,7 +273,7 @@ void loadMamowsineData(const char* filename)
 
 	if (file == NULL)
 	{
-		printf("Aucune sauvegarde trouv�e. Cr�ation de %s...\n", filename);
+		printf("Aucune sauvegarde trouvee. Creation de %s...\n", filename);
 		saveMamowsineData(filename);
 		return;
 	}
@@ -281,7 +281,7 @@ void loadMamowsineData(const char* filename)
 
 	fclose(file);
 
-	printf("Map charg�e depuis %s\n", filename);
+	printf("Map chargee depuis %s\n", filename);
 }
 void setMamoswineFirePosition(sfVector2f newPos,int frame) {
 	mammoswineFirePos = newPos;
