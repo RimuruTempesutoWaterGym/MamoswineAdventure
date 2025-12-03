@@ -103,56 +103,55 @@ void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 	
 	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetCollisionMamoswineFire()) && (GetMamoswineFireElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-		
-		if (startBattle(&mamoswineBat, &mamoswineFireBat))
-		{
-			mamoswineElementalCount |= mamoswineFire;
+		startBattle(&mamoswineBat, &mamoswineFireBat, 7);
 
-		}
-		else
-		{
 
-			SetPosAtRespawn();
-		}
 	}
+	if (getBattleResult(&mamoswineFireBat) == 1 && (GetMamoswineFireElementalCount() != 1 && GetMamoswineElementalCount() != 16))
+	{
+	
+		mamoswineElementalCount |= mamoswineFire;
+		sfIntRect mammoswineFireRect = { 0,0,48,48 };
+	}
+
+	
 }
 void SetMamoswineDialga(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 
 	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(playerPos, GetCollisionMamoswineDialga()))
 	{
+		startBattle(&mamoswineBat, &mamoswineDialgaBat, 11);
 
-		if (startBattle(&mamoswineBat, &mamoswineDialgaBat))
-		{
-	
-
-		}
-		else
-		{
-
-			SetPosAtRespawn();
-		}
 
 	}
+	if (getBattleResult(&mamoswineDialgaBat) == 1 )
+	{
+
+	//	mamoswineElementalCount |= mamoswineWater;
+	//	sfIntRect mammoswineDialgaRect = { 0,0,48,48 };
+	}
+
+
+
 }
 void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 	
 	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetCollisionMamoswineWater()) && (GetMamoswineWaterElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-		if (startBattle(&mamoswineBat, &mamoswineWaterBat))
-		{
-			mamoswineElementalCount |= mamoswineWater;
+		startBattle(&mamoswineBat, &mamoswineWaterBat, 8);
 
-		}
-		else
-		{
 
-			SetPosAtRespawn();
-		}
-	
-	
 	}
+	if (getBattleResult(&mamoswineWaterBat) == 1 && (GetMamoswineWaterElementalCount() != 1 && GetMamoswineElementalCount() != 16))
+	{
+	
+		mamoswineElementalCount |= mamoswineWater;
+		sfIntRect mammoswineWaterRect = { 0,0,48,48 };
+	}
+	
+	
 }
 void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos)
 {
@@ -161,16 +160,15 @@ void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos)
 	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetCollisionMamoswineGrass())&& (GetMamoswineGrassElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
 
-		if (startBattle(&mamoswineBat, &mamoswineGrassBat)) 
-		{
+		startBattle(&mamoswineBat, &mamoswineGrassBat, 9);
+	
+	
+	}
+	if (getBattleResult(&mamoswineGrassBat) == 1 && (GetMamoswineGrassElementalCount() != 1 && GetMamoswineElementalCount() != 16))
+	{
 		
-			mamoswineElementalCount |= mamoswineGrass;
-		}
-		else
-		{
-		
-			SetPosAtRespawn();
-		}
+		mamoswineElementalCount |= mamoswineGrass;
+		sfIntRect mammoswineGrassRect = { 0,0,48,48 };
 	}
 }
 void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos)
@@ -179,20 +177,13 @@ void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos)
 
 	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetCollisionMamoswineElectric()) && (GetMamoswineElectricElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-		if (startBattle(&mamoswineBat, &mamoswineElectricBat))
-		{
-			mamoswineElementalCount |= mamoswineElectric;
-			sfIntRect mammoswineElectricRect = { 0,0,48,48 };
-		}
-		else
-		{
-
-			SetPosAtRespawn();
-		}
-
+		startBattle(&mamoswineBat, &mamoswineElectricBat, 10);
+	}
+	if (getBattleResult(&mamoswineElectricBat) == 1 && (GetMamoswineElectricElementalCount() != 1 && GetMamoswineElementalCount() != 16))
+	{
 		
-
-
+		mamoswineElementalCount |= mamoswineElectric;
+		sfIntRect mammoswineElectricRect = { 0,0,48,48 };
 	}
 }
 void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)

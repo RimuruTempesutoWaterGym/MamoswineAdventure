@@ -1,4 +1,5 @@
 #include"battle.h"
+#include"music.h"
 #define GET_EFFECTIVENESS(attacker, defender) \
     ((typeChart[attacker][(defender) / 4] >> (((defender) % 4) * 2)) & 0x03)
 #define SET_EFFECTIVENESS(attacker, defender, value) \
@@ -349,7 +350,8 @@ void initPokemons() {
 
         },
         {110, 130, 80, 70, 60, 80},
-        {Ground, Ice}
+        {Ground, Ice},
+        0
     };
     mamoswineBat.maxHp = mamoswineBat.stats[0] * 3.14;
     mamoswineBat.currentHp = mamoswineBat.maxHp;
@@ -364,7 +366,8 @@ void initPokemons() {
             {0}, {0}
         },
         {90, 100, 50, 100, 100, 90},
-        {Fire, Null}
+        {Fire, Null},
+        0
     };
     mamoswineFireBat.maxHp = mamoswineFireBat.stats[0] * 3.14;
     mamoswineFireBat.currentHp = mamoswineFireBat.maxHp;
@@ -378,7 +381,8 @@ void initPokemons() {
             {0}, {0}
         },
         {100, 100, 90, 70, 95, 75},
-        {Water, Null}
+        {Water, Null},
+        0
     };
     mamoswineWaterBat.maxHp = mamoswineWaterBat.stats[0] * 3.14;
     mamoswineWaterBat.currentHp = mamoswineWaterBat.maxHp;
@@ -390,8 +394,9 @@ void initPokemons() {
          trailblaze,energyBall,
             {0}, {0}
         },
-        {130, 50, 90, 95, 90, 75},
-        {Grass, Null}
+        {130, 60, 90, 85, 90, 75},
+        {Grass, Null},
+        0
     };
     mamoswineGrassBat.maxHp = mamoswineGrassBat.stats[0] * 3.14;
     mamoswineGrassBat.currentHp = mamoswineGrassBat.maxHp;
@@ -404,7 +409,8 @@ void initPokemons() {
             {0}, {0}
         },
         {70, 80, 60, 140, 60, 120},
-        {Electric, Null}
+        {Electric, Null},
+        0
     };
     mamoswineElectricBat.maxHp = mamoswineElectricBat.stats[0] * 3.14;
     mamoswineElectricBat.currentHp = mamoswineElectricBat.maxHp;
@@ -416,10 +422,11 @@ void initPokemons() {
       dragonClaw,ironHead,
             {0}, {0}
         },
-        {110, 80, 100, 80, 100, 100},
-        {Steel, Dragon}
+        {110, 50, 100, 80, 100, 100},
+        {Steel, Dragon},
+        0
     };
-    mamoswineDialgaBat.maxHp = mamoswineDialgaBat.stats[1] * 4;
+    mamoswineDialgaBat.maxHp = mamoswineDialgaBat.stats[0] * 7;
     mamoswineDialgaBat.currentHp = mamoswineDialgaBat.maxHp;
 }   
 void initTypeChart() {
@@ -711,7 +718,8 @@ void displayHealthBars(sfRenderWindow* _window) {
 
     sfRectangleShape* enemyHpBg = sfRectangleShape_create();
     sfRectangleShape_setSize(enemyHpBg, (sfVector2f) { 200.0f, 15.0f });
-    sfRectangleShape_setPosition(enemyHpBg, (sfVector2f) { 550.0f, 80.0f });
+    sfRectangleShape_setPosition(enemyHpBg, (sfVector2f) { 300.0f, 60.0f
+    });
     sfRectangleShape_setFillColor(enemyHpBg, (sfColor) { 50, 50, 50, 255 });
     sfRectangleShape_setOutlineColor(enemyHpBg, sfBlack);
     sfRectangleShape_setOutlineThickness(enemyHpBg, 2.0f);
@@ -721,7 +729,7 @@ void displayHealthBars(sfRenderWindow* _window) {
     sfRectangleShape* enemyHpBar = sfRectangleShape_create();
     float enemyHpPercent = (float)currentOpponent->currentHp / (float)currentOpponent->maxHp;
     sfRectangleShape_setSize(enemyHpBar, (sfVector2f) { 196.0f * enemyHpPercent, 11.0f });
-    sfRectangleShape_setPosition(enemyHpBar, (sfVector2f) { 552.0f, 82.0f });
+    sfRectangleShape_setPosition(enemyHpBar, (sfVector2f) { 302.0f, 62.0f });
 
     if (enemyHpPercent > 0.5f) {
         sfRectangleShape_setFillColor(enemyHpBar, (sfColor) { 76, 255, 0, 255 });
@@ -738,12 +746,13 @@ void displayHealthBars(sfRenderWindow* _window) {
 
     sprintf(hpText, "%d / %d", currentOpponent->currentHp, currentOpponent->maxHp);
     sfText_setString(battleText, hpText);
-    sfText_setPosition(battleText, (sfVector2f) { 555.0f, 100.0f });
+    sfText_setPosition(battleText, (sfVector2f) { 305.0f, 75.f });
     sfRenderWindow_drawText(_window, battleText, NULL);
 
     sfText_setCharacterSize(battleText, 20);
     sfText_setString(battleText, currentOpponent->name);
-    sfText_setPosition(battleText, (sfVector2f) { 555.0f, 55.0f });
+    sfText_setPosition(battleText, (sfVector2f) {     305.0f, 30.0f
+    });
     sfRenderWindow_drawText(_window, battleText, NULL);
 
     
@@ -762,7 +771,7 @@ void updateBattle(sfRenderWindow* _window) {
 
         switch (battleState) {
         case BATTLE_INTRO:
-            sprintf(battleMessage, "Vous Défiez le %s!!!", currentOpponent->name);
+            sprintf(battleMessage, "Vous Defiez le %s!!!", currentOpponent->name);
             if (battleTimer > 2.0f) {
                 battleState = BATTLE_PLAYER_TURN;
                 sprintf(battleMessage, "Que doit faire %s?", currentPlayer->name);
@@ -816,19 +825,20 @@ void updateBattle(sfRenderWindow* _window) {
         case BATTLE_END:
             if (battleTimer > 2.0f) {
                 if (currentPlayer->currentHp > 0) {
-
+                    hasWon = 1;
                     state = GAME;
                     currentPlayer->currentHp = currentPlayer->maxHp;
+                    currentOpponent->isDefeated = 1;
                     currentOpponent->currentHp = currentOpponent->maxHp;
-                    hasWon = 1;
+                 
                     battleState = BATTLE_INTRO;
                 }
                 else {
-
+                    hasWon = 1;
                     state = GAME;
                     currentPlayer->currentHp = currentPlayer->maxHp;
                     currentOpponent->currentHp = currentOpponent->maxHp;
-                    hasWon = 0;
+                    SetPosAtRespawn();
                 }
             }
             break;
@@ -931,10 +941,10 @@ void checkWhichSpriteToDraw(sfRenderWindow* _window) {
         sfRenderWindow_drawSprite(_window, battleMamoswineDialga, NULL);
     }
 }
-int startBattle(Pokemon* player, Pokemon* opponent) {
+int startBattle(Pokemon* player, Pokemon* opponent,int _music) {
     currentPlayer = player;
     currentOpponent = opponent;
-
+    ChangeMusic(_music);
     state = BATTLE;
     battleState = BATTLE_INTRO;
     selectedMove = 0;
@@ -944,6 +954,10 @@ int startBattle(Pokemon* player, Pokemon* opponent) {
 
     return hasWon; 
 }
+int getBattleResult(Pokemon* _opponent) {
+    
+    return _opponent->isDefeated;
+}
 void setCurrentMamoswineBattle(Pokemon* opponent) {
     strncpy(currentMamoswineBattle, opponent->name, 29);
     currentMamoswineBattle[29] = '\0';
@@ -952,7 +966,7 @@ float getTypeEffectiveness(Types attackType, Types defenderType1, Types defender
     if (attackType >= TYPE_COUNT) return 1.0f;
     
     float effectiveness = 1.0f;
-    printf("newwave%f", effectiveness);
+
     // Calculer l'efficacité contre le premier type
     if (defenderType1 != Null && defenderType1 < TYPE_COUNT) {
         switch (typeChart[attackType][defenderType1]) {
@@ -962,7 +976,7 @@ float getTypeEffectiveness(Types attackType, Types defenderType1, Types defender
         case EFF_SUPER:     effectiveness *= 2.0f; break;
         }
     }
-    printf("after%f", effectiveness);
+
     // Calculer l'efficacité contre le second type
     if (defenderType2 != Null && defenderType2 < TYPE_COUNT) {
         switch (typeChart[attackType][defenderType2]) {
@@ -1026,7 +1040,7 @@ int calculateDamage(Pokemon* attacker, Pokemon* defender, Attack* attack) {
 
     
     float effectiveness = getTypeEffectiveness(attack->type, defender->type[0], defender->type[1]);
-    printf("%f", effectiveness);
+
     damage *= stab * effectiveness;
 
     if (effectiveness == 0.0f) {
