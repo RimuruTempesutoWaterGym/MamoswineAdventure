@@ -1,4 +1,5 @@
 #include"tools.h"
+#include"battle.h"
 
 #define MAMOSWINE_FIRE 0
 #define MAMOSWINE_GRASS 1
@@ -12,6 +13,10 @@ void updateMamoDialga();
 void displayElementalMamoswine(sfRenderWindow* _window);
 void displayMamoDialga(sfRenderWindow* _window);
 int GetMamoswineElementalCount();
+int GetMamoswineGrassElementalCount();
+int GetMamoswineFireElementalCount();
+int GetMamoswineWaterElementalCount();
+int GetMamoswineElectricElementalCount();
 void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos);
 void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos);
 void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos);
@@ -22,10 +27,12 @@ sfFloatRect GetCollisionMamoswineWater();
 sfFloatRect GetCollisionMamoswineGrass();
 sfFloatRect GetCollisionMamoswineFire();
 sfFloatRect GetCollisionMamoswineElectric();
-void setMamoswineFirePosition(sfVector2f newPos);
-void setMamoswineWaterPosition(sfVector2f newPos);
-void setMamoswineGrassPosition(sfVector2f newPos);
-void setMamoswineElectricPosition(sfVector2f newPos);
+sfFloatRect GetCollisionMamoswineDialga();
+sfFloatRect GetRangeMamoswineDialga();
+void setMamoswineFirePosition(sfVector2f newPos, int frame);
+void setMamoswineWaterPosition(sfVector2f newPos, int frame);
+void setMamoswineGrassPosition(sfVector2f newPos, int frame);
+void setMamoswineElectricPosition(sfVector2f newPos,int frame);
 void saveMamowsineData(const char* filename);
 void loadMamowsineData(const char* filename);
 typedef enum {

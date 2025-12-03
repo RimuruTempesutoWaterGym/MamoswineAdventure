@@ -13,7 +13,8 @@ float actualVolume;
 float maxVolume;
 float timerLerp = 0;
 int BackSound = 0;
-int isMuted;
+int isMutedSfx;
+int isMutedMusic;
 int hasChanged= 0;
 int musicUp = 0;
 MusicChoice oldMusic = 0;
@@ -25,7 +26,7 @@ void initMusic()
 	actualVolume = 10.f;
 	maxVolume = 100.0f;
 	playedMusic = sfMusic_createFromFile(MUSIC_PATH"ecran-titre-Port Yoneuve [TubeRipper.cc].mp3");
-	setMusic(Menu);
+	setMusic(MUSIC_Menu);
 	
 	sfMusic_setLoop(playedMusic, sfTrue);
 	sfMusic_play(playedMusic);
@@ -47,22 +48,22 @@ void initSound()
 void setVolumeMusicIfNotMuted(sfMusic* _music, float _volume)
 {
 
-	if (isMuted == 0)
+	if (isMutedMusic == 0)
 	{
 		sfMusic_setVolume(_music, _volume);
 	}
-	if (isMuted == 1)
+	if (isMutedMusic == 1)
 	{
 		sfMusic_setVolume(_music, 0);
 	}
 }
 void setVolumeSFXIfNotMuted(sfSound* _sfx, float _volume)
 {
-	if (isMuted == 0)
+	if (isMutedMusic == 0)
 	{
 		sfSound_setVolume(_sfx, _volume);
 	}
-	if (isMuted == 1)
+	if (isMutedMusic == 1)
 	{
 		_volume = 0.0f;
 	}
@@ -114,58 +115,58 @@ void setMusic(MusicChoice _music)
             {
                 switch (oldMusic)  
                 {
-                case Menu:
+                case MUSIC_Menu:
                     sfMusic_destroy(playedMusic);
                     playedMusic = sfMusic_createFromFile(MUSIC_PATH"ecran-titre-Port Yoneuve [TubeRipper.cc].mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = Menu;
+                    actualMusic = MUSIC_Menu;
                     break;
 
-                case Overworld:
+                case MUSIC_Overworld:
                     sfMusic_destroy(playedMusic);
                     playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-plante -Grotte Abime [TubeRipper.cc].mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = Overworld;
+                    actualMusic = MUSIC_Overworld;
                     break;
 
-                case Fire:
+                case MUSIC_Fire:
                     sfMusic_destroy(playedMusic);
                     playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-feu-CombatcontreNoctunoir.ogg");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = Fire;
+                    actualMusic = MUSIC_Fire;
                     break;
 
-                case Water:
+                case MUSIC_Water:
                     sfMusic_destroy(playedMusic);
                     playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = Water;
+                    actualMusic = MUSIC_Water;
                     break;
 
-                case Grass:
+                case MUSIC_Grass:
                     sfMusic_destroy(playedMusic);
                     playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = Grass;
+                    actualMusic = MUSIC_Grass;
                     break;
 
-                case Elec:
+                case MUSIC_Elec:
                     sfMusic_destroy(playedMusic);
                     playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = Elec;
+                    actualMusic = MUSIC_Elec;
                     break;
                 }
             }
@@ -224,37 +225,32 @@ void playSoundTree()
 
 void musicMute()
 {
-	isMuted = 1;
+    isMutedMusic = 1;
 	setVolumeMusicIfNotMuted(getActualMusic(), 0);
-	setVolumeSFXIfNotMuted(attackMamo, 0);
-	setVolumeSFXIfNotMuted(boulderPush, 0);
-	setVolumeSFXIfNotMuted(treeCut, 0);
+
 }
 
 void musicUnmute()
 {
 	
-	isMuted = 0;
+	isMutedMusic = 0;
 	setVolumeMusicIfNotMuted(getActualMusic(), maxVolume);
-	setVolumeSFXIfNotMuted(attackMamo, maxVolume);
-	setVolumeSFXIfNotMuted(boulderPush, maxVolume);
-	setVolumeSFXIfNotMuted(treeCut, maxVolume);
+
 }
 void soundMute()
 {
-    isMuted = 1;
-    setVolumeMusicIfNotMuted(getActualMusic(), 0);
-    setVolumeSFXIfNotMuted(attackMamo, 0);
-    setVolumeSFXIfNotMuted(boulderPush, 0);
-    setVolumeSFXIfNotMuted(treeCut, 0);
+    isMutedSfx = 1;
+    setVolumeSFXIfNotMuted(attackMamo, maxVolume);
+    setVolumeSFXIfNotMuted(boulderPush, maxVolume);
+    setVolumeSFXIfNotMuted(treeCut, maxVolume);
 }
 
 void soundUnmute()
 {
 
-    isMuted = 0;
-    setVolumeMusicIfNotMuted(getActualMusic(), maxVolume);
-    setVolumeSFXIfNotMuted(attackMamo, maxVolume);
-    setVolumeSFXIfNotMuted(boulderPush, maxVolume);
-    setVolumeSFXIfNotMuted(treeCut, maxVolume);
+    isMutedSfx = 0;
+
+    setVolumeSFXIfNotMuted(attackMamo, 0);
+    setVolumeSFXIfNotMuted(boulderPush, 0);
+    setVolumeSFXIfNotMuted(treeCut, 0);
 }

@@ -76,6 +76,7 @@ typedef struct {
 	sfVector2f position;
 	SpriteType type;
 	sfIntRect bounds; 
+	int FrameY; 
 } SpriteData;
 void initmap();
 void initTileset();
@@ -101,3 +102,4 @@ sfBool canPlaceSpriteAt(sfVector2f position, sfIntRect spriteBounds);
 void saveSpritesData(const char* filename);
 void loadSpritesData(const char* filename);
 void initSpriteData();
+sfVector2f getPlayerSpawnPoint();
