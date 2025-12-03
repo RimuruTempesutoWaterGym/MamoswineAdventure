@@ -3,34 +3,38 @@
 #include"music.h"
 #include"elemental_mammoswine.h"
 
-
+//créer les sprite des mammochons élémentaires
 sfSprite* mammoswineFire;
 sfSprite* mammoswineWater;
 sfSprite* mammoswineGrass;
 sfSprite* mammoswineElectric;
 sfSprite* mamoDialga;
+//créer les textures des mammochons élémentaires
 sfTexture* textureMammoswineFire;
 sfTexture* textureMammoswineWater;
 sfTexture* textureMammoswinGrasse;
 sfTexture* textureMammoswineElec;
 sfTexture* textureMamoDialga;
+//créer et initialiser les rectangles de limitation des mammochons élémentaires
 sfIntRect mammoswineFireRect = { 49,0,48,48};
 sfIntRect mammoswineWaterRect = { 49,0,48,48};
 sfIntRect mammoswineGrassRect = { 49,0,48,48};
 sfIntRect mammoswineElectricRect = { 49,0,48,48};
 sfIntRect mammoswineRectDialga = {0,0,57,66};
+//créer et initialiser les position des mammochons élémentaires
 sfVector2f mammoswineFirePos = { 1000, 900 };
 sfVector2f mammoswineWaterPos = { 1100, 700 };
 sfVector2f mammoswineGrassPos = { 900, 900 };
 sfVector2f mammoswineElectricPos = { 1190,460 };
 sfVector2f mamoDialgaPos = { 1180, 100 };
+//créer une variable qui va stocker en binaire la valeur d'ame de mammochon qu'on a 
 char mamoswineElementalCount;
 
 
-
+//initialise les valeurs importantes pour les mammochons élémentaires
 void initElementalMamoswine()
 {
-	
+	//
 	loadMamowsineData("data/keydata.bin");
 	mammoswineFire = sfSprite_create();
 	mammoswineWater = sfSprite_create();
@@ -58,7 +62,7 @@ void initElementalMamoswine()
 	sfSprite_setPosition(mammoswineElectric, mammoswineElectricPos);
 	sfSprite_setPosition(mamoDialga, mamoDialgaPos);
 }
-
+//créer et initialiser les position des mammochons élémentaires
 void updateElementalMamoswine()
 {
 	saveMamowsineData("data/keydata.bin");
