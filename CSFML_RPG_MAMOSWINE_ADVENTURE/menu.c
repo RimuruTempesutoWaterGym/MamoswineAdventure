@@ -172,62 +172,53 @@ sfVector2f positionRightClic = { 400.0f, 390.0f };
 
 // Rendre le son muet
 sfRectangleShape* CaseMute;
-sfVector2f positioncasemute = { 490.0f,140.0f };
+sfVector2f positioncasemute = { 490.0f,170.0f };
 sfVector2f Sizecasemute = { 12.0f,12.0f };
 sfIntRect irectcasemute = { 0,0,12,12 };
 sfVector2f scalecasemute = { 4.0f,4.0f };
 sfRectangleShape* CaseDemute;
 
 sfText* SoundMuted;
-sfVector2f postextsoundmuted = { 275.0f, 140.0f };
+sfVector2f postextsoundmuted = { 275.0f, 170.0f };
 
 // Rendre SFX muet
 sfRectangleShape* CaseMute2;
-sfVector2f positioncasemute2 = { 490.0f,230.0f };
+sfVector2f positioncasemute2 = { 490.0f,260.0f };
 sfRectangleShape* CaseDemute2;
 
 sfText* SFXMuted;
-sfVector2f postextsfxmuted = { 255.0f, 230.0f };
-
-// Rendre Musique muette
-
-sfRectangleShape* CaseMute3;
-sfVector2f positioncasemute3 = { 490.0f,320.0f };
-sfRectangleShape* CaseDemute3;
-
-sfText* MusicMuted;
-sfVector2f postextmusicmuted = { 255.0f, 320.0f };
+sfVector2f postextsfxmuted = { 255.0f, 260.0f };
 
 // Barre son
 sfRectangleShape* soundbarre;
-sfVector2f positionsoundbarre = { 250.0f, 420.0f };
+sfVector2f positionsoundbarre = { 250.0f, 390.0f };
 sfVector2f Sizesoundbarre = { 31.0f,6.0f };
 sfIntRect irectsoundbarre = { 0,0,31,6 };
 sfVector2f scalesoundbarre = { 10.0f,10.0f };
 sfTexture* texsoundbarre;
 
 sfRectangleShape* SoundLevel;
-sfVector2f positionsound = { 550.0f, 470.0f };
+sfVector2f positionsound = { 550.0f, 440.0f };
 sfVector2f Sizesound = { 0.0f, 4.0f };
 sfIntRect irectSoundLevel = { 0,0,30,5 };
 sfVector2f scaleSoundLevel = { 10.0f, 10.0f };
 // Boutons de volume
 sfRectangleShape* ButtonPlus;
-sfVector2f positionButtonplus = { 565.0f, 420.0f };
+sfVector2f positionButtonplus = { 565.0f, 390.0f };
 sfVector2f SizeButtonplus = { 8.0f,8.0f };
 sfIntRect irectButtonplus = { 0,0,8,8 };
 sfVector2f scaleButtonplus = { 8.0f,8.0f };
 sfTexture* TexButtonPlus;
 
 sfRectangleShape* ButtonMoins;
-sfVector2f positionButtonmoins = { 180.0f, 420.0f };
+sfVector2f positionButtonmoins = { 180.0f, 390.0f };
 sfVector2f SizeButtonmoins = { 8.0f,8.0f };
 sfIntRect irectButtonmoins = { 0,0,8,8 };
 sfVector2f scaleButtonmoins = { 8.0f,8.0f };
 sfTexture* TexButtonMoins;
 
 sfText* ChangeSound;
-sfVector2f postextchangesound = { 275.0f, 380.0f };
+sfVector2f postextchangesound = { 275.0f, 350.0f };
 //FIN MENU AUDIO
 
 // MENU PAUSE IN GAME
@@ -478,17 +469,6 @@ void initmenu()
 	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
 	sfText_setFont(SFXMuted, MC);
 	
-	// Touche pour mute la musique
-
-	CaseMute3 = creationbutton(CaseMute3, Sizecasemute, positioncasemute3, irectcasemute, casevide);
-	sfRectangleShape_setScale(CaseMute3, scalecasemute);
-
-	CaseDemute2 = creationbutton(CaseDemute2, Sizecasemute, positioncasemute3, irectcasemute, casecoche);
-	sfRectangleShape_setScale(CaseDemute2, scalecasemute);
-
-	MusicMuted = creationtexte(MusicMuted, "Activer les musiques:", postextmusicmuted, sfWhite, 30);
-	MC = sfFont_createFromFile("..\\Ressources\\Font\\Minecraft.ttf");
-	sfText_setFont(MusicMuted, MC);
 
 	// Barre pour monter le son ou le descendre
 	soundbarre = creationbutton(soundbarre, Sizesoundbarre, positionsoundbarre, irectsoundbarre, texsoundbarre);
@@ -690,11 +670,11 @@ void updatemenu(sfRenderWindow* _window)
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle2 = sfRectangleShape_getGlobalBounds(CaseMute);
-		if (sfMouse_isButtonPressed(sfMouseLeft)&& (coche == VALIDE || (coche == SFXNEUTRE || coche == MUSICNEUTRE)) && keytimer > 0.5f && mousepos.x > Rectangle2.left && mousepos.x < (Rectangle2.width + Rectangle2.left) && mousepos.y > Rectangle2.top && mousepos.y < (Rectangle2.top + Rectangle2.height))
+		if (sfMouse_isButtonPressed(sfMouseLeft)&& (coche == VALIDE || coche == SFXNEUTRE ) && keytimer > 0.5f && mousepos.x > Rectangle2.left && mousepos.x < (Rectangle2.width + Rectangle2.left) && mousepos.y > Rectangle2.top && mousepos.y < (Rectangle2.top + Rectangle2.height))
 		{
 		
 			coche = NEUTRE;
-			sfMusic_stop(getActualMusic());
+			musicMute();
 			soundMute();
 			keytimer = 0.0f;
 		}
@@ -704,7 +684,7 @@ void updatemenu(sfRenderWindow* _window)
 
 			coche = VALIDE;
 			soundUnmute();
-			sfMusic_play(getActualMusic());
+			musicUnmute();
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle4 = sfRectangleShape_getGlobalBounds(ButtonPlus);
@@ -738,30 +718,14 @@ void updatemenu(sfRenderWindow* _window)
 		if (sfMouse_isButtonPressed(sfMouseLeft) && coche == VALIDE && keytimer > 0.5f && mousepos.x > Rectangle6.left && mousepos.x < (Rectangle6.width + Rectangle6.left) && mousepos.y > Rectangle6.top && mousepos.y < (Rectangle6.top + Rectangle6.height))
 		{
 			coche = SFXNEUTRE;
-			
+			soundMute();
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle7 = sfRectangleShape_getGlobalBounds(CaseDemute2);
 		if (sfMouse_isButtonPressed(sfMouseLeft) && coche == SFXNEUTRE && keytimer > 0.5f && mousepos.x > Rectangle7.left && mousepos.x < (Rectangle7.width + Rectangle7.left) && mousepos.y > Rectangle7.top && mousepos.y < (Rectangle7.top + Rectangle7.height))
 		{
 			coche = VALIDE;
-		
-			keytimer = 0.0f;
-		}
-		sfFloatRect Rectangle8 = sfRectangleShape_getGlobalBounds(CaseMute3);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && coche == VALIDE && keytimer > 0.5f && mousepos.x > Rectangle8.left && mousepos.x < (Rectangle8.width + Rectangle8.left) && mousepos.y > Rectangle8.top && mousepos.y < (Rectangle8.top + Rectangle8.height))
-		{
-			coche = MUSICNEUTRE;
-			keytimer = 0.0f;
-		}
-		else if (coche == SFXNEUTRE)
-		{
-			coche = NEUTRE;
-		}
-		sfFloatRect Rectangle9 = sfRectangleShape_getGlobalBounds(CaseDemute3);
-		if (sfMouse_isButtonPressed(sfMouseLeft) && coche == MUSICNEUTRE && keytimer > 0.5f && mousepos.x > Rectangle9.left && mousepos.x < (Rectangle9.width + Rectangle9.left) && mousepos.y > Rectangle9.top && mousepos.y < (Rectangle9.top + Rectangle9.height))
-		{
-			coche = VALIDE;
+			soundUnmute();
 			keytimer = 0.0f;
 		}
 		
@@ -884,32 +848,23 @@ void displaymenu(sfRenderWindow* _window)
 		{
 			sfRenderWindow_drawRectangleShape(_window, CaseMute, NULL);
 			sfRenderWindow_drawRectangleShape(_window, CaseMute2, NULL);
-			sfRenderWindow_drawRectangleShape(_window, CaseMute3, NULL);
 		}
 		else if (coche == VALIDE)
 		{
 			sfRenderWindow_drawRectangleShape(_window, CaseDemute, NULL);
 			sfRenderWindow_drawRectangleShape(_window, CaseDemute2, NULL);
-			sfRenderWindow_drawRectangleShape(_window, CaseDemute3, NULL);
+			
 		}
 		else if (coche == SFXNEUTRE)
 		{
 			sfRenderWindow_drawRectangleShape(_window, CaseDemute, NULL);
 			sfRenderWindow_drawRectangleShape(_window, CaseMute2, NULL);
-			sfRenderWindow_drawRectangleShape(_window, CaseDemute3, NULL);
-		}
-		else if (coche == MUSICNEUTRE)
-		{
-			sfRenderWindow_drawRectangleShape(_window, CaseDemute, NULL);
-			sfRenderWindow_drawRectangleShape(_window, CaseDemute2, NULL);
-			sfRenderWindow_drawRectangleShape(_window, CaseMute3, NULL);
 		}
 		sfRenderWindow_drawRectangleShape(_window, soundbarre, NULL);
 		sfRenderWindow_drawRectangleShape(_window, SoundLevel, NULL);
 		sfRenderWindow_drawText(_window, SoundMuted, NULL);
 		sfRenderWindow_drawText(_window, ChangeSound, NULL);
 		sfRenderWindow_drawText(_window, SFXMuted, NULL);
-		sfRenderWindow_drawText(_window, MusicMuted, NULL);
 		sfRenderWindow_drawRectangleShape(_window, ButtonPlus, NULL);
 		sfRenderWindow_drawRectangleShape(_window, ButtonMoins, NULL);
 		
