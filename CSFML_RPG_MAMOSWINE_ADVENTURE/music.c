@@ -195,7 +195,7 @@ void ChangeMusic(MusicChoice _music)
 
                 case MUSIC_Elec:
                     sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-elek -Mt Herisse.mp3");
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-elek -Mt Hérissé.mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
@@ -203,7 +203,7 @@ void ChangeMusic(MusicChoice _music)
                     break;
                 case MUSIC_Void:
                     sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Distortion World Pokemon Platinum Music Extended HD.mp3");
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Distortion World Pokémon Platinum Music Extended HD.mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
