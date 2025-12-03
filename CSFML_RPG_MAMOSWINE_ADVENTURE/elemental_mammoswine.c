@@ -34,18 +34,21 @@ char mamoswineElementalCount;
 //initialise les valeurs importantes pour les mammochons élémentaires
 void initElementalMamoswine()
 {
-	//
+	//Récupère la valeur de MamoswineElementalCount du fichier de sauvegarde
 	loadMamowsineData("data/keydata.bin");
+	//Initialise les mammochons élementaire
 	mammoswineFire = sfSprite_create();
 	mammoswineWater = sfSprite_create();
 	mammoswineGrass = sfSprite_create();
 	mammoswineElectric = sfSprite_create();
 	mamoDialga = sfSprite_create();
+	//Initialise les textures des mammochons élementaire
 	textureMammoswineFire = sfTexture_createFromFile(TEXTURE_PATH"mamofeu.png", NULL);
 	textureMammoswineWater = sfTexture_createFromFile(TEXTURE_PATH"mamoeau.png", NULL);
 	textureMammoswinGrasse = sfTexture_createFromFile(TEXTURE_PATH"mamoplante.png", NULL);
 	textureMammoswineElec = sfTexture_createFromFile(TEXTURE_PATH"mamoelec.png", NULL);
 	textureMamoDialga = sfTexture_createFromFile(TEXTURE_PATH"mamoDialga.png", NULL);
+	//set les textures et la position des mammochons élementaire sur les sprites
 	sfSprite_setTexture(mammoswineFire, textureMammoswineFire, sfTrue);
 	sfSprite_setTexture(mammoswineWater, textureMammoswineWater, sfTrue);
 	sfSprite_setTexture(mammoswineGrass, textureMammoswinGrasse, sfTrue);
@@ -62,9 +65,8 @@ void initElementalMamoswine()
 	sfSprite_setPosition(mammoswineElectric, mammoswineElectricPos);
 	sfSprite_setPosition(mamoDialga, mamoDialgaPos);
 }
-//créer et initialiser les position des mammochons élémentaires
 void updateElementalMamoswine()
-{
+{//créer et initialiser les position des mammochons élémentaires
 	saveMamowsineData("data/keydata.bin");
 }
 void updateMamoDialga()
@@ -114,6 +116,7 @@ void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineFireBat) == 1 && (GetMamoswineFireElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
+		setHasChangedTo1();
 		setMusic(2);
 		mamoswineElementalCount |= mamoswineFire;
 		sfIntRect mammoswineFireRect = { 0,0,48,48 };
