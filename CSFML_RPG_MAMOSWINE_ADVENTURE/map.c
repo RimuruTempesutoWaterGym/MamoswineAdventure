@@ -1192,7 +1192,7 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineWater())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineWater()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineElectric()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineGrass())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineGrass()))
-				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetRangeMamoswineDialga())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetRangeMamoswineDialga()))
+				|| isInsideMousei(nextPosInTab, GetCollisionMamoswineDialga()) || isInsideMousei(nextPosInTab2, GetCollisionMamoswineDialga())
 				)
 			{
 				return sfTrue;
@@ -1311,8 +1311,7 @@ void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
 		nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
 		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
 		nextPosInTab2.y = (int)((_sprite.top + _sprite.height  - 1) / TILE_WIDTH);
-		printf("%d", nextPosInTab.y);
-		printf("%d", nextPosInTab.x);
+
 		break;
 	case Top:
 
@@ -1321,8 +1320,7 @@ void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
 		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
 		nextPosInTab2.y = (int)((_sprite.top - _sprite.height) / TILE_WIDTH);
 
-		printf("%d", nextPosInTab.y);
-		printf("%d", nextPosInTab.x);
+	
 
 		break;
 	case Right:

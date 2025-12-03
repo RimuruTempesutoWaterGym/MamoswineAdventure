@@ -72,19 +72,18 @@ sfFloatRect GetCollisionMamoswineFire()
 }
 sfFloatRect GetCollisionMamoswineDialga()
 {
+
+
 	return sfSprite_getGlobalBounds(mamoDialga);
 }
 sfFloatRect GetRangeMamoswineDialga()
 {
-	sfFloatRect rangeMamoswineDialga = sfSprite_getGlobalBounds(mamoDialga);
-	printf("%f", rangeMamoswineDialga.left);
-	printf("%f", rangeMamoswineDialga.top);
-	printf("%f", rangeMamoswineDialga.height);
-	printf("%f", rangeMamoswineDialga.width);
+	sfFloatRect rangeMamoswineDialga = GetCollisionMamoswineDialga(mamoDialga);
+
 	rangeMamoswineDialga.left -= 20;
-		rangeMamoswineDialga.top -= 30;
-		rangeMamoswineDialga.height += 60;
-		rangeMamoswineDialga.width += 40;
+	rangeMamoswineDialga.top -= 30;
+	rangeMamoswineDialga.height += 60;
+	rangeMamoswineDialga.width += 40;
 	return rangeMamoswineDialga;
 }
 sfFloatRect GetCollisionMamoswineGrass()
@@ -120,11 +119,12 @@ void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 void SetMamoswineDialga(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 
-	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(getMamoswineHitboxByPos(playerPos), GetRangeMamoswineDialga()))
+	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(playerPos, GetCollisionMamoswineDialga()))
 	{
+		printf("win");
 		if (startBattle(&mamoswineBat, &mamoswineDialgaBat))
 		{
-
+	
 
 		}
 		else
@@ -201,7 +201,7 @@ void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)
 	SetMamoswineWater(_window, playerPos);
 	SetMamoswineGrass(_window, playerPos);
 	SetMamoswineElectric(_window, playerPos);
-
+	SetMamoswineDialga(_window, playerPos);
 }
 void displayElementalMamoswine(sfRenderWindow* _window)
 {
