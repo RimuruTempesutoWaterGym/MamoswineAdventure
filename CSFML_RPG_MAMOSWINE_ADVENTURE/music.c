@@ -158,7 +158,7 @@ void ChangeMusic(MusicChoice _music)
 
                 case MUSIC_Overworld:
                     sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-eau -Grotte et Chemin Lisière.mp3");
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-eau -Grotte et Chemin Lisiere.mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
