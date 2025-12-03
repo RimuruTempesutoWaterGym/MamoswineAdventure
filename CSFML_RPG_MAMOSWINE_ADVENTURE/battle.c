@@ -13,7 +13,7 @@
 #define EFF_NORMAL      0x02  // 10 en binaire = 1.0x
 #define EFF_SUPER       0x03  // 11 en binaire = 2.0x
 
-static unsigned char typeChart[TYPE_COUNT][5];
+static unsigned char typeChart[TYPE_COUNT][TYPE_COUNT];
 char currentMamoswineBattle[30] = "";
 Pokemon mamoswineBat;
 Pokemon mamoswineFireBat;
@@ -27,6 +27,7 @@ int selectedMove = 0;
 float battleTimer = 0.0f;
 char battleMessage[100] = "";
 int playerTurn = 1;
+int hasWon = 0;
 
 
 BattleState battleState = BATTLE_INTRO;
@@ -73,11 +74,11 @@ sfVector2f battleMamoswineScalePlayer = {5.f,5.f };
 sfVector2f battlePosMamoswinePlayer = {130.f,150.f };
 sfVector2f battleBgGrassSize = {3.3f,2.8f };
 sfIntRect battleMamoswineRect ={0,0,81,71 };
-sfIntRect battleMamoswineFireRect = { 0,0,83,74 };
-sfIntRect battleMamoswineWaterRect = { 0,0,83,74 };
-sfIntRect battleMamoswineElectricRect = { 0,0,83,74 };
-sfIntRect battleMamoswineGrassRect = {0, 0, 83, 74 };
-sfIntRect battleMamoswineDialgaRect = {0, 0, 83, 74 };
+sfIntRect battleMamoswineFireRect = { 0,0,86,76 };
+sfIntRect battleMamoswineWaterRect = { 0,0,86,76 };
+sfIntRect battleMamoswineElectricRect = { 0,0,86,76 };
+sfIntRect battleMamoswineGrassRect = {0, 0, 86, 76 };
+sfIntRect battleMamoswineDialgaRect = {0, 0, 90, 76 };
 sfRectangleShape* battleUI;
 sfText* battleText;
 Attack iceShard;
@@ -126,11 +127,11 @@ void initBattle() {
     battleBgTimeTexture = sfTexture_createFromFile(TEXTURE_PATH"grassy_bg.png", NULL);
 
     battleMamoswineTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinebattleBack.png", NULL);
-    battleMamoswineFireTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinefirecombat.png", NULL);
-    battleMamoswineWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinewatercombat.png", NULL);
-    battleMamoswineElectricTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswineeleccombat.png", NULL);
-    battleMamoswineGrassTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinegrasscombat.png", NULL);
-    battleMamoswineDialgaTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinegrasscombat.png", NULL);
+    battleMamoswineFireTexture = sfTexture_createFromFile(TEXTURE_PATH"mamofeucombat.png", NULL);
+    battleMamoswineWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoeaucombat.png", NULL);
+    battleMamoswineElectricTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoeleccombat.png", NULL);
+    battleMamoswineGrassTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoplantecombat.png", NULL);
+    battleMamoswineDialgaTexture = sfTexture_createFromFile(TEXTURE_PATH"mamodialgaBattle.png", NULL);
     
     sfSprite_setTexture(battleMamoswine, battleMamoswineTexture, sfTrue);
     sfSprite_setTexture(battleMamoswineFire, battleMamoswineFireTexture, sfTrue);
@@ -376,7 +377,7 @@ void initPokemons() {
         {surf,hydroPump,
             {0}, {0}
         },
-        {110, 80, 100, 80, 85, 75},
+        {100, 100, 90, 70, 95, 75},
         {Water, Null}
     };
     mamoswineWaterBat.maxHp = mamoswineWaterBat.stats[0] * 3.14;
@@ -442,7 +443,8 @@ void initTypeChart() {
     typeChart[Ground][Bug] = EFF_NOT_VERY;
     typeChart[Ground][Rock] = EFF_SUPER;
     typeChart[Ground][Steel] = EFF_SUPER;
-
+    typeChart[Ground][Water] = EFF_NORMAL;
+    typeChart[Ground][Dragon] = EFF_NORMAL;
     // Ice (attaquant)
     typeChart[Ice][Fire] = EFF_NOT_VERY;
     typeChart[Ice][Water] = EFF_NOT_VERY;
@@ -452,6 +454,7 @@ void initTypeChart() {
     typeChart[Ice][Fly] = EFF_SUPER;
     typeChart[Ice][Dragon] = EFF_SUPER;
     typeChart[Ice][Steel] = EFF_NOT_VERY;
+    typeChart[Ice][Electric] = EFF_NORMAL;
 
     // Grass (attaquant)
     typeChart[Grass][Fire] = EFF_NOT_VERY;
@@ -464,6 +467,7 @@ void initTypeChart() {
     typeChart[Grass][Rock] = EFF_SUPER;
     typeChart[Grass][Dragon] = EFF_NOT_VERY;
     typeChart[Grass][Steel] = EFF_NOT_VERY;
+    typeChart[Grass][Electric] = EFF_NORMAL;
 
     // Fire (attaquant)
     typeChart[Fire][Fire] = EFF_NOT_VERY;
@@ -520,11 +524,14 @@ void initTypeChart() {
     typeChart[Steel][Rock] = EFF_SUPER;
     typeChart[Steel][Steel] = EFF_NOT_VERY;
     typeChart[Steel][Fairy] = EFF_SUPER;
+    typeChart[Steel][Ground] = EFF_NORMAL;
 
     // Dragon (attaquant)
     typeChart[Dragon][Dragon] = EFF_SUPER;
     typeChart[Dragon][Steel] = EFF_NOT_VERY;
     typeChart[Dragon][Fairy] = EFF_IMMUNE;
+    typeChart[Dragon][Ice] = EFF_NORMAL;
+    typeChart[Dragon][Ground] = EFF_NORMAL;
 
     // Bug (attaquant)
     typeChart[Bug][Fire] = EFF_NOT_VERY;
@@ -813,11 +820,15 @@ void updateBattle(sfRenderWindow* _window) {
                     state = GAME;
                     currentPlayer->currentHp = currentPlayer->maxHp;
                     currentOpponent->currentHp = currentOpponent->maxHp;
+                    hasWon = 1;
                     battleState = BATTLE_INTRO;
                 }
                 else {
 
                     state = GAME;
+                    currentPlayer->currentHp = currentPlayer->maxHp;
+                    currentOpponent->currentHp = currentOpponent->maxHp;
+                    hasWon = 0;
                 }
             }
             break;
@@ -929,9 +940,9 @@ int startBattle(Pokemon* player, Pokemon* opponent) {
     selectedMove = 0;
     battleTimer = 0.0f;
 
-    sprintf(battleMessage, "Un %s sauvage apparait!", opponent->name);
 
-    return 1; // Combat lancé
+
+    return hasWon; 
 }
 void setCurrentMamoswineBattle(Pokemon* opponent) {
     strncpy(currentMamoswineBattle, opponent->name, 29);
@@ -939,9 +950,9 @@ void setCurrentMamoswineBattle(Pokemon* opponent) {
 }
 float getTypeEffectiveness(Types attackType, Types defenderType1, Types defenderType2) {
     if (attackType >= TYPE_COUNT) return 1.0f;
-
+    
     float effectiveness = 1.0f;
-
+    printf("newwave%f", effectiveness);
     // Calculer l'efficacité contre le premier type
     if (defenderType1 != Null && defenderType1 < TYPE_COUNT) {
         switch (typeChart[attackType][defenderType1]) {
@@ -951,7 +962,7 @@ float getTypeEffectiveness(Types attackType, Types defenderType1, Types defender
         case EFF_SUPER:     effectiveness *= 2.0f; break;
         }
     }
-
+    printf("after%f", effectiveness);
     // Calculer l'efficacité contre le second type
     if (defenderType2 != Null && defenderType2 < TYPE_COUNT) {
         switch (typeChart[attackType][defenderType2]) {
@@ -1013,11 +1024,9 @@ int calculateDamage(Pokemon* attacker, Pokemon* defender, Attack* attack) {
         stab = 1.5f;
     }
 
-    printf("%d",defender->type[0]);
-    printf("%d", defender->type[1]);
-    printf("%d", attack->type);
+    
     float effectiveness = getTypeEffectiveness(attack->type, defender->type[0], defender->type[1]);
-
+    printf("%f", effectiveness);
     damage *= stab * effectiveness;
 
     if (effectiveness == 0.0f) {
