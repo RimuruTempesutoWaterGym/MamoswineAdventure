@@ -26,6 +26,14 @@ typedef struct {
 } Pokemon;
 
 
+typedef enum {
+    BATTLE_INTRO,
+    BATTLE_PLAYER_TURN,
+    BATTLE_ENEMY_TURN,
+    BATTLE_ANIMATION,
+    BATTLE_END
+} BattleState;
+
 
 extern Pokemon mamoswineBat;
 extern Pokemon mamoswineFireBat;
@@ -43,4 +51,10 @@ void initBattle();
 int startBattle(Pokemon* player, Pokemon* opponent);
 void displayBattleUI(sfRenderWindow* _window);
 void checkWhichSpriteToDraw(sfRenderWindow* _window);
+void updateBattle(sfRenderWindow* _window);
 void setCurrentMamoswineBattle(Pokemon* opponent);
+void displayHealthBars(sfRenderWindow* _window);
+void displayMoveButtons(sfRenderWindow* _window);
+void handlePlayerInput(sfRenderWindow* _window);
+void performEnemyAttack();
+void performPlayerAttack(int moveIndex);

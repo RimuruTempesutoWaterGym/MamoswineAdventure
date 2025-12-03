@@ -25,7 +25,7 @@ void initMusic()
 {
 	actualVolume = 10.f;
 	maxVolume = 100.0f;
-	playedMusic = sfMusic_createFromFile(MUSIC_PATH"ecran-titre-Port Yoneuve [TubeRipper.cc].mp3");
+	playedMusic = sfMusic_createFromFile(MUSIC_PATH"ecran-titre-Port Yoneuve.mp3");
 	setMusic(MUSIC_Menu);
 	
 	sfMusic_setLoop(playedMusic, sfTrue);
@@ -113,62 +113,7 @@ void setMusic(MusicChoice _music)
         {
             if (actualMusic != oldMusic)
             {
-                switch (oldMusic)  
-                {
-                case MUSIC_Menu:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"ecran-titre-Port Yoneuve [TubeRipper.cc].mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Menu;
-                    break;
-
-                case MUSIC_Overworld:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-plante -Grotte Abime [TubeRipper.cc].mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Overworld;
-                    break;
-
-                case MUSIC_Fire:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-feu-CombatcontreNoctunoir.ogg");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Fire;
-                    break;
-
-                case MUSIC_Water:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Water;
-                    break;
-
-                case MUSIC_Grass:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Grass;
-                    break;
-
-                case MUSIC_Elec:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Blanche Noire Musique - Port Yoneuve [TubeRipper.cc].mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Elec;
-                    break;
-                }
+                ChangeMusic(oldMusic);
             }
             BackSound = 1;  
         }
@@ -198,7 +143,73 @@ MusicChoice getOldMusic()
 	return oldMusic;
 }
 
+void ChangeMusic(MusicChoice _music)
+{
+  switch (_music)
+                {
+                case MUSIC_Menu:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"ecran-titre-Port Yoneuve.mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_Menu;
+                    break;
 
+                case MUSIC_Overworld:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-eau -Grotte et Chemin Lisière.mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_Overworld;
+                    break;
+
+                case MUSIC_Fire:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Platinum OST Hard Mountain HD.mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_Fire;
+                    break;
+
+                case MUSIC_Water:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-eau -Lake HD.mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_Water;
+                    break;
+
+                case MUSIC_Grass:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-elek -Plaines Elek.mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_Grass;
+                    break;
+
+                case MUSIC_Elec:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-elek -Mt Hérissé.mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_Elec;
+                    break;
+                case MUSIC_Void:
+                    sfMusic_destroy(playedMusic);
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Distortion World Pokémon Platinum Music Extended HD.mp3");
+                    sfMusic_setLoop(playedMusic, sfTrue);
+                    sfMusic_play(playedMusic);
+                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
+                    actualMusic = MUSIC_Void;
+                    break;
+                } 
+}
 void playSoundAttack()
 {
 	if (!sfSound_getStatus(attackMamo))

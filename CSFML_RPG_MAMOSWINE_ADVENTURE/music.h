@@ -15,8 +15,10 @@ typedef enum {
     MUSIC_Fire,
     MUSIC_Water,
     MUSIC_Grass,
-    MUSIC_Elec
+    MUSIC_Elec,
+    MUSIC_Void
 }MusicChoice;
+void ChangeMusic(MusicChoice _music);
 void initSound();
 void volumeMusic(float _volume);
 void setMusic(MusicChoice _music);

@@ -21,7 +21,15 @@ Pokemon mamoswineWaterBat;
 Pokemon mamoswineGrassBat;
 Pokemon mamoswineElectricBat;
 Pokemon mamoswineDialgaBat;
+Pokemon* currentPlayer;
+Pokemon* currentOpponent;
+int selectedMove = 0;
+float battleTimer = 0.0f;
+char battleMessage[100] = "";
+int playerTurn = 1;
 
+
+BattleState battleState = BATTLE_INTRO;
 sfSprite* battleBackgroundFire;
 sfSprite* battleBackgroundWater;
 sfSprite* battleBackgroundElectric;
@@ -35,10 +43,10 @@ sfSprite* battleMamoswineElectric;
 sfSprite* battleMamoswineGrass;
 sfSprite* battleMamoswineDialga;
 
-sfTexture* battleUiMove1;
-sfTexture* battleUiMove2;
-sfTexture* battleUiMove3;
-sfTexture* battleUiMove4;
+sfSprite* battleUiMove1;
+sfSprite* battleUiMove2;
+sfSprite* battleUiMove3;
+sfSprite* battleUiMove4;
 
 sfTexture* battleBgFireTexture;
 sfTexture* battleBgWaterTexture;
@@ -85,6 +93,7 @@ Attack thunder;
 Attack ironHead;
 Attack dragonClaw;
 Attack icicleCrash;
+
 void initBattle() {
     initTypeChart();
     initAttacks();
@@ -199,7 +208,7 @@ void initBattle() {
 
 void initAttacks() {
   
-    Attack iceShard = {
+    iceShard = (Attack){
         1,
         "Eclat Glace",
         40,
@@ -208,7 +217,7 @@ void initAttacks() {
          physical,
         Ice
     };
-    Attack earthquake = {
+    earthquake = (Attack){
         2,
         "Seisme",
         100,
@@ -217,7 +226,7 @@ void initAttacks() {
          physical,
         Ground
     };
-    Attack icicleCrash = {
+    icicleCrash = (Attack){
     13,
     "Chute Glace",
     90,
@@ -228,7 +237,7 @@ void initAttacks() {
     };
 
  
-    Attack flamethrower = {
+    flamethrower = (Attack){
         3,
         "Lance-Flammes",
         90,
@@ -237,7 +246,7 @@ void initAttacks() {
          special,
         Fire
     };
-    Attack fireBlast = {
+     fireBlast = (Attack){
         4,
         "Deflagration",
         110,
@@ -248,7 +257,7 @@ void initAttacks() {
     };
 
   
-    Attack surf = {
+     surf = (Attack){
         5,
         "Surf",
         90,
@@ -257,7 +266,7 @@ void initAttacks() {
          special,
         Water
     };
-    Attack hydroPump = {
+     hydroPump = (Attack){
         6,
         "Hydrocanon",
         110,
@@ -268,7 +277,7 @@ void initAttacks() {
     };
 
 
-    Attack trailblaze = {
+     trailblaze = (Attack){
         7,
         "Desherbaffe",
         90,
@@ -277,7 +286,7 @@ void initAttacks() {
          physical,
         Grass
     };
-    Attack energyBall = {
+     energyBall = (Attack){
         8,
         "EcoSphere",
         90,
@@ -288,7 +297,7 @@ void initAttacks() {
     };
 
 
-    Attack thunderbolt = {
+     thunderbolt = (Attack){
         9,
         "Tonnerre",
         90,
@@ -297,7 +306,7 @@ void initAttacks() {
          special,
         Electric
     };
-    Attack thunder = {
+     thunder = (Attack){
         10,
         "Fatal-Foudre",
         110,
@@ -308,7 +317,7 @@ void initAttacks() {
     };
 
 
-    Attack ironHead = {
+     ironHead = (Attack){
         11,
         "Tete de Fer",
         80,
@@ -317,7 +326,7 @@ void initAttacks() {
          physical,
         Steel
     };
-    Attack dragonClaw = {
+     dragonClaw = (Attack){
         12,
         "Draco Griffe",
         80,
@@ -335,13 +344,13 @@ void initPokemons() {
         "Mammochon",
         0,
         0,
-        {iceShard,earthquake,icicleCrash,trailblaze
+        {earthquake,iceShard,icicleCrash,trailblaze
 
         },
         {110, 130, 80, 70, 60, 80},
         {Ground, Ice}
     };
-    mamoswineBat.maxHp = mamoswineBat.stats[1] * 4;
+    mamoswineBat.maxHp = mamoswineBat.stats[0] * 3.14;
     mamoswineBat.currentHp = mamoswineBat.maxHp;
 
 
@@ -356,7 +365,7 @@ void initPokemons() {
         {90, 100, 50, 100, 100, 90},
         {Fire, Null}
     };
-    mamoswineFireBat.maxHp = mamoswineFireBat.stats[1] * 4;
+    mamoswineFireBat.maxHp = mamoswineFireBat.stats[0] * 3.14;
     mamoswineFireBat.currentHp = mamoswineFireBat.maxHp;
 
     
@@ -370,7 +379,7 @@ void initPokemons() {
         {110, 80, 100, 80, 85, 75},
         {Water, Null}
     };
-    mamoswineWaterBat.maxHp = mamoswineWaterBat.stats[1] * 4;
+    mamoswineWaterBat.maxHp = mamoswineWaterBat.stats[0] * 3.14;
     mamoswineWaterBat.currentHp = mamoswineWaterBat.maxHp;
     mamoswineGrassBat = (Pokemon){
         "Mammochon Plante",
@@ -383,7 +392,7 @@ void initPokemons() {
         {130, 50, 90, 95, 90, 75},
         {Grass, Null}
     };
-    mamoswineGrassBat.maxHp = mamoswineGrassBat.stats[1] * 4;
+    mamoswineGrassBat.maxHp = mamoswineGrassBat.stats[0] * 3.14;
     mamoswineGrassBat.currentHp = mamoswineGrassBat.maxHp;
     mamoswineElectricBat = (Pokemon){
 
@@ -396,7 +405,7 @@ void initPokemons() {
         {70, 80, 60, 140, 60, 120},
         {Electric, Null}
     };
-    mamoswineElectricBat.maxHp = mamoswineElectricBat.stats[1] * 4;
+    mamoswineElectricBat.maxHp = mamoswineElectricBat.stats[0] * 3.14;
     mamoswineElectricBat.currentHp = mamoswineElectricBat.maxHp;
     mamoswineDialgaBat = (Pokemon){
         "Mammochon Dialga",
@@ -576,68 +585,362 @@ void initTypeChart() {
     typeChart[Poison][Fairy] = EFF_SUPER;
 }
 void displayBattleUI(sfRenderWindow* _window) {
-    
+
     sfRenderWindow_drawSprite(_window, battleBackgroundGrass, NULL);
-  //  checkWhichSpriteToDraw(_window);
-    sfRenderWindow_drawSprite(_window, battleMamoswineFire, NULL);
+
+
+    checkWhichSpriteToDraw(_window);
+
+
     sfRenderWindow_drawSprite(_window, battleMamoswine, NULL);
+
+ 
+    displayHealthBars(_window);
+
+ 
     sfRenderWindow_drawRectangleShape(_window, battleUI, NULL);
 
-    sfRenderWindow_drawSprite(_window, battleUiMove1, NULL);
-    sfRenderWindow_drawSprite(_window, battleUiMove2, NULL);
-    sfRenderWindow_drawSprite(_window, battleUiMove3, NULL);
-    sfRenderWindow_drawSprite(_window, battleUiMove4, NULL);
-    
-    sfText_setString(battleText, "Que doit faire Mammochon?");
+  
+    if (battleState == BATTLE_PLAYER_TURN) {
+        displayMoveButtons(_window);
+    }
+
+   
+    sfText_setString(battleText, battleMessage);
     sfText_setPosition(battleText, (sfVector2f) { 30.0f, 425.0f });
+    sfText_setFillColor(battleText, sfWhite);
+    sfText_setOutlineColor(battleText, sfBlack);
+    sfText_setOutlineThickness(battleText, 2.0f);
     sfRenderWindow_drawText(_window, battleText, NULL);
 }
-void checkWhichSpriteToDraw(sfRenderWindow* _window)
-{
-    size_t lenFire = strlen(mamoswineFireBat.name);
-    size_t lenWater = strlen(mamoswineWaterBat.name);
-    size_t lenGrass = strlen(mamoswineGrassBat.name);
-    size_t lenElectric = strlen(mamoswineElectricBat.name);
-    size_t lenDialga = strlen(mamoswineDialgaBat.name);
-    for (int i = 0; i < 30; i++)
-    {
-   
+void displayMoveButtons(sfRenderWindow* _window) {
+    printf("Affichage des moves, battleState = %d\n", battleState);
+
+    for (int i = 0; i < 4; i++) {
+        printf("Attaque %d: id=%d, nom=%s\n",
+            i,
+            currentPlayer->attacks[i].id,
+            currentPlayer->attacks[i].name);
     }
-    if (strncmp(currentMamoswineBattle, mamoswineFireBat.name, lenFire) == 0 && lenFire >= 3)
-    {
+    sfSprite* moves[4] = { battleUiMove1, battleUiMove2, battleUiMove3, battleUiMove4 };
+    sfVector2f positions[4] = {
+        {20.0f, 450.0f},
+        {20.0f, 525.0f},
+        {400.0f, 450.0f},
+        {400.0f, 525.0f}
+    };
+
+    for (int i = 0; i < 4; i++) {
+        if (currentPlayer->attacks[i].id != 0) {
+      
+            if (i == selectedMove) {
+                sfSprite_setColor(moves[i], (sfColor) { 255, 255, 100, 255 }); 
+            }
+            else {
+                sfSprite_setColor(moves[i], sfWhite);
+            }
+
+            sfRenderWindow_drawSprite(_window, moves[i], NULL);
+
+            sfText_setCharacterSize(battleText, 20);
+            sfText_setString(battleText, currentPlayer->attacks[i].name);
+            sfText_setFillColor(battleText, sfWhite);
+            sfText_setOutlineColor(battleText, sfBlack);
+            sfText_setOutlineThickness(battleText, 2.0f);
+
+            sfVector2f textPos = positions[i];
+            textPos.x += 145;
+            textPos.y += 5;
+            sfText_setPosition(battleText, textPos);
+            sfRenderWindow_drawText(_window, battleText, NULL);
+
+       
+            char typeInfo[50];
+            sprintf(typeInfo, "Puissance: %d", currentPlayer->attacks[i].power);
+            sfText_setCharacterSize(battleText, 14);
+            sfText_setString(battleText, typeInfo);
+            textPos.y += 25;
+            sfText_setPosition(battleText, textPos);
+            sfRenderWindow_drawText(_window, battleText, NULL);
+        }
+    }
+
+   
+    sfText_setCharacterSize(battleText, 24);
+}
+void displayHealthBars(sfRenderWindow* _window) {
+
+
+    sfRectangleShape* playerHpBg = sfRectangleShape_create();
+    sfRectangleShape_setSize(playerHpBg, (sfVector2f) { 200.0f, 15.0f });
+    sfRectangleShape_setPosition(playerHpBg, (sfVector2f) { 50.0f, 350.0f });
+    sfRectangleShape_setFillColor(playerHpBg, (sfColor) { 50, 50, 50, 255 });
+    sfRectangleShape_setOutlineColor(playerHpBg, sfBlack);
+    sfRectangleShape_setOutlineThickness(playerHpBg, 2.0f);
+    sfRenderWindow_drawRectangleShape(_window, playerHpBg, NULL);
+
+    sfRectangleShape* playerHpBar = sfRectangleShape_create();
+    float playerHpPercent = (float)currentPlayer->currentHp / (float)currentPlayer->maxHp;
+    sfRectangleShape_setSize(playerHpBar, (sfVector2f) { 196.0f * playerHpPercent, 11.0f });
+    sfRectangleShape_setPosition(playerHpBar, (sfVector2f) { 52.0f, 352.0f });
+
+    if (playerHpPercent > 0.5f) {
+        sfRectangleShape_setFillColor(playerHpBar, (sfColor) { 76, 255, 0, 255 }); // Vert vif
+    }
+    else if (playerHpPercent > 0.25f) {
+        sfRectangleShape_setFillColor(playerHpBar, (sfColor) { 255, 200, 0, 255 }); // Orange
+    }
+    else {
+        sfRectangleShape_setFillColor(playerHpBar, (sfColor) { 255, 48, 48, 255 }); // Rouge
+    }
+
+    sfRenderWindow_drawRectangleShape(_window, playerHpBar, NULL);
+
+  
+    char hpText[50];
+    sprintf(hpText, "%d / %d", currentPlayer->currentHp, currentPlayer->maxHp);
+    sfText_setCharacterSize(battleText, 18);
+    sfText_setString(battleText, hpText);
+    sfText_setPosition(battleText, (sfVector2f) { 55.0f, 370.0f });
+    sfText_setFillColor(battleText, sfWhite);
+    sfText_setOutlineColor(battleText, sfBlack);
+    sfText_setOutlineThickness(battleText, 2.0f);
+    sfRenderWindow_drawText(_window, battleText, NULL);
+
+
+
+    sfRectangleShape* enemyHpBg = sfRectangleShape_create();
+    sfRectangleShape_setSize(enemyHpBg, (sfVector2f) { 200.0f, 15.0f });
+    sfRectangleShape_setPosition(enemyHpBg, (sfVector2f) { 550.0f, 80.0f });
+    sfRectangleShape_setFillColor(enemyHpBg, (sfColor) { 50, 50, 50, 255 });
+    sfRectangleShape_setOutlineColor(enemyHpBg, sfBlack);
+    sfRectangleShape_setOutlineThickness(enemyHpBg, 2.0f);
+    sfRenderWindow_drawRectangleShape(_window, enemyHpBg, NULL);
+
+
+    sfRectangleShape* enemyHpBar = sfRectangleShape_create();
+    float enemyHpPercent = (float)currentOpponent->currentHp / (float)currentOpponent->maxHp;
+    sfRectangleShape_setSize(enemyHpBar, (sfVector2f) { 196.0f * enemyHpPercent, 11.0f });
+    sfRectangleShape_setPosition(enemyHpBar, (sfVector2f) { 552.0f, 82.0f });
+
+    if (enemyHpPercent > 0.5f) {
+        sfRectangleShape_setFillColor(enemyHpBar, (sfColor) { 76, 255, 0, 255 });
+    }
+    else if (enemyHpPercent > 0.25f) {
+        sfRectangleShape_setFillColor(enemyHpBar, (sfColor) { 255, 200, 0, 255 });
+    }
+    else {
+        sfRectangleShape_setFillColor(enemyHpBar, (sfColor) { 255, 48, 48, 255 });
+    }
+
+    sfRenderWindow_drawRectangleShape(_window, enemyHpBar, NULL);
+
+
+    sprintf(hpText, "%d / %d", currentOpponent->currentHp, currentOpponent->maxHp);
+    sfText_setString(battleText, hpText);
+    sfText_setPosition(battleText, (sfVector2f) { 555.0f, 100.0f });
+    sfRenderWindow_drawText(_window, battleText, NULL);
+
+    sfText_setCharacterSize(battleText, 20);
+    sfText_setString(battleText, currentOpponent->name);
+    sfText_setPosition(battleText, (sfVector2f) { 555.0f, 55.0f });
+    sfRenderWindow_drawText(_window, battleText, NULL);
+
+    
+    sfText_setCharacterSize(battleText, 24);
+    sfText_setOutlineThickness(battleText, 1.0f);
+
+    sfRectangleShape_destroy(playerHpBar);
+    sfRectangleShape_destroy(playerHpBg);
+    sfRectangleShape_destroy(enemyHpBar);
+    sfRectangleShape_destroy(enemyHpBg);
+}
+void updateBattle(sfRenderWindow* _window) {
+    battleTimer += GetDeltaTime();
+
+    switch (battleState) {
+    case BATTLE_INTRO:
+        sprintf(battleMessage, "Vous Défiez le %s!!!", currentOpponent->name);
+        if (battleTimer > 2.0f) {
+            battleState = BATTLE_PLAYER_TURN;
+            sprintf(battleMessage, "Que doit faire %s?", currentPlayer->name);
+            battleTimer = 0.0f;
+        }
+        break;
+
+    case BATTLE_PLAYER_TURN:
+        if (battleTimer > 1.0f) {
+            sprintf(battleMessage, "Que doit faire %s?", currentPlayer->name);
+            battleTimer = 0;
+        }
+            handlePlayerInput(_window);
+      
+       
+        break;
+
+    case BATTLE_ENEMY_TURN:
+        if (battleTimer > 2.0f) {
+            performEnemyAttack();
+           battleTimer = 0.0f;
+            if (currentPlayer->currentHp <= 0) {
+                battleState = BATTLE_END;
+                sprintf(battleMessage, "%s est K.O.!", currentPlayer->name);
+            }
+            else {
+              
+                battleState = BATTLE_PLAYER_TURN;
+          
+     
+                }
+            
+            }
+        
+        break;
+
+    case BATTLE_ANIMATION:
+        if (battleTimer > 2.0f) {
+            if (currentOpponent->currentHp <= 0) {
+                battleState = BATTLE_END;
+                sprintf(battleMessage, "%s ennemi est K.O.!", currentOpponent->name);
+            }
+            else {
+                battleState = BATTLE_ENEMY_TURN;
+                sprintf(battleMessage, "%s ennemi attaque!", currentOpponent->name);
+            }
+            battleTimer = 0.0f;
+        }
+        break;
+
+    case BATTLE_END:
+        if (battleTimer > 2.0f) {
+            if (currentPlayer->currentHp > 0) {
+         
+                state = GAME;
+                currentPlayer->currentHp = currentPlayer->maxHp;
+                currentOpponent->currentHp = currentOpponent->maxHp;
+                battleState = BATTLE_INTRO;
+            }
+            else {
+      
+                state = GAME;
+            }
+        }
+        break;
+    }
+}
+
+void handlePlayerInput(sfRenderWindow* _window) {
+    static float inputTimer = 0.0f;
+    inputTimer += GetDeltaTime();
+
+    if (inputTimer < 0.2f) return;
+
+
+    if (sfKeyboard_isKeyPressed(sfKeyZ) && selectedMove > 0) {
+        selectedMove--;
+        inputTimer = 0.0f;
+    }
+    if (sfKeyboard_isKeyPressed(sfKeyS) && selectedMove < 3) {
+        selectedMove++;
+        inputTimer = 0.0f;
+    }
+    if (sfKeyboard_isKeyPressed(sfKeyQ) && selectedMove > 1) {
+        selectedMove -= 2;
+        inputTimer = 0.0f;
+    }
+    if (sfKeyboard_isKeyPressed(sfKeyD) && selectedMove < 2) {
+        selectedMove += 2;
+        inputTimer = 0.0f;
+    }
+
+
+    if (sfKeyboard_isKeyPressed(sfKeyE)) {
+        performPlayerAttack(selectedMove);
+        inputTimer = 0.0f;
+    }
+}
+void performPlayerAttack(int moveIndex) {
+    Attack* attack = &currentPlayer->attacks[moveIndex];
+
+    if (attack->id == 0) return;
+
+
+    int damage = calculateDamage(currentPlayer, currentOpponent, attack);
+    currentOpponent->currentHp -= damage;
+
+    if (currentOpponent->currentHp < 0) {
+        currentOpponent->currentHp = 0;
+    }
+
+  
+    float effectiveness = getTypeEffectiveness(attack->type,
+        currentOpponent->type[0],
+        currentOpponent->type[1]);
+
+    sprintf(battleMessage, "%s utilise %s! %d degats!",
+        currentPlayer->name, attack->name, damage);
+
+    battleState = BATTLE_ANIMATION;
+    battleTimer = 0.0f;
+}
+
+void performEnemyAttack() {
+
+    int moveIndex = rand() % 2; 
+
+    Attack* attack = &currentOpponent->attacks[moveIndex];
+
+    if (attack->id == 0) {
+        moveIndex = 0; 
+        attack = &currentOpponent->attacks[0];
+    }
+
+  
+    int damage = calculateDamage(currentOpponent, currentPlayer, attack);
+    currentPlayer->currentHp -= damage;
+
+    if (currentPlayer->currentHp < 0) {
+        currentPlayer->currentHp = 0;
+    }
+
+    sprintf(battleMessage, "%s ennemi utilise %s! %d degats!",
+        currentOpponent->name, attack->name, damage);
+}
+
+
+void checkWhichSpriteToDraw(sfRenderWindow* _window) {
+    if (strcmp(currentOpponent->name, mamoswineFireBat.name) == 0) {
         sfRenderWindow_drawSprite(_window, battleMamoswineFire, NULL);
     }
-    else if (strncmp(currentMamoswineBattle, mamoswineWaterBat.name, lenWater) == 0 && lenWater >= 3)
-    {
+    else if (strcmp(currentOpponent->name, mamoswineWaterBat.name) == 0) {
         sfRenderWindow_drawSprite(_window, battleMamoswineWater, NULL);
     }
-    else  if (strncmp(currentMamoswineBattle, mamoswineGrassBat.name, lenWater) == 0 && lenWater >= 3)
-    {
-       sfRenderWindow_drawSprite(_window, battleMamoswineGrass, NULL);
+    else if (strcmp(currentOpponent->name, mamoswineGrassBat.name) == 0) {
+        sfRenderWindow_drawSprite(_window, battleMamoswineGrass, NULL);
     }
-    else if (strncmp(currentMamoswineBattle, mamoswineElectricBat.name, lenElectric) == 0 && lenElectric >= 3)
-    {
-       sfRenderWindow_drawSprite(_window, battleMamoswineElectric, NULL);
+    else if (strcmp(currentOpponent->name, mamoswineElectricBat.name) == 0) {
+        sfRenderWindow_drawSprite(_window, battleMamoswineElectric, NULL);
     }
-    else if (strncmp(currentMamoswineBattle, mamoswineDialgaBat.name, lenDialga) == 0 && lenDialga >= 3)
-    {
+    else if (strcmp(currentOpponent->name, mamoswineDialgaBat.name) == 0) {
         sfRenderWindow_drawSprite(_window, battleMamoswineDialga, NULL);
     }
 }
 int startBattle(Pokemon* player, Pokemon* opponent) {
-    state = BATTLE;
-        setCurrentMamoswineBattle(opponent);
+    currentPlayer = player;
+    currentOpponent = opponent;
 
-        state = GAME;
-    return 1;
+    state = BATTLE;
+    battleState = BATTLE_INTRO;
+    selectedMove = 0;
+    battleTimer = 0.0f;
+
+    sprintf(battleMessage, "Un %s sauvage apparait!", opponent->name);
+
+    return 1; // Combat lancé
 }
 void setCurrentMamoswineBattle(Pokemon* opponent) {
-    for (int i = 0; i < 30; i++)
-    {
-
-        printf("//%c", currentMamoswineBattle[i]);
- 
-    }
+    strncpy(currentMamoswineBattle, opponent->name, 29);
+    currentMamoswineBattle[29] = '\0';
 }
 float getTypeEffectiveness(Types attackType, Types defenderType1, Types defenderType2) {
     if (attackType >= TYPE_COUNT) return 1.0f;
@@ -693,11 +996,21 @@ const char* getTypeName(Types type) {
  
 }
 int calculateDamage(Pokemon* attacker, Pokemon* defender, Attack* attack) {
-    int level = 50;
+    int level = 100;
+    float damage = 0;
     int attackStat = attacker->stats[1];
     int defenseStat = defender->stats[2];
-
-    float damage = ((2.0f * level / 5.0f + 2.0f) * attack->power * attackStat / defenseStat) / 50.0f + 2.0f;
+    int attackSpecialStat = attacker->stats[3];
+    int defenseSpecialStat = defender->stats[4];
+    if (attack->category == physical)
+    {
+        damage = ((2.0f * level / 5.0f + 2.0f) * attack->power * attackStat / defenseStat) / 50.0f + 2.0f;
+    }
+        if (attack->category == special)
+        {
+             damage = ((2.0f * level / 5.0f + 2.0f) * attack->power * attackSpecialStat / defenseSpecialStat) / 50.0f + 2.0f;
+        }
+ 
 
 
     float stab = 1.0f;

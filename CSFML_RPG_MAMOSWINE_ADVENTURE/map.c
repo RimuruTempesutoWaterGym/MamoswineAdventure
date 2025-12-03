@@ -3,6 +3,7 @@
 #include "door.h"
 #include "elemental_mammoswine.h"
 #include "player.h"
+#include "music.h"
 #include "NPC.h"
 sfRectangleShape* selectTileSetSquare;
 sfVector2f mousepos;
@@ -351,7 +352,6 @@ void updateMap(sfRenderWindow* _window)
 		if (selectedTileMode == 4) {
 			updateSpritePlacementMode(_window);
 
-			// Save sprites with S key
 	
 		}
 		if (selectedTileMode == 5) {
@@ -930,7 +930,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 				sfVector2f tilepos_ui = { 5.0f, 10.0f };
 		
 
-				for (int i = 0; i < 6; i++) {
+				for (int i = 0; i < 7; i++) {
 					// Draw sprite icon/preview
 					sfRectangleShape* musicIcon = sfRectangleShape_create();
 					sfRectangleShape_setSize(musicIcon, (sfVector2f) { 24.f, 24.f });
@@ -943,6 +943,8 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 					sfFloatRect iconRect = sfRectangleShape_getGlobalBounds(musicIcon);
 					if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, iconRect)) {
 						selectedMusic = i;
+						if(selectedMusic> 0)
+							ChangeMusic(i);
 					}
 
 					sfRenderWindow_drawRectangleShape(_window, musicIcon, NULL);

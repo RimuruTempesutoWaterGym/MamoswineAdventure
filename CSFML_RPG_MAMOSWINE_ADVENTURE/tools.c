@@ -107,6 +107,7 @@ void updateAll(sfRenderWindow* _window)
 	updateTextBox();
 	updateDoor();
 	updateMusic();
+	updateBattle(_window);
 }
 void displayAll(sfRenderWindow* _window)
 {

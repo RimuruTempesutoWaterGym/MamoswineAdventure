@@ -121,7 +121,7 @@ void SetMamoswineDialga(sfRenderWindow* _window, sfFloatRect playerPos)
 
 	if (sfKeyboard_isKeyPressed(sfKeyE) && isInsidePlayer(playerPos, GetCollisionMamoswineDialga()))
 	{
-		printf("win");
+
 		if (startBattle(&mamoswineBat, &mamoswineDialgaBat))
 		{
 	
