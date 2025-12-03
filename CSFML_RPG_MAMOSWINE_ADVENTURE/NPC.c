@@ -1,22 +1,30 @@
 #include"NPC.h"
 #include"player.h"
 
-
-sfRectangleShape* rectangleDialog;
-sfVector2f rectangleDialogSize = { 250.0f,200.0f };
-sfTexture* textureTextBox;
-sfFont* font;
-sfText* dialogNPC;
+// Affichage du NPC
 sfSprite* spCynthia;
 sfTexture* textureCynthia;
 sfIntRect irecttextureTextBox = { 0,0,252,46 };
 sfIntRect irectCynthia = { 0,0,26,38 };
 sfVector2f cynthiaPos = { 1200.0f,900.0f };
+
+// Affichage de la bulle de discussion du NPC
+sfRectangleShape* rectangleDialog;
+sfVector2f rectangleDialogSize = { 250.0f,200.0f };
+sfTexture* textureTextBox;
+
+// Affichage du texte du NPC
+sfText* dialogNPC;
+sfFont* font;
 sfVector2f textBoxPos = { 0.f,0.f };
 sfVector2f dialogPos = { 20.0f,20.0f };
 sfVector2f dialogSize = { 1.0f,3.0f };
 float NpcTextTimer;
+
+
 int isShown = 0;
+
+
 void initNPC()
 {
     dialogNPC = sfText_create();
@@ -79,11 +87,13 @@ void displayTextBox(sfRenderWindow* _window)
 
 void collisionNPC()
 {
+    // gestion de la hitbox du joueur sur le NPC
     sfFloatRect playerHitbox = getCollisionOfPlayer();
     playerHitbox.top += playerHitbox.height / 3;
     playerHitbox.height /= 1.3;
     playerHitbox.width /= 1.;
     
+    // Gestion de la Hitbox du NPC sur le joueur
     sfFloatRect npcHitbox = GetCollisionOfNPC();
     npcHitbox.top += npcHitbox.height / 6;
     npcHitbox.height /= 1.2;

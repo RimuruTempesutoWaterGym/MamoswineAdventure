@@ -16,7 +16,12 @@ typedef enum {
     MUSIC_Water,
     MUSIC_Grass,
     MUSIC_Elec,
-    MUSIC_Void
+    MUSIC_Void,
+    MUSIC_BattleFire,
+    MUSIC_BattleWater,
+    MUSIC_BattleGrass,
+    MUSIC_BattleElec,
+    MUSIC_BattleVoid,
 }MusicChoice;
 void ChangeMusic(MusicChoice _music);
 void initSound();
@@ -27,7 +32,7 @@ void playSoundBoulder();
 void playSoundTree();
 void soundMute();
 void soundUnmute();
-void changeMusic();
+
 void updateMusic();
 sfMusic* getActualMusic();
 MusicChoice getOldMusic();
