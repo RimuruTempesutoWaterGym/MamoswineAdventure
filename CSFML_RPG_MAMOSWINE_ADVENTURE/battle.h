@@ -23,6 +23,7 @@ typedef struct {
     Attack attacks[4];
     int stats[6];  // HP, Attack, Defense, SpAtk, SpDef, Speed
     Types type[2];
+    int isDefeated;
 } Pokemon;
 
 
@@ -48,7 +49,7 @@ const char* getTypeName(Types type);
 void initPokemons();
 void initAttacks();
 void initBattle();
-int startBattle(Pokemon* player, Pokemon* opponent);
+int startBattle(Pokemon* player, Pokemon* opponent, int _music);
 void displayBattleUI(sfRenderWindow* _window);
 void checkWhichSpriteToDraw(sfRenderWindow* _window);
 void updateBattle(sfRenderWindow* _window);
@@ -57,4 +58,5 @@ void displayHealthBars(sfRenderWindow* _window);
 void displayMoveButtons(sfRenderWindow* _window);
 void handlePlayerInput(sfRenderWindow* _window);
 void performEnemyAttack();
+int getBattleResult(Pokemon* _opponent);
 void performPlayerAttack(int moveIndex);
