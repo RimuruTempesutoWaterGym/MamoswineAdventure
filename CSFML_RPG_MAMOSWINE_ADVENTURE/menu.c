@@ -1,5 +1,6 @@
 #include "menu.h"
-
+#include "music.h"
+#include "map.h"
 
 // BASES MENU
 sfVector2f SizeRectangle = { 300.0f, 80.0f };
@@ -591,6 +592,8 @@ void updatemenu(sfRenderWindow* _window)
 		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle2.left && mousepos.x < (Rectangle2.width + Rectangle2.left) && mousepos.y > Rectangle2.top && mousepos.y < (Rectangle2.top + Rectangle2.height))
 		{
 			state = EDITOR;
+			loadMap("maps/mymap.dat");
+			loadSpritesData("maps/sprites.dat");
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle3 = sfRectangleShape_getGlobalBounds(ButtonLeave);
@@ -804,6 +807,7 @@ void updatemenu(sfRenderWindow* _window)
 		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle4.left && mousepos.x < (Rectangle4.width + Rectangle4.left) && mousepos.y > Rectangle4.top && mousepos.y < (Rectangle4.top + Rectangle4.height))
 		{
 			state = MENU;
+			setMusic(MUSIC_Menu);
 			keytimer = 0.0f;
 		}
 	}

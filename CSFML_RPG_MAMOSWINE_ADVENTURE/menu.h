@@ -1,5 +1,5 @@
 #include "tools.h"
-#include "music.h"
+
 
 void initmenu();
 void updatemenu(sfRenderWindow* _window);

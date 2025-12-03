@@ -77,10 +77,14 @@ sfFloatRect GetCollisionMamoswineDialga()
 sfFloatRect GetRangeMamoswineDialga()
 {
 	sfFloatRect rangeMamoswineDialga = sfSprite_getGlobalBounds(mamoDialga);
-	rangeMamoswineDialga.left -= 10;
-		rangeMamoswineDialga.top -= 10;
-		rangeMamoswineDialga.height+= 10;
-		rangeMamoswineDialga.width += 10;
+	printf("%f", rangeMamoswineDialga.left);
+	printf("%f", rangeMamoswineDialga.top);
+	printf("%f", rangeMamoswineDialga.height);
+	printf("%f", rangeMamoswineDialga.width);
+	rangeMamoswineDialga.left -= 20;
+		rangeMamoswineDialga.top -= 30;
+		rangeMamoswineDialga.height += 60;
+		rangeMamoswineDialga.width += 40;
 	return rangeMamoswineDialga;
 }
 sfFloatRect GetCollisionMamoswineGrass()
@@ -212,8 +216,12 @@ void displayElementalMamoswine(sfRenderWindow* _window)
 	}
 void displayMamoDialga(sfRenderWindow* _window)
 {
-	sfRenderWindow_drawSprite(_window, mamoDialga, NULL);
-}
+	if (state == GAME || state == EDITOR)
+	{
+
+		sfRenderWindow_drawSprite(_window, mamoDialga, NULL);
+	}
+	}
 int GetMamoswineElementalCount()
 {
 
@@ -277,28 +285,33 @@ void loadMamowsineData(const char* filename)
 }
 void setMamoswineFirePosition(sfVector2f newPos,int frame) {
 	mammoswineFirePos = newPos;
-	mammoswineFireRect.top = frame * mammoswineFireRect.height;
+	mammoswineFireRect.top = frame * (mammoswineFireRect.height+1);
 	sfSprite_setPosition(mammoswineFire, mammoswineFirePos);
 	sfSprite_setTextureRect(mammoswineFire, mammoswineFireRect);
 }
 
 void setMamoswineWaterPosition(sfVector2f newPos, int frame) {
 	mammoswineWaterPos = newPos;
-	mammoswineWaterRect.top = (frame * mammoswineWaterRect.height) +1;
+	mammoswineWaterRect.top = frame * (mammoswineWaterRect.height +1);
 	sfSprite_setPosition(mammoswineWater, mammoswineWaterPos);
 	sfSprite_setTextureRect(mammoswineWater, mammoswineWaterRect);
+}
+void setMamoswineDialgaPosition(sfVector2f newPos) {
+	mamoDialgaPos = newPos;
+	sfSprite_setPosition(mamoDialga, mamoDialgaPos);
+
 }
 
 void setMamoswineGrassPosition(sfVector2f newPos, int frame) {
 	mammoswineGrassPos = newPos;
-	mammoswineGrassRect.top = frame  * (mammoswineGrassRect.height) ;
+	mammoswineGrassRect.top = frame  * (mammoswineGrassRect.height+1) ;
 	sfSprite_setPosition(mammoswineGrass, mammoswineGrassPos);
 	sfSprite_setTextureRect(mammoswineGrass, mammoswineGrassRect);
 }
 
 void setMamoswineElectricPosition(sfVector2f newPos, int frame) {
 	mammoswineElectricPos = newPos;
-	mammoswineElectricRect.top = frame * mammoswineElectricRect.height;
+	mammoswineElectricRect.top = frame * (mammoswineElectricRect.height+1);
 	sfSprite_setPosition(mammoswineElectric, mammoswineElectricPos);
 	sfSprite_setTextureRect(mammoswineElectric, mammoswineElectricRect);
 

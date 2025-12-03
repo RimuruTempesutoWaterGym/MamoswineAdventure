@@ -120,6 +120,7 @@ void displayAll(sfRenderWindow* _window)
 		displayDoor(_window);
 		displayElementalMamoswine(_window);
 		displayNPC(_window);
+		displayMamoDialga(_window);
 		displayViewEditUi(_window);
 		displayViewTileSelection(_window);	
 		break;
@@ -127,8 +128,8 @@ void displayAll(sfRenderWindow* _window)
 		displayViewPlayer(_window);
 		displayMap(_window);
 		displayNPC(_window);
-		displayElementalMamoswine(_window);		displayMamoDialga(_window);
-
+		displayElementalMamoswine(_window);		
+		displayMamoDialga(_window);
 		if (isPlayerOverDoor())
 		{
 			displayPlayer(_window);
