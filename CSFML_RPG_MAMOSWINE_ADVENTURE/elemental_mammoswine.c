@@ -1,46 +1,54 @@
 #include"tools.h"
 #include"player.h"
+#include"music.h"
 #include"elemental_mammoswine.h"
 
-
+//créer les sprite des mammochons élémentaires
 sfSprite* mammoswineFire;
 sfSprite* mammoswineWater;
 sfSprite* mammoswineGrass;
 sfSprite* mammoswineElectric;
 sfSprite* mamoDialga;
+//créer les textures des mammochons élémentaires
 sfTexture* textureMammoswineFire;
 sfTexture* textureMammoswineWater;
 sfTexture* textureMammoswinGrasse;
 sfTexture* textureMammoswineElec;
 sfTexture* textureMamoDialga;
+//créer et initialiser les rectangles de limitation des mammochons élémentaires
 sfIntRect mammoswineFireRect = { 49,0,48,48};
 sfIntRect mammoswineWaterRect = { 49,0,48,48};
 sfIntRect mammoswineGrassRect = { 49,0,48,48};
 sfIntRect mammoswineElectricRect = { 49,0,48,48};
 sfIntRect mammoswineRectDialga = {0,0,57,66};
+//créer et initialiser les position des mammochons élémentaires
 sfVector2f mammoswineFirePos = { 1000, 900 };
 sfVector2f mammoswineWaterPos = { 1100, 700 };
 sfVector2f mammoswineGrassPos = { 900, 900 };
 sfVector2f mammoswineElectricPos = { 1190,460 };
 sfVector2f mamoDialgaPos = { 1180, 100 };
+//créer une variable qui va stocker en binaire la valeur d'ame de mammochon qu'on a 
 char mamoswineElementalCount;
 
 
-
+//initialise les valeurs importantes pour les mammochons élémentaires
 void initElementalMamoswine()
 {
-	
+	//Récupère la valeur de MamoswineElementalCount du fichier de sauvegarde
 	loadMamowsineData("data/keydata.bin");
+	//Initialise les mammochons élementaire
 	mammoswineFire = sfSprite_create();
 	mammoswineWater = sfSprite_create();
 	mammoswineGrass = sfSprite_create();
 	mammoswineElectric = sfSprite_create();
 	mamoDialga = sfSprite_create();
+	//Initialise les textures des mammochons élementaire
 	textureMammoswineFire = sfTexture_createFromFile(TEXTURE_PATH"mamofeu.png", NULL);
 	textureMammoswineWater = sfTexture_createFromFile(TEXTURE_PATH"mamoeau.png", NULL);
 	textureMammoswinGrasse = sfTexture_createFromFile(TEXTURE_PATH"mamoplante.png", NULL);
 	textureMammoswineElec = sfTexture_createFromFile(TEXTURE_PATH"mamoelec.png", NULL);
 	textureMamoDialga = sfTexture_createFromFile(TEXTURE_PATH"mamoDialga.png", NULL);
+	//set les textures et la position des mammochons élementaire sur les sprites
 	sfSprite_setTexture(mammoswineFire, textureMammoswineFire, sfTrue);
 	sfSprite_setTexture(mammoswineWater, textureMammoswineWater, sfTrue);
 	sfSprite_setTexture(mammoswineGrass, textureMammoswinGrasse, sfTrue);
@@ -57,34 +65,14 @@ void initElementalMamoswine()
 	sfSprite_setPosition(mammoswineElectric, mammoswineElectricPos);
 	sfSprite_setPosition(mamoDialga, mamoDialgaPos);
 }
-
-void updateElementalMamoswine()
-{
-	saveMamowsineData("data/keydata.bin");
-}
-void updateMamoDialga()
-{
-
-}
+// récupère la boite de collision des mammochons
 sfFloatRect GetCollisionMamoswineFire()
 {
 	return sfSprite_getGlobalBounds(mammoswineFire);
 }
 sfFloatRect GetCollisionMamoswineDialga()
 {
-
-
 	return sfSprite_getGlobalBounds(mamoDialga);
-}
-sfFloatRect GetRangeMamoswineDialga()
-{
-	sfFloatRect rangeMamoswineDialga = GetCollisionMamoswineDialga(mamoDialga);
-
-	rangeMamoswineDialga.left -= 20;
-	rangeMamoswineDialga.top -= 30;
-	rangeMamoswineDialga.height += 60;
-	rangeMamoswineDialga.width += 40;
-	return rangeMamoswineDialga;
 }
 sfFloatRect GetCollisionMamoswineGrass()
 {
@@ -98,6 +86,8 @@ sfFloatRect GetCollisionMamoswineWater()
 {
 	return sfSprite_getGlobalBounds(mammoswineWater);
 }
+//vérifie si le joueur est a la portée de la porte et que les mammochons n'ont pas été vaincus, puis lance un combat quand on appuie sur E
+//si le combat est gagné alors récupère le binaire du bits du mammochon en question,si le combat est loose alors retour au spawn
 void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 	
@@ -109,7 +99,8 @@ void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineFireBat) == 1 && (GetMamoswineFireElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-	
+		setHasChangedTo1();
+		setMusic(2);
 		mamoswineElementalCount |= mamoswineFire;
 		sfIntRect mammoswineFireRect = { 0,0,48,48 };
 	}
@@ -127,7 +118,7 @@ void SetMamoswineDialga(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineDialgaBat) == 1 )
 	{
-
+		setMusic(6);
 	//	mamoswineElementalCount |= mamoswineWater;
 	//	sfIntRect mammoswineDialgaRect = { 0,0,48,48 };
 	}
@@ -146,10 +137,11 @@ void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineWaterBat) == 1 && (GetMamoswineWaterElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-	
+		setMusic(3);
 		mamoswineElementalCount |= mamoswineWater;
 		sfIntRect mammoswineWaterRect = { 0,0,48,48 };
 	}
+
 	
 	
 }
@@ -166,7 +158,7 @@ void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineGrassBat) == 1 && (GetMamoswineGrassElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-		
+		setMusic(4);
 		mamoswineElementalCount |= mamoswineGrass;
 		sfIntRect mammoswineGrassRect = { 0,0,48,48 };
 	}
@@ -181,11 +173,12 @@ void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineElectricBat) == 1 && (GetMamoswineElectricElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-		
+		setMusic(5);
 		mamoswineElementalCount |= mamoswineElectric;
 		sfIntRect mammoswineElectricRect = { 0,0,48,48 };
 	}
 }
+//regroupe les sets de tous les mammochons
 void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 	SetMamoswineFire(_window, playerPos);
@@ -194,6 +187,7 @@ void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)
 	SetMamoswineElectric(_window, playerPos);
 	SetMamoswineDialga(_window, playerPos);
 }
+//affiche tous les mammochons
 void displayElementalMamoswine(sfRenderWindow* _window)
 {
 	if (state == GAME || state == EDITOR)
@@ -213,11 +207,14 @@ void displayMamoDialga(sfRenderWindow* _window)
 		sfRenderWindow_drawSprite(_window, mamoDialga, NULL);
 	}
 	}
+
+//recupere le bits mamoswineElementalCount
 int GetMamoswineElementalCount()
 {
 
 	return mamoswineElementalCount ;
 }
+//recupere une partie du bits mamoswineElementalCount
 int GetMamoswineGrassElementalCount()
 {
 
@@ -238,11 +235,13 @@ int GetMamoswineWaterElementalCount()
 
 	return (mamoswineElementalCount & mamoswineWater) >> MAMOSWINE_WATER;
 }
+//monte la valeur du bits mamoswineElementalCount de +1 pour pouvoir afficher la porte ouverte
 void SetMamoswineElementalCountToPlusOne()
 {
 
 	mamoswineElementalCount++;
 }
+//sauvegarde et load les mammoswine
 void saveMamowsineData(const char* filename)
 {
 
@@ -274,6 +273,7 @@ void loadMamowsineData(const char* filename)
 
 	printf("Map chargee depuis %s\n", filename);
 }
+//give la valeur de position des mammochons de la save
 void setMamoswineFirePosition(sfVector2f newPos,int frame) {
 	mammoswineFirePos = newPos;
 	mammoswineFireRect.top = frame * (mammoswineFireRect.height+1);
