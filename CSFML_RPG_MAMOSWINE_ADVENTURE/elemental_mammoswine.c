@@ -1,5 +1,6 @@
 #include"tools.h"
 #include"player.h"
+#include"music.h"
 #include"elemental_mammoswine.h"
 
 
@@ -109,7 +110,7 @@ void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineFireBat) == 1 && (GetMamoswineFireElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-	
+		setMusic(2);
 		mamoswineElementalCount |= mamoswineFire;
 		sfIntRect mammoswineFireRect = { 0,0,48,48 };
 	}
@@ -127,7 +128,7 @@ void SetMamoswineDialga(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineDialgaBat) == 1 )
 	{
-
+		setMusic(6);
 	//	mamoswineElementalCount |= mamoswineWater;
 	//	sfIntRect mammoswineDialgaRect = { 0,0,48,48 };
 	}
@@ -146,10 +147,11 @@ void SetMamoswineWater(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineWaterBat) == 1 && (GetMamoswineWaterElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-	
+		setMusic(3);
 		mamoswineElementalCount |= mamoswineWater;
 		sfIntRect mammoswineWaterRect = { 0,0,48,48 };
 	}
+
 	
 	
 }
@@ -166,7 +168,7 @@ void SetMamoswineGrass(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineGrassBat) == 1 && (GetMamoswineGrassElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-		
+		setMusic(4);
 		mamoswineElementalCount |= mamoswineGrass;
 		sfIntRect mammoswineGrassRect = { 0,0,48,48 };
 	}
@@ -181,7 +183,7 @@ void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos)
 	}
 	if (getBattleResult(&mamoswineElectricBat) == 1 && (GetMamoswineElectricElementalCount() != 1 && GetMamoswineElementalCount() != 16))
 	{
-		
+		setMusic(5);
 		mamoswineElementalCount |= mamoswineElectric;
 		sfIntRect mammoswineElectricRect = { 0,0,48,48 };
 	}

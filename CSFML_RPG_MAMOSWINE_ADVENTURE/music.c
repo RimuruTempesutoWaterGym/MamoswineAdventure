@@ -176,7 +176,7 @@ void ChangeMusic(MusicChoice _music)
 
                 case MUSIC_Water:
                     sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"area-eau -Lake HD.mp3");
+                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"LAC SINNOH Musique Pokemon Diamant, Perle & Platine.mp3");
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
@@ -214,7 +214,7 @@ void ChangeMusic(MusicChoice _music)
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Fire;
+                    actualMusic = MUSIC_BattleFire;
                     break;
 
                 case MUSIC_BattleWater:
@@ -223,7 +223,7 @@ void ChangeMusic(MusicChoice _music)
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Water;
+                    actualMusic = MUSIC_BattleWater;
                     break;
 
                 case MUSIC_BattleGrass:
@@ -232,7 +232,7 @@ void ChangeMusic(MusicChoice _music)
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Grass;
+                    actualMusic = MUSIC_BattleGrass;
                     break;
 
                 case MUSIC_BattleElec:
@@ -241,7 +241,7 @@ void ChangeMusic(MusicChoice _music)
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Elec;
+                    actualMusic = MUSIC_BattleElec;
                     break;
                 case MUSIC_BattleVoid:
                     sfMusic_destroy(playedMusic);
@@ -249,7 +249,7 @@ void ChangeMusic(MusicChoice _music)
                     sfMusic_setLoop(playedMusic, sfTrue);
                     sfMusic_play(playedMusic);
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Void;
+                    actualMusic = MUSIC_BattleVoid;
                     break;
   }
                 } 
