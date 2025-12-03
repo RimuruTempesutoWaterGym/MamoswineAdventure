@@ -182,7 +182,7 @@ void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos)
 		if (startBattle(&mamoswineBat, &mamoswineElectricBat))
 		{
 			mamoswineElementalCount |= mamoswineElectric;
-
+			sfIntRect mammoswineElectricRect = { 0,0,48,48 };
 		}
 		else
 		{
