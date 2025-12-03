@@ -4,21 +4,26 @@
 
 
 
+//temporary variables
 sfSprite* door;
 sfVector2f doorSize = { 2006, 126 };
 sfIntRect doorTextureRect = { 0, 0,118,126 };
+//temporary variables
 sfTexture* doorTexture;
 sfVector2f doorPos = { 1201, 600 };
 
 
 
 void initDoor()
+
 { 
 	door = sfSprite_create();
 	doorTexture = sfTexture_createFromFile(TEXTURE_PATH"door/doorSpritesheet.png",NULL);
 	sfSprite_setTexture(door, doorTexture, sfTrue); 
+	//temporary
 
 	sfSprite_setPosition(door, doorPos);
+	//temporary
 }
 sfFloatRect GetCollisionOfDoor()
 {
@@ -28,7 +33,6 @@ sfFloatRect GetCollisionOfDoor()
 	return  doorHitbox;
 
 }
-//update the elemental mamoswine count and the sprite to draw
 void updateDoor()
 {
 	sfFloatRect doorHitbox = GetCollisionOfDoor();
@@ -40,7 +44,6 @@ void updateDoor()
 		sfSprite_setTextureRect(door, doorTextureRect);
 	
 }
-//hit box when the door is open
 int isInsideOpenDoor(sfVector2i item, sfFloatRect obstacle)
 {
 	

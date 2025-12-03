@@ -209,53 +209,8 @@ void ChangeMusic(MusicChoice _music)
                     setVolumeMusicIfNotMuted(playedMusic, actualVolume);
                     actualMusic = MUSIC_Void;
                     break;
-                case MUSIC_BattleFire:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Omega Ruby & Alpha Sapphire - Ho-oh Battle Music (HQ).mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Fire;
-                    break;
-
-                case MUSIC_BattleWater:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Omega Ruby Alpha Sapphire - Uxie Mesprit Azelf Battle Music (HQ).mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Water;
-                    break;
-
-                case MUSIC_BattleGrass:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Sun & Moon - Guardian Deities Battle Music (HQ).mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Grass;
-                    break;
-
-                case MUSIC_BattleElec:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Sun & Moon - Solgaleo & Lunala Battle Music (HQ).mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Elec;
-                    break;
-                case MUSIC_BattleVoid:
-                    sfMusic_destroy(playedMusic);
-                    playedMusic = sfMusic_createFromFile(MUSIC_PATH"Pokemon Legends_ Arceus - Palkia Dialga Battle Music (HQ).mp3");
-                    sfMusic_setLoop(playedMusic, sfTrue);
-                    sfMusic_play(playedMusic);
-                    setVolumeMusicIfNotMuted(playedMusic, actualVolume);
-                    actualMusic = MUSIC_Void;
-                    break;
-  }
                 } 
-
-
+}
 void playSoundAttack()
 {
 	if (!sfSound_getStatus(attackMamo))
@@ -294,17 +249,19 @@ void musicUnmute()
 	setVolumeMusicIfNotMuted(getActualMusic(), maxVolume);
 
 }
-void soundUnmute()
+void soundMute()
 {
-    isMutedSfx = 0;
+    isMutedSfx = 1;
     setVolumeSFXIfNotMuted(attackMamo, maxVolume);
     setVolumeSFXIfNotMuted(boulderPush, maxVolume);
     setVolumeSFXIfNotMuted(treeCut, maxVolume);
 }
 
-void soundMute()
+void soundUnmute()
 {
-    isMutedSfx = 1;
+
+    isMutedSfx = 0;
+
     setVolumeSFXIfNotMuted(attackMamo, 0);
     setVolumeSFXIfNotMuted(boulderPush, 0);
     setVolumeSFXIfNotMuted(treeCut, 0);
