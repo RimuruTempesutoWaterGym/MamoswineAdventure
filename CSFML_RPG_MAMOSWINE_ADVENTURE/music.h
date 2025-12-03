@@ -1,6 +1,6 @@
 #pragma once
 #include "tools.h"
-#pragma once
+
 
 
 
@@ -10,7 +10,12 @@
 void initMusic();
 
 typedef enum {
-	Menu, Overworld, Fire, Water, Grass, Elec,
+    MUSIC_Menu,
+    MUSIC_Overworld,
+    MUSIC_Fire,
+    MUSIC_Water,
+    MUSIC_Grass,
+    MUSIC_Elec
 }MusicChoice;
 void initSound();
 void volumeMusic(float _volume);

@@ -7,6 +7,9 @@ sfView* viewEditUi;
 sfView* viewDefault;
 sfView* viewTileSelection;
 sfView* viewHUD;
+sfView* viewBattle;
+sfVector2f viewBattleSize = { 800.0f, 600.0f };
+sfVector2f posViewBattle = { 400.0f, 300.0f };
 sfVector2f posViewEdit = { 400.0f,300.0f };
 sfVector2f posViewDefault = { 400.0f,300.0f };
 sfVector2f posViewPlayer = { 400.0f,300.0f };
@@ -49,13 +52,17 @@ viewEditUi = sfView_create();
 viewDefault = sfView_create();
 viewTileSelection = sfView_create();
 viewHUD = sfView_create();
+viewBattle = sfView_create();
 
+
+sfView_setSize(viewBattle, viewBattleSize);
  sfView_setSize(viewEdit, viewEditSize);
  sfView_setSize(viewPlayer, viewPlayerSize);
  sfView_setSize(viewEditUi, viewEditUISize);
  sfView_setSize(viewDefault, viewDefaultSize);
  sfView_setSize(viewTileSelection, viewTileSelectionSize);
  sfView_setSize(viewHUD, viewHUDSize);
+ sfView_setCenter(viewBattle, posViewBattle);
  sfView_setCenter(viewEditUi, posViewEditUi);
  sfView_setCenter(viewHUD, posViewHUD);
  sfView_setCenter(viewDefault, posViewDefault);
@@ -66,8 +73,11 @@ viewHUD = sfView_create();
  float tileSelectionViewportWidth = viewTileSelectionSize.x / 800.0f;
  sfFloatRect tileSelectionViewport = { 1.0f - tileSelectionViewportWidth, 0.0f, tileSelectionViewportWidth, 1.0f };
  float HUDViewportHeight = viewHUDSize.y / 800.0f;
+
  sfFloatRect HUDViewport = { 0.f , 1.0f - HUDViewportHeight,1.f , HUDViewportHeight };
+ sfFloatRect DefaultViewport = { 0.f , 0.0f ,1.f ,1.f };
  sfView_setViewport(viewTileSelection, tileSelectionViewport);
+ sfView_setViewport(viewDefault, DefaultViewport);
  sfView_setViewport(viewHUD, HUDViewport);
 
 }
@@ -163,6 +173,8 @@ void displayViewPlayer(sfRenderWindow* _window)
 }
 void displayViewDefault(sfRenderWindow* _window)
 {
+	
+
 	sfRenderWindow_setView(_window, viewDefault);
 }
 void displayHUD(sfRenderWindow* _window)
@@ -185,6 +197,10 @@ void displayMinimap(sfRenderWindow* _window)
 
 
 
+}
+void displayBattleView(sfRenderWindow* _window)
+{
+	sfRenderWindow_setView(_window, viewBattle);
 }
 sfVector2f updatePixelToWorld(sfRenderWindow* _window, sfView* _view)
 {

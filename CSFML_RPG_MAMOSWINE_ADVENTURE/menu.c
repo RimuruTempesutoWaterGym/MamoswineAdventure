@@ -564,7 +564,7 @@ void updatemenu(sfRenderWindow* _window)
 		if (sfMouse_isButtonPressed(sfMouseLeft) && keytimer > 0.5f && mousepos.x > Rectangle.left && mousepos.x < (Rectangle.width + Rectangle.left) && mousepos.y > Rectangle.top && mousepos.y < (Rectangle.top + Rectangle.height))
 		{
 			state = GAME;
-			setMusic(Overworld);
+			setMusic(MUSIC_Overworld);
 			keytimer = 0.0f;
 		}
 		sfFloatRect Rectangle2 = sfRectangleShape_getGlobalBounds(ButtonEditor);

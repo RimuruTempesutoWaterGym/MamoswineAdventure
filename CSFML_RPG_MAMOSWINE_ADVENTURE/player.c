@@ -216,6 +216,11 @@ sfFloatRect getMamoswineHitboxByPos(sfFloatRect _mamoswinePos)
     _mamoswinePos.width /= 2;
     return _mamoswinePos;
 }
+void SetPosAtRespawn()
+{
+    setPlayerPosition(getPlayerSpawnPoint());
+
+}
 sfBool isPlayerOverDoor()
 {
  

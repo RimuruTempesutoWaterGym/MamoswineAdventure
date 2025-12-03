@@ -80,25 +80,19 @@ int isInsidePlayer(sfFloatRect player, sfFloatRect obstacle)
 void initAll()
 {
 	initTools();
-
-	
-
 	initMusic();
-
 	initSound();
-
 	initView();
-
 	initplayer();
-
 	initNPC();
+	initBattle();
 	initDoor();
 	initTextBox();
-	
 	initmenu();
-	
+
 	initElementalMamoswine();
 	initmap();
+
 	updateSpritePositionsFromData();
 }
 
@@ -151,7 +145,13 @@ void displayAll(sfRenderWindow* _window)
 		displayTextBox(_window);
 
 		break;
+
+	case BATTLE: 
+		displayBattleView(_window);
+		displayBattleUI(_window);
+		break;
 	default:
+		displayMap(_window);
 		displayViewDefault(_window);
 		displaymenu(_window);
 		break;

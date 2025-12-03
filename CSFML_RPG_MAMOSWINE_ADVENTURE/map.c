@@ -51,7 +51,23 @@ sfRectangleShape* buttonNextPage;
 
 tileSet peacefulTileset;
 tileSet naturalTileset;
- 
+sfColor musicColors[6] = {
+				{100, 100, 255, 255},
+				{255, 100, 255, 255},
+				{255, 0, 0, 255},
+				{0, 100, 255, 255},
+				{0, 255, 0, 255},
+				{255, 255, 0, 255}
+};
+sfColor spriteColors[SPRITE_COUNT] = {
+	{100, 100, 255, 255},
+	{255, 100, 255, 255},
+	{150, 75, 0, 255},
+	{255, 0, 0, 255},
+	{0, 100, 255, 255},
+	{0, 255, 0, 255},
+	{255, 255, 0, 255}
+};
 tileSet swampTileset;
 tileSet waterTileset;
 tileSet deepWaterTileset ;
@@ -385,11 +401,55 @@ void displayMap(sfRenderWindow* _window)
 			tilepos.x = 0;
 		}
 		tilepos.y = 0;
+		if (selectedTileMode == 5 && state == EDITOR)
+		{
+			for (int x = 0; x < MAP_HEIGHT; x++)
+			{
+				for (int y = 0; y < MAP_WIDTH; y++)
+				{
+					if (tileMap[x][y].musicOfTile > 0)
+					{
+						// Créer un rectangle semi-transparent de couleur selon la musique
+						sfRectangleShape* musicIndicator = sfRectangleShape_create();
+						sfRectangleShape_setSize(musicIndicator, (sfVector2f) { TILE_WIDTH, TILE_HEIGHT });
+						sfRectangleShape_setPosition(musicIndicator, tilepos);
 
+						// Couleurs selon le type de musique (même que dans le panel)
+			
+						if (tileMap[x][y].musicOfTile < 6)
+						{
+							sfRectangleShape_setFillColor(musicIndicator, musicColors[tileMap[x][y].musicOfTile]);
+						}
+
+						sfRenderWindow_drawRectangleShape(_window, musicIndicator, NULL);
+
+						// Afficher le numéro de la musique
+						char musicStr[16];
+						sprintf(musicStr, "M%d", tileMap[x][y].musicOfTile);
+						sfText_setString(idText, musicStr);
+
+						sfFloatRect textBounds = sfText_getLocalBounds(idText);
+						sfVector2f textPos;
+						textPos.x = tilepos.x + (TILE_WIDTH - textBounds.width) / 2.0f;
+						textPos.y = tilepos.y + (TILE_HEIGHT - textBounds.height) / 2.0f - 4.0f;
+						sfText_setPosition(idText, textPos);
+						sfRenderWindow_drawText(_window, idText, NULL);
+
+						sfRectangleShape_destroy(musicIndicator);
+					}
+
+					tilepos.x += TILE_WIDTH;
+				}
+				tilepos.y += TILE_HEIGHT;
+				tilepos.x = 0;
+			}
+			tilepos.y = 0;
+		}
 		for (int x = 0; x < MAP_HEIGHT; x++)
 		{
 			for (int y = 0; y < MAP_WIDTH; y++)
 			{
+
 				typeOfSpecialTile = tileMap[x][y].selectedSpecialTiles.SpecialTilesType;
 	
 				if (typeOfSpecialTile != none)
@@ -431,6 +491,20 @@ void displayMap(sfRenderWindow* _window)
 					}
 					else {
 						sfSprite_setColor(mapSprite, sfWhite);
+					}
+					if (typeOfSpecialTile == electric_toggle) {
+						if (tileMap[x][y].selectedSpecialTiles.state > 0)
+						{
+							tile.left = 24;
+							tile.top = 0;
+						}
+						else
+						{
+							tile.left = 0;
+							tile.top = 0;
+						}
+							sfSprite_setTextureRect(mapSprite, tile);
+				
 					}
 					if (typeOfSpecialTile == plant)
 					{
@@ -812,10 +886,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 		}
 		if (selectedTileMode == 4) {
 			sfVector2f tilepos_ui = { 5.0f, 10.0f };
-			const char* spriteNames[SPRITE_COUNT] = {
-				"Player", "NPC", "Door", "Mamo Fire",
-				"Mamo Water", "Mamo Grass", "Mamo Elec"
-			};
+
 
 			for (int i = 0; i < SPRITE_COUNT; i++) {
 				// Draw sprite icon/preview
@@ -824,21 +895,15 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 				sfRectangleShape_setPosition(spriteIcon, tilepos_ui);
 
 				// Color code each sprite type
-				sfColor colors[SPRITE_COUNT] = {
-					{100, 100, 255, 255},
-					{255, 100, 255, 255},
-					{150, 75, 0, 255},
-					{255, 0, 0, 255},
-					{0, 100, 255, 255},
-					{0, 255, 0, 255},
-					{255, 255, 0, 255}
-				};
-				sfRectangleShape_setFillColor(spriteIcon, colors[i]);
+
+				sfRectangleShape_setFillColor(spriteIcon, spriteColors[i]);
 
 				sfFloatRect iconRect = sfRectangleShape_getGlobalBounds(spriteIcon);
 				if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, iconRect)) {
 					selectedSprite = i;
 				}
+		
+
 
 				sfRenderWindow_drawRectangleShape(_window, spriteIcon, NULL);
 
@@ -871,15 +936,8 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 					sfRectangleShape_setPosition(musicIcon, tilepos_ui);
 
 					// Color code each sprite type
-					sfColor colors[6] = {
-						{100, 100, 255, 255},
-						{255, 100, 255, 255},
-						{255, 0, 0, 255},
-						{0, 100, 255, 255},
-						{0, 255, 0, 255},
-						{255, 255, 0, 255}
-					};
-					sfRectangleShape_setFillColor(musicIcon, colors[i]);
+			
+					sfRectangleShape_setFillColor(musicIcon, musicColors[i]);
 
 					sfFloatRect iconRect = sfRectangleShape_getGlobalBounds(musicIcon);
 					if (sfMouse_isButtonPressed(sfMouseLeft) && isInsideMouse(mouseposViewUi, iconRect)) {
@@ -1246,20 +1304,23 @@ void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
 	switch (_direction)
 	{
 	case Down:
-		nextPosInTab.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH - 1) / TILE_WIDTH);
+		
+		nextPosInTab.y = (int)((_sprite.top + _sprite.height - 1) / TILE_WIDTH);
 		nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
 		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-		nextPosInTab2.y = (int)((_sprite.top + _sprite.height + TILE_WIDTH - 1) / TILE_WIDTH);
-
-
+		nextPosInTab2.y = (int)((_sprite.top + _sprite.height  - 1) / TILE_WIDTH);
+		printf("%d", nextPosInTab.y);
+		printf("%d", nextPosInTab.x);
 		break;
 	case Top:
 
-		nextPosInTab.y = (int)((_sprite.top + _sprite.height - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab.y = (int)((_sprite.top - _sprite.height) / TILE_WIDTH);
 		nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
 		nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-		nextPosInTab2.y = (int)((_sprite.top + _sprite.height - TILE_WIDTH + 1) / TILE_WIDTH);
+		nextPosInTab2.y = (int)((_sprite.top - _sprite.height) / TILE_WIDTH);
 
+		printf("%d", nextPosInTab.y);
+		printf("%d", nextPosInTab.x);
 
 		break;
 	case Right:
@@ -1555,8 +1616,16 @@ void updateSpritePlacementMode(sfRenderWindow* _window) {
 	snappedPos.x = ((int)(mousepos.x / TILE_WIDTH)) * TILE_WIDTH;
 	snappedPos.y = ((int)(mousepos.y / TILE_HEIGHT)) * TILE_HEIGHT;
 
-
-	if (pressed == 1 && sfMouse_isButtonPressed(sfMouseLeft) && spriteInteractionTimer > 0.2f) {
+	if (sfKeyboard_isKeyPressed(sfKeyE) && selectedSprite >= 3 && selectedSprite <= 6&&spriteInteractionTimer > 0.5f)
+	{
+		printf("%d", sprites[selectedSprite].FrameY);
+		if (sprites[selectedSprite].FrameY < 6)
+			sprites[selectedSprite].FrameY += 2;
+		else
+			sprites[selectedSprite].FrameY = 0;
+		spriteInteractionTimer = 0.0f;
+	}
+	if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight) && spriteInteractionTimer > 0.2f) {
 		if (canPlaceSpriteAt(snappedPos, sprites[selectedSprite].bounds)) {
 			if (sprites[selectedSprite].type == SPRITE_DOOR)
 			{
@@ -1648,12 +1717,15 @@ void updateSpritePositionsFromData() {
 	setPlayerPosition(sprites[SPRITE_PLAYER].position);
 	setNPCPosition(sprites[SPRITE_NPC].position);
 	setDoorPosition(sprites[SPRITE_DOOR].position);
-	setMamoswineFirePosition(sprites[SPRITE_MAMOSWINE_FIRE].position);
-	setMamoswineWaterPosition(sprites[SPRITE_MAMOSWINE_WATER].position);
-	setMamoswineGrassPosition(sprites[SPRITE_MAMOSWINE_GRASS].position);
-	setMamoswineElectricPosition(sprites[SPRITE_MAMOSWINE_ELECTRIC].position);
+	setMamoswineFirePosition(sprites[SPRITE_MAMOSWINE_FIRE].position, sprites[SPRITE_MAMOSWINE_FIRE].FrameY);
+	setMamoswineWaterPosition(sprites[SPRITE_MAMOSWINE_WATER].position, sprites[SPRITE_MAMOSWINE_WATER].FrameY);
+	setMamoswineGrassPosition(sprites[SPRITE_MAMOSWINE_GRASS].position, sprites[SPRITE_MAMOSWINE_GRASS].FrameY);
+	setMamoswineElectricPosition(sprites[SPRITE_MAMOSWINE_ELECTRIC].position, sprites[SPRITE_MAMOSWINE_ELECTRIC].FrameY);
 }
-
+sfVector2f getPlayerSpawnPoint()
+{
+	return sprites[SPRITE_PLAYER].position;
+}
 
 
 void loadSpritesData(const char* filename) {
