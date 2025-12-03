@@ -19,6 +19,7 @@ float GetDeltaTime()
 {
 	return sfTime_asSeconds(sftime);
 }
+//collision for float
 int isInsideMouse(sfVector2f item, sfFloatRect obstacle)
 {
 	if (item.x > obstacle.left &&
@@ -32,21 +33,23 @@ int isInsideMouse(sfVector2f item, sfFloatRect obstacle)
 	}
 	return 0;
 }
-	int isInsideMousei(sfVector2i item, sfFloatRect obstacle)
+//collision for int
+int isInsideMousei(sfVector2i item, sfFloatRect obstacle)
+{
+
+	if (item.x > obstacle.left &&
+		item.x < (obstacle.width + obstacle.left) &&
+		item.y > obstacle.top &&
+		item.y < (obstacle.top + obstacle.height))
 	{
-
-		if (item.x > obstacle.left &&
-			item.x < (obstacle.width + obstacle.left) &&
-			item.y > obstacle.top &&
-			item.y < (obstacle.top + obstacle.height))
-		{
 			
-			return 1;
+		return 1;
 
-		}
+	}
 
 return 0;
 }
+//collision of the player
 int isInsidePlayer(sfFloatRect player, sfFloatRect obstacle)
 {
 
@@ -109,6 +112,7 @@ void updateAll(sfRenderWindow* _window)
 	updateMusic();
 	updateBattle(_window);
 }
+//display for case EDITOR GAME and BATTLE
 void displayAll(sfRenderWindow* _window)
 {
 	switch (state)
@@ -158,6 +162,4 @@ void displayAll(sfRenderWindow* _window)
 		displaymenu(_window);
 		break;
 	}
-
-	//displayTextBox(_window);
 }
