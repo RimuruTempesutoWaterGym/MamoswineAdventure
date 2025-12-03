@@ -6,7 +6,7 @@ void updatemenu(sfRenderWindow* _window);
 void displaymenu(sfRenderWindow* _window);
 
 typedef enum {
-	NEUTRE, VALIDE,
+	NEUTRE, VALIDE, SFXNEUTRE, MUSICNEUTRE,
 }Coche;
 Coche coche;
 
