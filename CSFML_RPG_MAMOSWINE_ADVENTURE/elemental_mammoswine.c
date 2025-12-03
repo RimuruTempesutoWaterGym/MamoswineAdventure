@@ -65,33 +65,14 @@ void initElementalMamoswine()
 	sfSprite_setPosition(mammoswineElectric, mammoswineElectricPos);
 	sfSprite_setPosition(mamoDialga, mamoDialgaPos);
 }
-void updateElementalMamoswine()
-{//créer et initialiser les position des mammochons élémentaires
-	saveMamowsineData("data/keydata.bin");
-}
-void updateMamoDialga()
-{
-
-}
+// récupère la boite de collision des mammochons
 sfFloatRect GetCollisionMamoswineFire()
 {
 	return sfSprite_getGlobalBounds(mammoswineFire);
 }
 sfFloatRect GetCollisionMamoswineDialga()
 {
-
-
 	return sfSprite_getGlobalBounds(mamoDialga);
-}
-sfFloatRect GetRangeMamoswineDialga()
-{
-	sfFloatRect rangeMamoswineDialga = GetCollisionMamoswineDialga(mamoDialga);
-
-	rangeMamoswineDialga.left -= 20;
-	rangeMamoswineDialga.top -= 30;
-	rangeMamoswineDialga.height += 60;
-	rangeMamoswineDialga.width += 40;
-	return rangeMamoswineDialga;
 }
 sfFloatRect GetCollisionMamoswineGrass()
 {
@@ -105,6 +86,8 @@ sfFloatRect GetCollisionMamoswineWater()
 {
 	return sfSprite_getGlobalBounds(mammoswineWater);
 }
+//vérifie si le joueur est a la portée de la porte et que les mammochons n'ont pas été vaincus, puis lance un combat quand on appuie sur E
+//si le combat est gagné alors récupère le binaire du bits du mammochon en question,si le combat est loose alors retour au spawn
 void SetMamoswineFire(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 	
@@ -195,6 +178,7 @@ void SetMamoswineElectric(sfRenderWindow* _window, sfFloatRect playerPos)
 		sfIntRect mammoswineElectricRect = { 0,0,48,48 };
 	}
 }
+//regroupe les sets de tous les mammochons
 void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)
 {
 	SetMamoswineFire(_window, playerPos);
@@ -203,6 +187,7 @@ void SetAllMamoswine(sfRenderWindow* _window, sfFloatRect playerPos)
 	SetMamoswineElectric(_window, playerPos);
 	SetMamoswineDialga(_window, playerPos);
 }
+//affiche tous les mammochons
 void displayElementalMamoswine(sfRenderWindow* _window)
 {
 	if (state == GAME || state == EDITOR)
@@ -222,11 +207,14 @@ void displayMamoDialga(sfRenderWindow* _window)
 		sfRenderWindow_drawSprite(_window, mamoDialga, NULL);
 	}
 	}
+
+//recupere le bits mamoswineElementalCount
 int GetMamoswineElementalCount()
 {
 
 	return mamoswineElementalCount ;
 }
+//recupere une partie du bits mamoswineElementalCount
 int GetMamoswineGrassElementalCount()
 {
 
@@ -247,11 +235,13 @@ int GetMamoswineWaterElementalCount()
 
 	return (mamoswineElementalCount & mamoswineWater) >> MAMOSWINE_WATER;
 }
+//monte la valeur du bits mamoswineElementalCount de +1 pour pouvoir afficher la porte ouverte
 void SetMamoswineElementalCountToPlusOne()
 {
 
 	mamoswineElementalCount++;
 }
+//sauvegarde et load les mammoswine
 void saveMamowsineData(const char* filename)
 {
 
@@ -283,6 +273,7 @@ void loadMamowsineData(const char* filename)
 
 	printf("Map chargee depuis %s\n", filename);
 }
+//give la valeur de position des mammochons de la save
 void setMamoswineFirePosition(sfVector2f newPos,int frame) {
 	mammoswineFirePos = newPos;
 	mammoswineFireRect.top = frame * (mammoswineFireRect.height+1);

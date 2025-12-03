@@ -5,6 +5,7 @@
 #include "player.h"
 #include "music.h"
 #include "NPC.h"
+
 sfRectangleShape* selectTileSetSquare;
 sfVector2f mousepos;
 sfVector2f mouseposViewUi;
@@ -21,6 +22,7 @@ sfVector2f PositionTilesetPanel = { 0.f,-100.f };
 sfVector2f PositionButtonSwitchTileWall = { 20.f,525.f };
 sfVector2f PositionButtonSwitchTileMode = { 5.f,525.f };
 sfSprite* mapSprite;
+//initialise les textures des tilesets
  sfTexture* peacefulTexture;
 sfTexture* naturalTexture;
 sfTexture* swampTexture;
@@ -191,16 +193,16 @@ void updateMap(sfRenderWindow* _window)
 	if (state == EDITOR)
 	{
 		keyMapTimer += GetDeltaTime();
+		//récupères la position de la souris 
 		mousepos = updatePixelToWorld(_window,NULL);
 
 
 
 		tilepos.y += 10;
 		sfVector2i posNewTile = { 0,0 };
-
 		tilepos.y = 0;
 
-
+		//save map et sprite pos
 		if (sfKeyboard_isKeyPressed(sfKeyS) && keyMapTimer > 1.0f)
 		{
 
@@ -210,13 +212,13 @@ void updateMap(sfRenderWindow* _window)
 
 		}
 
-
+		//mode tilesets
 		if (selectedTileMode == 1)
 
-		{
+		{//obtient la bonne dimension pour les tiles
 			tile = giveSpriteTextureDim(tile, selectedTiles);
 
-
+			//dessine la tile qui est sélectionné sur la souris
 			changeTileset(selectedTexture);
 			sfSprite_setTextureRect(mapSprite, tile);
 			sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
@@ -234,7 +236,7 @@ void updateMap(sfRenderWindow* _window)
 				sfRenderWindow_setMouseCursorVisible(_window, sfFalse);
 
 
-
+				//pose la tile qui est sélectionné sur le tilemap a l'endroit de la souris
 				if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
 				{
 					if (keyMapTimer > 0.02f) {
@@ -251,13 +253,13 @@ void updateMap(sfRenderWindow* _window)
 				}
 			}
 		}
+		//mode specialtiles
 		if (selectedTileMode == 2)
 		{
 			tile = giveSpriteTextureDim(tile, selectedTiles);
-
+			//dessine la tile qui est sélectionné sur la souris
 			sfSprite_setTextureRect(mapSprite, tile);
 			changeSpecialTiles(selectedTexture);
-		
 			sfSprite_setPosition(mapSprite, (sfVector2f) { mousepos.x, mousepos.y });
 			sfRectangleShape_setPosition(mouseCornerIndicator, (sfVector2f) { mousepos.x, mousepos.y });
 			sfRenderWindow_drawRectangleShape(_window, mouseCornerIndicator, NULL);
@@ -274,7 +276,7 @@ void updateMap(sfRenderWindow* _window)
 				sfRenderWindow_setMouseCursorVisible(_window, sfFalse);
 
 			}
-
+			//pose la tile qui est sélectionné sur le tilemap a l'endroit de la souris
 				if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
 				{
 				
@@ -296,6 +298,7 @@ void updateMap(sfRenderWindow* _window)
 				}
 			
 		}
+		//mode circuit_link
 		if (selectedTileMode == 3){
 			tile = giveSpriteTextureDim(tile, selectedTiles);
 
@@ -308,7 +311,7 @@ void updateMap(sfRenderWindow* _window)
 				sfRenderWindow_setMouseCursorVisible(_window, sfTrue);
 			
 			
-
+				//Monte l'id de circuit de la tile
 			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
 			{
 
@@ -329,6 +332,8 @@ void updateMap(sfRenderWindow* _window)
 				}
 			
 			}
+
+			//Descend l'id de circuit de la tile
 			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseLeft))
 			{
 
@@ -338,7 +343,7 @@ void updateMap(sfRenderWindow* _window)
 					if (posNewTile.x >= 0 && posNewTile.x < MAP_WIDTH && posNewTile.y >= 0 && posNewTile.y < MAP_HEIGHT)
 					{
 						tileSet* tilesetTile = getCurrentTileset(tileMap[posNewTile.y][posNewTile.x].texture);
-						if (tileMap[posNewTile.y][posNewTile.x].selectedSpecialTiles.SpecialTilesType == 3 || tileMap[posNewTile.y][posNewTile.x].selectedSpecialTiles.SpecialTilesType == 4)
+						if (tileMap[posNewTile.y][posNewTile.x].selectedSpecialTiles.SpecialTilesType == 3 || tileMap[posNewTile.y][posNewTile.x].selectedSpecialTiles.SpecialTilesType == 4 && tileMap[posNewTile.y][posNewTile.x].isActivable.idActivable> 0)
 						{
 							tileMap[posNewTile.y][posNewTile.x].isActivable.idActivable--;
 
@@ -349,12 +354,15 @@ void updateMap(sfRenderWindow* _window)
 				}
 			}
 		}
+		//mode sprite
 		if (selectedTileMode == 4) {
 			updateSpritePlacementMode(_window);
 
 	
 		}
+		//mode Music
 		if (selectedTileMode == 5) {
+			//pose la music qui est sélectionné sur le tilemap a l'endroit de la souris
 			if (pressed == 1 && sfMouse_isButtonPressed(sfMouseRight))
 			{
 				if (keyMapTimer > 0.02f) {
@@ -375,10 +383,13 @@ void updateMap(sfRenderWindow* _window)
 		}
 	}
 }
+//affiche la map
 void displayMap(sfRenderWindow* _window)
 {
+	
 	if (state != MENU)
 	{
+		//affiche les tiles
 		for (int x = 0; x < MAP_HEIGHT; x++)
 		{
 			for (int y = 0; y < MAP_WIDTH; y++)
@@ -402,6 +413,7 @@ void displayMap(sfRenderWindow* _window)
 			tilepos.x = 0;
 		}
 		tilepos.y = 0;
+		// affiche la music des tiles si en editeur music
 		if (selectedTileMode == 5 && state == EDITOR)
 		{
 			for (int x = 0; x < MAP_HEIGHT; x++)
@@ -410,7 +422,7 @@ void displayMap(sfRenderWindow* _window)
 				{
 					if (tileMap[x][y].musicOfTile > 0)
 					{
-						// Créer un rectangle semi-transparent de couleur selon la musique
+						// Créer un rectangle de couleur selon la musique
 						sfRectangleShape* musicIndicator = sfRectangleShape_create();
 						sfRectangleShape_setSize(musicIndicator, (sfVector2f) { TILE_WIDTH, TILE_HEIGHT });
 						sfRectangleShape_setPosition(musicIndicator, tilepos);
@@ -446,6 +458,7 @@ void displayMap(sfRenderWindow* _window)
 			}
 			tilepos.y = 0;
 		}
+		// affiche les specialtiles
 		for (int x = 0; x < MAP_HEIGHT; x++)
 		{
 			for (int y = 0; y < MAP_WIDTH; y++)
@@ -456,7 +469,7 @@ void displayMap(sfRenderWindow* _window)
 				if (typeOfSpecialTile != none)
 				{
 					changeSpecialTiles(typeOfSpecialTile);
-			
+					// animation de l'arbuste si il se fait casser
 					if (typeOfSpecialTile == plant)
 					{
 						if (tileMap[x][y].selectedSpecialTiles.state > 0)
@@ -478,6 +491,7 @@ void displayMap(sfRenderWindow* _window)
 						tile.height = 24;
 						tile.width = 24;
 					}
+					// le mur devient transparent quand désactivé
 					if (typeOfSpecialTile == electric_wall) {
 					
 						if (tileMap[x][y].selectedSpecialTiles.state == 1 ) {
@@ -493,6 +507,7 @@ void displayMap(sfRenderWindow* _window)
 					else {
 						sfSprite_setColor(mapSprite, sfWhite);
 					}
+					// est électrique quand activé et sans si désactivé
 					if (typeOfSpecialTile == electric_toggle) {
 						if (tileMap[x][y].selectedSpecialTiles.state > 0)
 						{
@@ -507,42 +522,6 @@ void displayMap(sfRenderWindow* _window)
 							sfSprite_setTextureRect(mapSprite, tile);
 				
 					}
-					if (typeOfSpecialTile == plant)
-					{
-						if (tileMap[x][y].selectedSpecialTiles.state > 0)
-						{
-							tile.top = 32 * ((tileMap[x][y].selectedSpecialTiles.state) / 4);
-							tile.width = 32;
-							tile.left = 32 * ((tileMap[x][y].selectedSpecialTiles.state) % 4);
-							tile.height = 32;
-							sfSprite_setTextureRect(mapSprite, tile);
-						}
-
-
-
-						tilepos.x -= 4;
-						tilepos.y -= 16;
-						sfSprite_setPosition(mapSprite, tilepos);
-						tilepos.x += 4;
-						tilepos.y += 16;
-						tile.height = 24;
-						tile.width = 24;
-					}
-					else if (typeOfSpecialTile == boulder)
-					{
-				/*		if (tileMap[x][y].selectedSpecialTiles.state > 0)
-						{
-							if (sideOfNewTileY != 0)
-							{
-								tilepos.y -= 3 * state *sideOfNewTileY;
-							}
-							if (sideOfNewTileX != 0)
-							{
-								tilepos.x -= 3 * state * sideOfNewTileX;
-							}
-						}*/
-						sfSprite_setPosition(mapSprite, tilepos);
-					}
 					else
 					{
 						sfSprite_setPosition(mapSprite, tilepos);
@@ -553,6 +532,7 @@ void displayMap(sfRenderWindow* _window)
 						sfRenderWindow_drawSprite(_window, mapSprite, NULL);
 					
 					}
+					// si mode  circuit_link alors afficher l'id des circuits
 					if (selectedTileMode == 3 && state == EDITOR)
 					{
 						if (tileMap[x][y].selectedSpecialTiles.SpecialTilesType == 3 || tileMap[x][y].selectedSpecialTiles.SpecialTilesType == 4)
@@ -591,7 +571,7 @@ void displayMap(sfRenderWindow* _window)
 	}
 
 }
-
+//change le tilesets utilisé par mapSprite
 void changeTileset(tilesetType tileType)
 {
 	switch (tileType)
@@ -622,7 +602,7 @@ void changeTileset(tilesetType tileType)
 		sfSprite_setTexture(mapSprite, voidTilesetTexture, sfTrue);
 		break;
 	}
-}
+}//change la texture de tilespecial utilisé par mapSprite
 void changeSpecialTiles(specialTileType specialTile)
 {
 	switch (specialTile)
@@ -645,6 +625,7 @@ void changeSpecialTiles(specialTileType specialTile)
 		break;
 	}
 }
+//sauvegarde la map
 void saveMap(const char* filename)
 {
 
@@ -664,7 +645,7 @@ void saveMap(const char* filename)
 	fclose(file);
 	printf("Map sauvegardée dans %s\n", filename);
 }
-
+//charge la map
 void loadMap(const char* filename)
 {
 	FILE* file = fopen(filename, "rb");
@@ -700,12 +681,13 @@ void loadMap(const char* filename)
 			{
 				tileMap[i][j].isActivable.idActivable = 0;
 			}
-			tileMap[i][j].selectedSpecialTiles.state = 0;
+	
 
 		}
 	}
 	printf("Map chargée depuis %s\n", filename);
 }
+//créer une map si aucune est existante
 void createMap()
 {
 	for (int i = 0; i < MAP_HEIGHT; i++)
@@ -716,9 +698,14 @@ void createMap()
 			tileMap[i][j].tileNumber = 4;
 			tileMap[i][j].selectedSpecialTiles.SpecialTilesType = none;
 			tileMap[i][j].selectedSpecialTiles.state = 0;
+			tileMap[i][j].selectedSpecialTiles.state = 0;
+			tileMap[i][j].isActivable.idActivable= 0;
+			tileMap[i][j].isActivable.numberOfActivable= 0;
+			tileMap[i][j].musicOfTile= 0;
 		}
 	}
 }
+
 sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber)
 {
 
@@ -726,6 +713,7 @@ sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber)
 			tile.left = (tileNumber - (tile.top - 8 *tile.top / tile.height) ) * tile.width;
 			return tile;
 }
+//un update pour la viewUI
 void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 {
 	if (state == EDITOR)
@@ -780,8 +768,9 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 					selectedTiles = 1;
 					currentPage = 0;
 				}
-
+				
 				sfRenderWindow_drawSprite(_window, mapSprite, NULL);
+				//Met le tileset en surbriance
 				if (selectedTexture == i)
 				{
 
@@ -798,7 +787,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 			}
 			tile = giveSpriteTextureDim(tile, selectedTiles);
 			changeTileset(selectedTexture);
-
+			//Affiche la tile choisi sur la souris quand elle est dans l'EditUI
 			sfSprite_setTextureRect(mapSprite, tile);
 			sfSprite_setPosition(mapSprite, mouseposViewUi);
 			sfRectangleShape_setPosition(mouseCornerIndicator, mouseposViewUi);
