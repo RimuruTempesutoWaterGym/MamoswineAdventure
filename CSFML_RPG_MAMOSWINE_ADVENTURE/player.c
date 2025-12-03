@@ -5,27 +5,32 @@
 #include "elemental_mammoswine.h"
 #include "music.h"
 
-//#include"camera.h"
+// Creation personnage et specificités
+sfSprite* mamoswineSprite;
+sfVector2f playerVel = { 72.0f,72.0f };
+sfVector2f posMamoswine = { 1200.0f,300.0f };
+sfTexture* myTextureMamoswine;
+sfIntRect mamoswineAnimation = { 0, 0, 48, 48 };
+sfVector2f speed;
 
-
-sfSprite* spPlayer;
-sfTexture* texPlayer;
-float PlayerTimer = 0.0f;
-
-float timer = 0.0f;
-float timerattack = 0.0f;
-float timerCdAttack = 0.0f;
+// gestion affichage des sprites
 int compt = -1;
 int frameX = 0;
 int frameY = 0;
+
+// gestion des fonctions utilisant du temps
+float PlayerTimer = 0.0f;
+float timer = 0.0f;
+float timerattack = 0.0f;
+float timerCdAttack = 0.0f;
+
+// Attaque du personnage
 int isAttacking = 0;
-sfVector2f playerVel = { 72.0f,72.0f };
-sfVector2f posMamoswine = { 1200.0f,300.0f };
-sfVector2f speed;
+
+
 sfBool hasMoved = sfFalse;
-sfSprite* mamoswineSprite;
-sfTexture* myTextureMamoswine;
-sfIntRect mamoswineAnimation = { 0, 0, 48, 48 };
+
+
 
 
 
@@ -45,25 +50,16 @@ sfFloatRect getCollisionOfPlayer()
 void updatePlayer(sfRenderWindow* _window)
 {
     
-    
     PlayerTimer += GetDeltaTime();
-
 
     if (state == GAME)
     {
         timerCdAttack += GetDeltaTime();
-      
-
-        //if (sfKeyboard_isKeyPressed(sfKeySpace) && posMamoswine.x > 0)
-        //{
-        //    frameY = 4;
-        //    mamoswineAnimation.top = frameY * mamoswineAnimation.height;
-        //    hasMoved = sfTrue;
-        //    updateMastery(posMamoswine, mamoswineAnimation);
-
-        //}
         speed = playerVel;
    
+
+        // Deplacement du personnage quand il n'attaque pas
+
         if(isAttacking == 0)
         {
           
@@ -141,6 +137,7 @@ void updatePlayer(sfRenderWindow* _window)
             }
         }
       
+        // Gestion du personnage quand il attaque (il ne peut plus se déplacer)
         if (sfKeyboard_isKeyPressed(sfKeyF) && timerCdAttack > 2.f || isAttacking == 1 )
         {
            
@@ -170,6 +167,7 @@ void updatePlayer(sfRenderWindow* _window)
         } 
         SetAllMamoswine(_window, getCollisionOfPlayer());
        
+        // Gestion des changements de sprites lors des mouvements
         if (PlayerTimer > 0.3f)
         {
             if (hasMoved)
@@ -190,12 +188,6 @@ void updatePlayer(sfRenderWindow* _window)
         sfSprite_setTextureRect(mamoswineSprite, mamoswineAnimation);
         sfSprite_setPosition(mamoswineSprite, posMamoswine);
     }
-
-    //else if (state == EDITOR)
-    //{
-
-    //}
-    //updateCamera(posMamoswine, mamoswineAnimation, _window);
 }
 
 
@@ -207,20 +199,26 @@ void displayPlayer(sfRenderWindow* _window)
             updateTextBox();  
     }
 }
+
+// gestion de la hitbox du player
 sfFloatRect getMamoswineHitboxByPos(sfFloatRect _mamoswinePos)
 {
     _mamoswinePos.left += _mamoswinePos.width / 4;
-
     _mamoswinePos.top += _mamoswinePos.height / 4;
     _mamoswinePos.height /= 2;
     _mamoswinePos.width /= 2;
     return _mamoswinePos;
 }
+
+// Point d'apparition du player
 void SetPosAtRespawn()
 {
     setPlayerPosition(getPlayerSpawnPoint());
 
 }
+
+// Gestion du personnage en fonction de la traversée de la porte de fin
+// Faire en sorte qu'il traverse la porte et ne marche pas dessus
 sfBool isPlayerOverDoor()
 {
  
@@ -230,47 +228,11 @@ sfBool isPlayerOverDoor()
     }
         return sfTrue;
 }
+
+// fonction pour actualiser la position du joueur
 void setPlayerPosition(sfVector2f newPos) {
     posMamoswine = newPos;
     if (mamoswineSprite != NULL) {
         sfSprite_setPosition(mamoswineSprite, posMamoswine);
     }
 }
-//sfFloatRect gethitboxMamoswine(sfFloatRect _sprite, Direction _direction, sfFloatRect spriteHitbox)
-//{
-//    switch (_direction)
-//    {
-//    case Down:
-//        spriteHitbox.y = (int)((_sprite.top + _sprite.height + _vitesse->y * delataTime) / TILE_WIDTH);
-//        spriteHitbox.x = (int)(_sprite.left / TILE_WIDTH);
-//        nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-//        nextPosInTab2.y = (int)((_sprite.top + _sprite.height + _vitesse->y * delataTime) / TILE_WIDTH);
-//        return spriteHitbox;
-//        break;
-//    case Top:
-//
-//        nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2) - _vitesse->y * delataTime) / TILE_WIDTH);
-//        nextPosInTab.x = (int)(_sprite.left / TILE_WIDTH);
-//        nextPosInTab2.x = (_sprite.left + _sprite.width) / TILE_WIDTH;
-//        nextPosInTab2.y = (int)((_sprite.top + (_sprite.height / 2) - _vitesse->y * delataTime) / TILE_WIDTH);
-//
-//
-//        break;
-//    case Right:
-//        nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
-//        nextPosInTab.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
-//        nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
-//        nextPosInTab2.x = (int)((_sprite.left + _sprite.width + _vitesse->x * delataTime) / TILE_WIDTH);
-//
-//        break;
-//    case Left:
-//        nextPosInTab.y = (int)((_sprite.top + (_sprite.height / 2)) / TILE_WIDTH);
-//        nextPosInTab.x = (int)((_sprite.left - _vitesse->x * delataTime) / TILE_WIDTH);
-//        nextPosInTab2.x = (int)((_sprite.left - _vitesse->x * delataTime) / TILE_WIDTH);
-//        nextPosInTab2.y = (_sprite.top + _sprite.height) / TILE_WIDTH;
-//
-//
-//        break;
-//    }
-//}
-
