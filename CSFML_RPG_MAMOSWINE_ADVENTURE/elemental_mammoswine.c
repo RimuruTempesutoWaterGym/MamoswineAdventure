@@ -66,6 +66,10 @@ void initElementalMamoswine()
 	sfSprite_setPosition(mamoDialga, mamoDialgaPos);
 }
 // récupère la boite de collision des mammochons
+void updateElementalMamoswine()
+{
+	saveMamowsineData("data/keydata.bin");
+}
 sfFloatRect GetCollisionMamoswineFire()
 {
 	return sfSprite_getGlobalBounds(mammoswineFire);
@@ -273,7 +277,7 @@ void loadMamowsineData(const char* filename)
 
 	printf("Map chargee depuis %s\n", filename);
 }
-//give la valeur de position des mammochons de la save
+//give la valeur de position des mammochons de la savewine
 void setMamoswineFirePosition(sfVector2f newPos,int frame) {
 	mammoswineFirePos = newPos;
 	mammoswineFireRect.top = frame * (mammoswineFireRect.height+1);

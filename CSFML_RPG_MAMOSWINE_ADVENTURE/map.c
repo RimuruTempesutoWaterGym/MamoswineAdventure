@@ -480,9 +480,7 @@ void displayMap(sfRenderWindow* _window)
 							tile.height = 32;
 							sfSprite_setTextureRect(mapSprite, tile);
 						}
-
-
-					
+						//Redimensionnement et repositionnement de la tile pour afficher les plantes 
 						tilepos.x -= 4;
 						tilepos.y -= 16;
 						sfSprite_setPosition(mapSprite, tilepos);
@@ -602,7 +600,7 @@ void changeTileset(tilesetType tileType)
 		sfSprite_setTexture(mapSprite, voidTilesetTexture, sfTrue);
 		break;
 	}
-}//change la texture de tilespecial utilisé par mapSprite
+}//change la texture de specialtile utilisé par mapSprite
 void changeSpecialTiles(specialTileType specialTile)
 {
 	switch (specialTile)
@@ -687,7 +685,7 @@ void loadMap(const char* filename)
 	}
 	printf("Map chargée depuis %s\n", filename);
 }
-//créer une map si aucune est existante
+//créer une map
 void createMap()
 {
 	for (int i = 0; i < MAP_HEIGHT; i++)
@@ -1178,7 +1176,6 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			if (isInsideMousei(nextPosInTab, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16 || isInsideMousei(nextPosInTab2, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16
 				|| isInsideOpenDoor(nextPosInTab,GetCollisionOfDoor())  || isInsideOpenDoor(nextPosInTab2,GetCollisionOfDoor())
 				|| isInsideMousei(nextPosInTab, GetCollisionOfNPC()) || isInsideMousei(nextPosInTab2, GetCollisionOfNPC())
-				
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineFire())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineFire()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineWater())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineWater()))
 				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineElectric()))
