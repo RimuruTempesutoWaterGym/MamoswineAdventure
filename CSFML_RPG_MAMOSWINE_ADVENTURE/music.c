@@ -30,7 +30,7 @@ int isMutedMusic;
 int hasChanged = 0;
 int musicUp = 0;
 
-
+// initialisation de la musique par celle du MENU
 void initMusic()
 {
     actualVolume = 10.f;
@@ -42,19 +42,23 @@ void initMusic()
     sfMusic_play(playedMusic);
 
 }
-
+// initialisation des SFX
 void initSound()
 {
     attackMamo = sfSound_create();
-    boulderPush = sfSound_create();
-    treeCut = sfSound_create();
     attackMamoBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\attack.mp3");
-    boulderPushBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\boulderPush.mp3");
-    treeCutBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\treeCut.mp3");
     sfSound_setBuffer(attackMamo, attackMamoBuffer);
+
+    boulderPush = sfSound_create();
+    boulderPushBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\boulderPush.mp3");
     sfSound_setBuffer(boulderPush, boulderPushBuffer);
+
+    treeCut = sfSound_create();
+    treeCutBuffer = sfSoundBuffer_createFromFile("..\\Ressources\\SoundsFX\\treeCut.mp3");
     sfSound_setBuffer(treeCut, treeCutBuffer);
 }
+
+// fonction de gestion de la musique si mute ou non dans les options
 void setVolumeMusicIfNotMuted(sfMusic* _music, float _volume)
 {
 
@@ -67,6 +71,8 @@ void setVolumeMusicIfNotMuted(sfMusic* _music, float _volume)
         sfMusic_setVolume(_music, 0);
     }
 }
+
+// fonction de gestion de SFX si mute ou non dans les options
 void setVolumeSFXIfNotMuted(sfSound* _sfx, float _volume)
 {
     if (isMutedMusic == 0)
@@ -78,6 +84,8 @@ void setVolumeSFXIfNotMuted(sfSound* _sfx, float _volume)
         _volume = 0.0f;
     }
 }
+
+// fonction de gestion du volume de son dans les options
 void volumeMusic(float _volume)
 {
     maxVolume += _volume;
@@ -89,22 +97,27 @@ void volumeMusic(float _volume)
 
 }
 
-
-
+// fonction permettant de récupérer la musique actuelle en tant que valeur
 sfMusic* getActualMusic()
 {
     return playedMusic;
 }
+
+// fonctions permettant de faciliter le changement de musique
 void updateMusic()
 {
     setMusic(getOldMusic());
 }
+
 void setHasChangedTo1()
 {
     hasChanged = 1;
 
     BackSound = 0;
 }
+// ------------------------------------------------------
+
+// fonction permettant de changer la musique
 void setMusic(MusicChoice _music)
 {
 
@@ -154,11 +167,13 @@ void setMusic(MusicChoice _music)
     }
 }
 
+// fonction de gestion du choix de musique en fonction de l'état de la tile et / ou state
 MusicChoice getOldMusic()
 {
     return oldMusic;
 }
 
+// fonction de changement de musique en fonction de leur état (MusicChoice), exemple (musique de menu, marchant sur les tiles ou en combat)
 void ChangeMusic(MusicChoice _music)
 {
     switch (_music)
@@ -270,7 +285,7 @@ void ChangeMusic(MusicChoice _music)
     }
 }
 
-
+// SFX d'attaque du player
 void playSoundAttack()
 {
     if (!sfSound_getStatus(attackMamo))
@@ -279,6 +294,7 @@ void playSoundAttack()
     }
 }
 
+// SFX de la boule poussée 
 void playSoundBoulder()
 {
     if (!sfSound_getStatus(boulderPush))
@@ -287,6 +303,7 @@ void playSoundBoulder()
     }
 }
 
+// SFX de l'arbre coupé
 void playSoundTree()
 {
     if (!sfSound_getStatus(treeCut))
@@ -295,6 +312,7 @@ void playSoundTree()
     }
 }
 
+// fonction pour mute la musique
 void musicMute()
 {
     isMutedMusic = 1;
@@ -302,6 +320,7 @@ void musicMute()
 
 }
 
+// fonction pour demute la musique
 void musicUnmute()
 {
 
@@ -309,6 +328,8 @@ void musicUnmute()
     setVolumeMusicIfNotMuted(getActualMusic(), maxVolume);
 
 }
+
+// fonction pour demute les SFX
 void soundUnmute()
 {
     isMutedSfx = 0;
@@ -317,6 +338,7 @@ void soundUnmute()
     setVolumeSFXIfNotMuted(treeCut, maxVolume);
 }
 
+// fonction pour demute les SFX
 void soundMute()
 {
     isMutedSfx = 1;
