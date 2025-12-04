@@ -30,7 +30,7 @@ sfFloatRect visibleArea = {
 	0.f,0.f,MAP_WIDTH* TILE_WIDTH ,MAP_HEIGHT* TILE_HEIGHT 
 };
 
-
+//initie les view
 void initView()
 {
 	 minimap = sfView_create();
@@ -126,7 +126,7 @@ void updateView(sfVector2f playerPos, sfIntRect playerHitbox,sfRenderWindow* _wi
 
 
 }
-
+//met a jour la position de la vue editeur quand on bouge sur la map
 void updateViewEditor(sfRenderWindow* _window)
 {
 
@@ -162,39 +162,39 @@ void updateViewEditor(sfRenderWindow* _window)
 
 }
 
-//display des view et HUD
+//affiche l'editeur
 void displayViewEdit(sfRenderWindow* _window)
 {
 	sfRenderWindow_setView(_window, viewEdit);
 }
-
+//affiche l'UI éditeur
 void displayViewEditUi(sfRenderWindow* _window)
 {
 	sfRenderWindow_setView(_window, viewEditUi);
 	updateTilesetPanel(_window, viewEditUi);
 }
-
+//affiche l'UI de sélection des tiles
 void displayViewTileSelection(sfRenderWindow* _window)
 {
 	sfRenderWindow_setView(_window, viewTileSelection);
 	updateTileSelectionPanel(_window, viewTileSelection);
 }
-
+//affiche la vue joueur
 void displayViewPlayer(sfRenderWindow* _window)
 {
 	sfRenderWindow_setView(_window, viewPlayer);
 }
-
+//affiche la vue par defaut
 void displayViewDefault(sfRenderWindow* _window)
 {
 	sfRenderWindow_setView(_window, viewDefault);
 }
-
+//affiche la vue HUD
 void displayHUD(sfRenderWindow* _window)
 {
 	sfRenderWindow_setView(_window, viewHUD);
 }
-
+//affiche la vue de la minimap
 void displayMinimap(sfRenderWindow* _window)
 {
 
@@ -213,13 +213,14 @@ void displayMinimap(sfRenderWindow* _window)
 
 }
 
+//affiche la vue de combat
 void displayBattleView(sfRenderWindow* _window)
 {
 	sfRenderWindow_setView(_window, viewBattle);
 }
-//display des view et HUD
 
-//ajuste la pixel au fenètre
+
+//ajuste le pixel par rapport fenètre
 sfVector2f updatePixelToWorld(sfRenderWindow* _window, sfView* _view)
 {
 	if (_view == NULL)

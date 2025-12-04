@@ -1,7 +1,5 @@
 #include"battle.h"
 #include"music.h"
-#define GET_EFFECTIVENESS(attacker, defender) \
-    ((typeChart[attacker][(defender) / 4] >> (((defender) % 4) * 2)) & 0x03)
 #define SET_EFFECTIVENESS(attacker, defender, value) \
     do { \
         int byte_idx = (defender) / 4; \
@@ -14,8 +12,10 @@
 #define EFF_NORMAL      0x02  // 10 en binaire = 1.0x
 #define EFF_SUPER       0x03  // 11 en binaire = 2.0x
 
+//tableau binaire 
 static unsigned char typeChart[TYPE_COUNT][TYPE_COUNT];
 char currentMamoswineBattle[30] = "";
+
 Pokemon mamoswineBat;
 Pokemon mamoswineFireBat;
 Pokemon mamoswineWaterBat;
@@ -95,7 +95,7 @@ Attack thunder;
 Attack ironHead;
 Attack dragonClaw;
 Attack icicleCrash;
-
+//initie tout les sprites ,et appelle tout les initieurs du battle.c
 void initBattle() {
     initTypeChart();
     initAttacks();
@@ -103,11 +103,8 @@ void initBattle() {
 
 
 
-    battleBackgroundFire = sfSprite_create();
-    battleBackgroundWater = sfSprite_create();
-    battleBackgroundElectric = sfSprite_create();
+
     battleBackgroundGrass = sfSprite_create();
-    battleBackgroundTime = sfSprite_create();
 
     battleMamoswine = sfSprite_create();
     battleMamoswineFire = sfSprite_create();
@@ -121,11 +118,9 @@ void initBattle() {
     battleUiMove3 = sfSprite_create();
     battleUiMove4 = sfSprite_create();
 
-    battleBgFireTexture = sfTexture_createFromFile(TEXTURE_PATH"grassy_bg.png", NULL);
-    battleBgWaterTexture = sfTexture_createFromFile(TEXTURE_PATH"grassy_bg.png", NULL);
-    battleBgElectricTexture = sfTexture_createFromFile(TEXTURE_PATH"grassy_bg.png", NULL);
+
     battleBgGrassTexture = sfTexture_createFromFile(TEXTURE_PATH"grassy_bg.png", NULL);
-    battleBgTimeTexture = sfTexture_createFromFile(TEXTURE_PATH"grassy_bg.png", NULL);
+    
 
     battleMamoswineTexture = sfTexture_createFromFile(TEXTURE_PATH"mamoswinebattleBack.png", NULL);
     battleMamoswineFireTexture = sfTexture_createFromFile(TEXTURE_PATH"mamofeucombat.png", NULL);
@@ -207,7 +202,7 @@ void initBattle() {
     sfText_setCharacterSize(battleText, 24);
     sfText_setFillColor(battleText, sfWhite);
 }
-
+//initie toutes les attaques des pokemons utilisé dans ce projet
 void initAttacks() {
   
     iceShard = (Attack){
@@ -339,7 +334,7 @@ void initAttacks() {
     };
 }
 
-
+//initie tout les pokémons utilisé dans le projet
 void initPokemons() {
 
     mamoswineBat = (Pokemon){
@@ -386,6 +381,7 @@ void initPokemons() {
     };
     mamoswineWaterBat.maxHp = mamoswineWaterBat.stats[0] * 3.14;
     mamoswineWaterBat.currentHp = mamoswineWaterBat.maxHp;
+    
     mamoswineGrassBat = (Pokemon){
         "Mammochon Plante",
           0,
@@ -400,6 +396,7 @@ void initPokemons() {
     };
     mamoswineGrassBat.maxHp = mamoswineGrassBat.stats[0] * 3.14;
     mamoswineGrassBat.currentHp = mamoswineGrassBat.maxHp;
+
     mamoswineElectricBat = (Pokemon){
 
         "Mammochon Electrique",
@@ -414,6 +411,7 @@ void initPokemons() {
     };
     mamoswineElectricBat.maxHp = mamoswineElectricBat.stats[0] * 3.14;
     mamoswineElectricBat.currentHp = mamoswineElectricBat.maxHp;
+
     mamoswineDialgaBat = (Pokemon){
         "Mammochon Dialga",
           0,
@@ -429,8 +427,10 @@ void initPokemons() {
     mamoswineDialgaBat.maxHp = mamoswineDialgaBat.stats[0] * 7;
     mamoswineDialgaBat.currentHp = mamoswineDialgaBat.maxHp;
 }   
+//initie les faiblesse et résistance des types
 void initTypeChart() {
 
+    // set tout les neutres  "un peu buggé"
     for (int i = 0; i < TYPE_COUNT; i++) {
         for (int j = 0; j < TYPE_COUNT; j++) {
             SET_EFFECTIVENESS(i, j, EFF_NORMAL);
@@ -598,6 +598,7 @@ void initTypeChart() {
     typeChart[Poison][Steel] = EFF_IMMUNE;
     typeChart[Poison][Fairy] = EFF_SUPER;
 }
+//affiche l'interface utilisateur de combat /barre de vie /moves /background /sprites des mammo
 void displayBattleUI(sfRenderWindow* _window) {
 
     sfRenderWindow_drawSprite(_window, battleBackgroundGrass, NULL);
@@ -627,6 +628,7 @@ void displayBattleUI(sfRenderWindow* _window) {
     sfText_setOutlineThickness(battleText, 2.0f);
     sfRenderWindow_drawText(_window, battleText, NULL);
 }
+//affiche les moves
 void displayMoveButtons(sfRenderWindow* _window) {
 
     sfSprite* moves[4] = { battleUiMove1, battleUiMove2, battleUiMove3, battleUiMove4 };
@@ -675,6 +677,7 @@ void displayMoveButtons(sfRenderWindow* _window) {
    
     sfText_setCharacterSize(battleText, 24);
 }
+//affiche les bars de vie en fonction de la vie restante
 void displayHealthBars(sfRenderWindow* _window) {
 
 
@@ -764,12 +767,15 @@ void displayHealthBars(sfRenderWindow* _window) {
     sfRectangleShape_destroy(enemyHpBar);
     sfRectangleShape_destroy(enemyHpBg);
 }
+
+//gère tout le combat
 void updateBattle(sfRenderWindow* _window) {
     if (state == BATTLE)
     {
         battleTimer += GetDeltaTime();
 
         switch (battleState) {
+            //premier message quand l'ennemi apparait
         case BATTLE_INTRO:
             sprintf(battleMessage, "Vous Defiez le %s!!!", currentOpponent->name);
             if (battleTimer > 2.0f) {
@@ -778,7 +784,7 @@ void updateBattle(sfRenderWindow* _window) {
                 battleTimer = 0.0f;
             }
             break;
-
+            //tour du joueur 
         case BATTLE_PLAYER_TURN:
             if (battleTimer > 1.0f) {
                 sprintf(battleMessage, "Que doit faire %s?", currentPlayer->name);
@@ -788,7 +794,7 @@ void updateBattle(sfRenderWindow* _window) {
 
 
             break;
-
+            //tour de l'ennemi + verifie que le joueur n'est pas mort apres l'attaque
         case BATTLE_ENEMY_TURN:
             if (battleTimer > 2.0f) {
                 performEnemyAttack();
@@ -807,7 +813,7 @@ void updateBattle(sfRenderWindow* _window) {
             }
 
             break;
-
+            //verifie que l'ennemi soit pas mort apres une attaque
         case BATTLE_ANIMATION:
             if (battleTimer > 2.0f) {
                 if (currentOpponent->currentHp <= 0) {
@@ -821,11 +827,11 @@ void updateBattle(sfRenderWindow* _window) {
                 battleTimer = 0.0f;
             }
             break;
-
+            //fin du combat verifie si le joeur a pertu ou gagné, si il a gagné met l'ennemi battu en tant que vaincu
         case BATTLE_END:
             if (battleTimer > 2.0f) {
                 if (currentPlayer->currentHp > 0) {
-                    hasWon = 1;
+
                     state = GAME;
                     currentPlayer->currentHp = currentPlayer->maxHp;
                     currentOpponent->isDefeated = 1;
@@ -834,7 +840,7 @@ void updateBattle(sfRenderWindow* _window) {
                     battleState = BATTLE_INTRO;
                 }
                 else {
-                    hasWon = 1;
+
                     state = GAME;
                     currentPlayer->currentHp = currentPlayer->maxHp;
                     currentOpponent->currentHp = currentOpponent->maxHp;
@@ -845,6 +851,7 @@ void updateBattle(sfRenderWindow* _window) {
         }
     }
 }
+//s'occupe de permettre au joueur de choisir l'attaque utilisé
 void handlePlayerInput(sfRenderWindow* _window) {
     static float inputTimer = 0.0f;
     inputTimer += GetDeltaTime();
@@ -875,6 +882,7 @@ void handlePlayerInput(sfRenderWindow* _window) {
         inputTimer = 0.0f;
     }
 }
+//s'occupe de lancer l'attaque utilisé par le joueur
 void performPlayerAttack(int moveIndex) {
     Attack* attack = &currentPlayer->attacks[moveIndex];
 
@@ -899,7 +907,7 @@ void performPlayerAttack(int moveIndex) {
     battleState = BATTLE_ANIMATION;
     battleTimer = 0.0f;
 }
-
+//s'occupe de choisir et lancer l'attaque utilisé par l'ennemi
 void performEnemyAttack() {
 
     int moveIndex = rand() % 2; 
@@ -923,7 +931,7 @@ void performEnemyAttack() {
         currentOpponent->name, attack->name, damage);
 }
 
-
+//regarde quel mammochon élémentaire est en combat pour le draw
 void checkWhichSpriteToDraw(sfRenderWindow* _window) {
     if (strcmp(currentOpponent->name, mamoswineFireBat.name) == 0) {
         sfRenderWindow_drawSprite(_window, battleMamoswineFire, NULL);
@@ -941,6 +949,7 @@ void checkWhichSpriteToDraw(sfRenderWindow* _window) {
         sfRenderWindow_drawSprite(_window, battleMamoswineDialga, NULL);
     }
 }
+//fonction qui sert a lancer le combat
 int startBattle(Pokemon* player, Pokemon* opponent,int _music) {
     currentPlayer = player;
     currentOpponent = opponent;
@@ -954,14 +963,19 @@ int startBattle(Pokemon* player, Pokemon* opponent,int _music) {
 
     return 1; 
 }
+
+//change la valeur d'un pokemon en tant que vaincu
 int getBattleResult(Pokemon* _opponent) {
     
     return _opponent->isDefeated;
 }
+
+//recupère le mammochon énnemi quand on lance un combat
 void setCurrentMamoswineBattle(Pokemon* opponent) {
     strncpy(currentMamoswineBattle, opponent->name, 29);
     currentMamoswineBattle[29] = '\0';
 }
+//permet de voir si l'attaque est efficace ou non
 float getTypeEffectiveness(Types attackType, Types defenderType1, Types defenderType2) {
     if (attackType >= TYPE_COUNT) return 1.0f;
     
@@ -989,32 +1003,11 @@ float getTypeEffectiveness(Types attackType, Types defenderType1, Types defender
 
     return effectiveness;
 }
-const char* getTypeName(Types type) {
-    switch (type) {
-    case Null: return "None";
-    case Normal: return "Normal";
-    case Ground: return "Ground";
-    case Ice: return "Ice";
-    case Grass: return "Grass";
-    case Fire: return "Fire";
-    case Combat: return "Fighting";
-    case Fairy: return "Fairy";
-    case Water: return "Water";
-    case Electric: return "Electric";
-    case Steel: return "Steel";
-    case Dragon: return "Dragon";
-    case Bug: return "Bug";
-    case Ghost: return "Ghost";
-    case Dark: return "Dark";
-    case Psy: return "Psychic";
-    case Fly: return "Flying";
-    case Rock: return "Rock";
-    case Poison: return "Poison";
-    default: return "Unknown";
-    }
+
 
  
-}
+
+//calcule les degats comme pokemon, sans les roll/random
 int calculateDamage(Pokemon* attacker, Pokemon* defender, Attack* attack) {
     int level = 100;
     float damage = 0;

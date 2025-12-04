@@ -469,26 +469,8 @@ void displayMap(sfRenderWindow* _window)
 				if (typeOfSpecialTile != none)
 				{
 					changeSpecialTiles(typeOfSpecialTile);
-					// animation de l'arbuste si il se fait casser
-					if (typeOfSpecialTile == plant)
-					{
-						if (tileMap[x][y].selectedSpecialTiles.state > 0)
-						{
-							tile.top = 32 * ((tileMap[x][y].selectedSpecialTiles.state ) / 4);
-							tile.width = 32;
-							tile.left = 32 * ((tileMap[x][y].selectedSpecialTiles.state ) % 4);
-							tile.height = 32;
-							sfSprite_setTextureRect(mapSprite, tile);
-						}
-						//Redimensionnement et repositionnement de la tile pour afficher les plantes 
-						tilepos.x -= 4;
-						tilepos.y -= 16;
-						sfSprite_setPosition(mapSprite, tilepos);
-						tilepos.x += 4;
-						tilepos.y += 16;
-						tile.height = 24;
-						tile.width = 24;
-					}
+			
+
 					// le mur devient transparent quand désactivé
 					if (typeOfSpecialTile == electric_wall) {
 					
@@ -519,6 +501,26 @@ void displayMap(sfRenderWindow* _window)
 						}
 							sfSprite_setTextureRect(mapSprite, tile);
 				
+					}
+					// animation de l'arbuste si il se fait casser
+					if (typeOfSpecialTile == plant)
+					{
+						if (tileMap[x][y].selectedSpecialTiles.state > 0)
+						{
+							tile.top = 32 * ((tileMap[x][y].selectedSpecialTiles.state) / 4);
+							tile.width = 32;
+							tile.left = 32 * ((tileMap[x][y].selectedSpecialTiles.state) % 4);
+							tile.height = 32;
+							sfSprite_setTextureRect(mapSprite, tile);
+						}
+						//Redimensionnement et repositionnement de la tile pour afficher les plantes 
+						tilepos.x -= 4;
+						tilepos.y -= 16;
+						sfSprite_setPosition(mapSprite, tilepos);
+						tilepos.x += 4;
+						tilepos.y += 16;
+						tile.height = 24;
+						tile.width = 24;
 					}
 					else
 					{
@@ -703,7 +705,7 @@ void createMap()
 		}
 	}
 }
-
+//donne la tile qui est choisi par rapport au numéro de la tile
 sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber)
 {
 
@@ -711,7 +713,7 @@ sfIntRect giveSpriteTextureDim(sfIntRect tile, int tileNumber)
 			tile.left = (tileNumber - (tile.top - 8 *tile.top / tile.height) ) * tile.width;
 			return tile;
 }
-//un update pour la viewUI
+//un update pour la viewUI de l'editeur
 void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 {
 	if (state == EDITOR)
@@ -877,12 +879,12 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 
 
 			for (int i = 0; i < SPRITE_COUNT; i++) {
-				// Draw sprite icon/preview
+				// affiche sprite preview
 				sfRectangleShape* spriteIcon = sfRectangleShape_create();
 				sfRectangleShape_setSize(spriteIcon, (sfVector2f) { 24.f, 24.f });
 				sfRectangleShape_setPosition(spriteIcon, tilepos_ui);
 
-				// Color code each sprite type
+			
 
 				sfRectangleShape_setFillColor(spriteIcon, spriteColors[i]);
 
@@ -895,7 +897,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 
 				sfRenderWindow_drawRectangleShape(_window, spriteIcon, NULL);
 
-				// Highlight selected sprite
+				// met en surbrillance le sprite sélectionné
 				if (selectedSprite == i) {
 					sfRectangleShape* highlight = sfRectangleShape_create();
 					sfRectangleShape_setSize(highlight, (sfVector2f) { 24.f, 24.f });
@@ -918,12 +920,12 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 		
 
 				for (int i = 0; i < 7; i++) {
-					// Draw sprite icon/preview
+					
 					sfRectangleShape* musicIcon = sfRectangleShape_create();
 					sfRectangleShape_setSize(musicIcon, (sfVector2f) { 24.f, 24.f });
 					sfRectangleShape_setPosition(musicIcon, tilepos_ui);
 
-					// Color code each sprite type
+					
 			
 					sfRectangleShape_setFillColor(musicIcon, musicColors[i]);
 
@@ -936,7 +938,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 
 					sfRenderWindow_drawRectangleShape(_window, musicIcon, NULL);
 
-					//Highlight selected sprite
+					// met en surbrillance le sprite sélectionné
 					if (selectedMusic == i) {
 						sfRectangleShape* highlight = sfRectangleShape_create();
 						sfRectangleShape_setSize(highlight, (sfVector2f) { 24.f, 24.f });
@@ -957,7 +959,7 @@ void updateTilesetPanel(sfRenderWindow* _window, sfView* _view)
 
 	}
 }
-
+//un update pour la UI de selection des tiles
 void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection)
 {
 	if (state == EDITOR)
@@ -981,7 +983,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 			int tilesPerRow = 3;
 			int currentCol = 0;
 			changeTileset(selectedTexture);
-
+			//affiche toutes les tiles de la page /différencie les murs des sols
 			for (int i = 0; i < currentTileset->nbOfTiles; i++)
 			{
 				sfFloatRect rectfrect = sfRectangleShape_getGlobalBounds(RectangleButtonSwitchTileWall);
@@ -1003,7 +1005,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 				}
 				int filteredTiles[200];
 				int filteredCount = 0;
-
+				
 				for (int i = 1; i < currentTileset->nbOfTiles; i++)
 				{
 					if (currentTileset->isWall[i] == filterTile)
@@ -1077,7 +1079,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 					}
 
 					sfRenderWindow_drawSprite(_window, mapSprite, NULL);
-				
+				//fait des pages de 48 tiles
 					currentCol++;
 					if (currentCol >= tilesPerRow)
 					{
@@ -1104,6 +1106,7 @@ void updateTileSelectionPanel(sfRenderWindow* _window, sfView* viewTileSelection
 		}
 	}
 	}
+	//met les collisions des sprites et des tiles a collisions dans la fonctions, la gestion de mouvement des rocher est dedans
 sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f* _vitesse)
 {
 
@@ -1172,23 +1175,30 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			
 	
 
-			
-			if (isInsideMousei(nextPosInTab, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16 || isInsideMousei(nextPosInTab2, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16
-				|| isInsideOpenDoor(nextPosInTab,GetCollisionOfDoor())  || isInsideOpenDoor(nextPosInTab2,GetCollisionOfDoor())
-				|| isInsideMousei(nextPosInTab, GetCollisionOfNPC()) || isInsideMousei(nextPosInTab2, GetCollisionOfNPC())
-				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineFire())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineFire()))
-				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineWater())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineWater()))
-				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineElectric()))
-				|| isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineGrass())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineGrass()))
-				|| isInsideMousei(nextPosInTab, GetCollisionMamoswineDialga()) || isInsideMousei(nextPosInTab2, GetCollisionMamoswineDialga())
-				)
-			{
+			//gere la collision des sprites
+			if (isInsideMousei(nextPosInTab, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16 || isInsideMousei(nextPosInTab2, GetCollisionOfDoor()) && GetMamoswineElementalCount() < 16)
 				return sfTrue;
-			}
+			else if	( isInsideOpenDoor(nextPosInTab,GetCollisionOfDoor())  || isInsideOpenDoor(nextPosInTab2,GetCollisionOfDoor()))
+				return sfTrue;
+			else if ( isInsideMousei(nextPosInTab, GetCollisionOfNPC()) || isInsideMousei(nextPosInTab2, GetCollisionOfNPC()))
+				return sfTrue;
+			else if ( isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineFire())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineFire())))
+				return sfTrue;
+			else if( isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineWater())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineWater())))
+				return sfTrue;
+			else if (isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineElectric())))
+				return sfTrue;
+			else if( isInsideMousei(nextPosInTab, getMamoswineHitboxByPos(GetCollisionMamoswineGrass())) || isInsideMousei(nextPosInTab2, getMamoswineHitboxByPos(GetCollisionMamoswineGrass())))
+				return sfTrue;
+			else if( isInsideMousei(nextPosInTab, GetCollisionMamoswineDialga()) || isInsideMousei(nextPosInTab2, GetCollisionMamoswineDialga()))
+				return sfTrue;
+
+
 			nextPosInTab.y /= (int)TILE_WIDTH;
 			nextPosInTab.x /= (int)TILE_WIDTH;
 			nextPosInTab2.y /= (int)TILE_WIDTH;
 			nextPosInTab2.x /=(int) TILE_WIDTH;
+
 			tileSet* tilesetInFront = getCurrentTileset(tileMap[nextPosInTab.y][nextPosInTab.x].texture);
 			tileSet* tilesetNearFront = getCurrentTileset(tileMap[nextPosInTab2.y][nextPosInTab2.x].texture);
 			tileSet* tilesetInFrontBehind = getCurrentTileset(tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].texture);
@@ -1200,6 +1210,8 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 					&& tileMap[nextPosInTab.y + sideOfNewTileY][nextPosInTab.x + sideOfNewTileX].selectedSpecialTiles.SpecialTilesType == none)
 				{
 					playSoundBoulder();
+
+					//gere les mouvements du rocher
 					rockStrengthTimer += GetDeltaTime();
 					if (tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.state == 0)
 					{
@@ -1243,7 +1255,7 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			
 				}
 			
-			
+			//gere les collisions des tiles
 			if (
 				tilesetInFront->isWall[tileMap[nextPosInTab.y][nextPosInTab.x].tileNumber] > 0  
 				|| tileMap[nextPosInTab.y][nextPosInTab.x].selectedSpecialTiles.SpecialTilesType == 2
@@ -1279,6 +1291,7 @@ sfBool collisionMapPlayer(sfFloatRect _sprite, Direction _direction, sfVector2f*
 			} 
 			return sfFalse;
 }
+// gere l'activation des champignons électrics
 void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
 
 	_sprite.left += _sprite.width / 4;
@@ -1397,6 +1410,7 @@ void ElectricTogglePlayerMap(sfFloatRect _sprite, Direction _direction) {
 		}
 	}
 }
+//gere le cassage des plantes
 void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction)
 {
 	playSoundTree();
@@ -1515,7 +1529,7 @@ void bushCutPlayerMap(sfFloatRect _sprite, Direction _direction)
 	
 
 }
-
+//recupere la tileset utilisé
 tileSet* getCurrentTileset(tilesetType type)
 {
 	switch (type )
@@ -1531,6 +1545,7 @@ tileSet* getCurrentTileset(tilesetType type)
 	default: return &peacefulTileset;
 	}
 }
+// vérifie tout les champignon activable pour vérifier si il faut ouvrir la porte
 int checkAllTogglesActivated(int idActivable) {
 	int totalToggles = 0;
 	int activatedToggles = 0;
@@ -1554,6 +1569,7 @@ int checkAllTogglesActivated(int idActivable) {
 	}
 	return 0;
 }
+//ouvre la porte si tout les activable de cette porte sont activés
 void updateElectricWalls(int idActivable, int state) {
     for (int x = 0; x < MAP_HEIGHT; x++) {
         for (int y = 0; y < MAP_WIDTH; y++) {
@@ -1564,6 +1580,7 @@ void updateElectricWalls(int idActivable, int state) {
         }
     }
 }
+//permet de vérifier si il y a un mur ou l'on veut placer le sprite
 sfBool canPlaceSpriteAt(sfVector2f position, sfIntRect spriteBounds) {
 
 	int tileMinX = (int)(position.x / TILE_WIDTH);
@@ -1595,6 +1612,7 @@ sfBool canPlaceSpriteAt(sfVector2f position, sfIntRect spriteBounds) {
 
 	return sfTrue;
 }
+//met a jour le placement des sprite
 void updateSpritePlacementMode(sfRenderWindow* _window) {
 	spriteInteractionTimer += GetDeltaTime();
 	mousepos = updatePixelToWorld(_window, NULL);
@@ -1692,6 +1710,7 @@ void initSpriteData() {
 	sprites[SPRITE_MAMOSWINE_DIALGA].position = (sfVector2f){ 1180.0f, 100.0f };
 	sprites[SPRITE_MAMOSWINE_DIALGA].bounds = (sfIntRect){ 0, 0, 57, 33 };
 }
+//sauvegarde les sprites
 void saveSpritesData(const char* filename) {
 	FILE* file = fopen(filename, "wb");
 	if (file == NULL) {
@@ -1704,6 +1723,7 @@ void saveSpritesData(const char* filename) {
 	printf("Sprites saved to %s\n", filename);
 
 }
+//met a jour la position des sprites par rapport a la save
 void updateSpritePositionsFromData() {
 
 	setPlayerPosition(sprites[SPRITE_PLAYER].position);
@@ -1715,12 +1735,13 @@ void updateSpritePositionsFromData() {
 	setMamoswineElectricPosition(sprites[SPRITE_MAMOSWINE_ELECTRIC].position, sprites[SPRITE_MAMOSWINE_ELECTRIC].FrameY);
 	setMamoswineDialgaPosition(sprites[SPRITE_MAMOSWINE_DIALGA].position);
 }
+//recupere le spawn du joeur
 sfVector2f getPlayerSpawnPoint()
 {
 	return sprites[SPRITE_PLAYER].position;
 }
 
-
+// charge les sprites
 void loadSpritesData(const char* filename) {
 	FILE* file = fopen(filename, "rb");
 	if (file == NULL) {
@@ -1737,7 +1758,7 @@ void loadSpritesData(const char* filename) {
 
 	updateSpritePositionsFromData();
 }
-
+//initie les tilesets
 void initTileset()
 {
 	//Equivalent des tilesets en binaire 1 /si c'est un wall 0 sinon
