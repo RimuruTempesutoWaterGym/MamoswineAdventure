@@ -45,7 +45,7 @@ extern Pokemon mamoswineDialgaBat;
 
 void initTypeChart();
 float getTypeEffectiveness(Types attackType, Types defenderType1, Types defenderType2);
-const char* getTypeName(Types type);
+
 void initPokemons();
 void initAttacks();
 void initBattle();
