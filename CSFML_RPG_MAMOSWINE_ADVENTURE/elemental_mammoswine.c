@@ -123,8 +123,6 @@ void SetMamoswineDialga(sfRenderWindow* _window, sfFloatRect playerPos)
 	if (getBattleResult(&mamoswineDialgaBat) == 1 )
 	{
 		setMusic(6);
-	//	mamoswineElementalCount |= mamoswineWater;
-	//	sfIntRect mammoswineDialgaRect = { 0,0,48,48 };
 	}
 
 

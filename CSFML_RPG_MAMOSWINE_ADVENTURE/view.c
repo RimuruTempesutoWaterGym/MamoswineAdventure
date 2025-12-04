@@ -71,7 +71,7 @@ viewBattle = sfView_create();
  sfView_setCenter(viewDefault, posViewDefault);
  sfView_setCenter(viewTileSelection, posViewTileSelection);
 
-
+ //crée les viewport
  float EditUiviewportWidth = (TILE_WIDTH + 10.f) / 800.0f;  
  sfFloatRect uiViewport = { 0.0f, 0.0f, EditUiviewportWidth, 1.0f };
  
@@ -90,7 +90,7 @@ viewBattle = sfView_create();
  sfView_setViewport(viewEditUi, uiViewport);
 }
 
-
+//bouge la view pour suivre le joueur
 void updateView(sfVector2f playerPos, sfIntRect playerHitbox,sfRenderWindow* _window)
 {
 
@@ -162,6 +162,7 @@ void updateViewEditor(sfRenderWindow* _window)
 
 }
 
+//display des view et HUD
 void displayViewEdit(sfRenderWindow* _window)
 {
 	sfRenderWindow_setView(_window, viewEdit);
@@ -216,7 +217,9 @@ void displayBattleView(sfRenderWindow* _window)
 {
 	sfRenderWindow_setView(_window, viewBattle);
 }
+//display des view et HUD
 
+//ajuste la pixel au fenètre
 sfVector2f updatePixelToWorld(sfRenderWindow* _window, sfView* _view)
 {
 	if (_view == NULL)
